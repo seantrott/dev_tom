@@ -131,6 +131,24 @@ def main(model_path, revision = None, suffix=None):
     df_results['model_path'] = model_path
     df_results['model_shorthand'] = MODELS[model_path]
 
+    if revision:
+        parts = revision.split("-")  # e.g., ['stage2', 'ingredient4', 'step102500', 'tokens860B']
+        stage = next((p for p in parts if p.startswith("stage")), None)
+        ingredient = next((p for p in parts if p.startswith("ingredient")), None)
+        step = next((p for p in parts if p.startswith("step")), None)
+        tokens = next((p for p in parts if p.startswith("tokens")), None)
+
+        df_results['stage'] = stage
+        df_results['ingredient'] = ingredient
+        df_results['step'] = int(step.replace("step", "")) if step else None
+        df_results['tokens_seen'] = tokens.replace("tokens", "") if tokens else None
+    else:
+        df_results['stage'] = None
+        df_results['ingredient'] = None
+        df_results['step'] = None
+        df_results['tokens_seen'] = None
+
+
     df_results.to_csv(os.path.join(savepath,filename), index=False)
 
 
@@ -144,6 +162,8 @@ if __name__ == "__main__":
     # sample or pick some
     selected = random.sample(checkpoints, k=5)  # or use the entire list
     print(selected)
+
+    selected = ["stage2-ingredient4-step31000-tokens261B"]
 
     for rev in selected:
         model_path = "allenai/OLMo-2-1124-13B"
