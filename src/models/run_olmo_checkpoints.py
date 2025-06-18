@@ -5,6 +5,7 @@ import numpy as np
 import transformers
 import torch
 import os
+import random
 
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
