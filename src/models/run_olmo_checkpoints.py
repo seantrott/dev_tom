@@ -140,8 +140,7 @@ if __name__ == "__main__":
 
     # Set base path to the directory where checkpoints are saved
     refs = list_repo_refs("allenai/OLMo-2-1124-13B")
-    checkpoints = [r.name for r in refs.branches if r.name.startswith("step")]
-
+    checkpoints = [r.name for r in refs.branches if "step" in r.name]
     # sample or pick some
     selected = random.sample(checkpoints, k=5)  # or use the entire list
     print(selected)
