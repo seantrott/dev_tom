@@ -151,5 +151,5 @@ if __name__ == "__main__":
         main(
             model_path=model_path,
             revision=rev,  # pass revision into main
-            suffix=rev     # to tag output files uniquely
+            suffix=rev.replace("/", "_")     # to tag output files uniquely
         )
