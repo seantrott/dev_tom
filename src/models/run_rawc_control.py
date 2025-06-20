@@ -45,14 +45,14 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 def main(model_path, revision = None, suffix=None):
 
     # Set up save path, filename, etc.
-    savepath = f"data/processed/fb_local/"
+    savepath = f"data/processed/rawc_local/"
     if not os.path.exists(savepath): 
         os.makedirs(savepath)
 
     if "/" in model_path:
-        filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
+        filename = f"rawc-{model_path.split('/')[-1]}-{suffix}.csv"
     else:
-        filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
+        filename = f"rawc-{model_path.split('/')[-1]}-{suffix}.csv"
 
     print(filename)
     print(savepath)
@@ -69,39 +69,62 @@ def main(model_path, revision = None, suffix=None):
 
 
     ### Load data
-    df_fb = pd.read_csv("data/raw/fb.csv")
+    df = pd.read_csv("data/raw/rawc_stimuli.csv")
 
     results = []
     ### Run model
-    with tqdm(total=len(df_fb)) as pbar:
-        for index, row in df_fb.iterrows():
-            passage = row['passage'].replace(" [MASK].", "").strip()
-            start_location = " " + row['start']
-            end_location =  " " +row['end']
+    for (ix, row) in tqdm(df.iterrows(), total=df.shape[0]):
+
+        ### Get word
+        target = " {w}".format(w = row['string'])
+
+        ### Run model for each sentence
+        s1_outputs = utils.run_model(model, tokenizer, row['sentence1'], device)
+        s2_outputs = utils.run_model(model, tokenizer, row['sentence2'], device)
+
+        ### Now, for each layer...
+        for layer in range(n_layers+1): # `range` is non-inclusive for the last value of interval
+
+            ### Get embeddings for word
+            s1 = utils.get_embedding(s1_outputs['hidden_states'], s1_outputs['tokens'], tokenizer, target, layer, device)
+            s2 = utils.get_embedding(s2_outputs['hidden_states'], s2_outputs['tokens'], tokenizer, target, layer, device)
+
+            ### Now calculate cosine distance 
+            #.  note, tensors need to be copied to cpu to make this run;
+            #.  still faster to do this copy than to just have everything
+            #.  running on the cpu
+            if device.type == "mps":  
+                model_cosine = cosine(s1.cpu(), s2.cpu())
+
+            else: 
+                model_cosine = cosine(s1, s2)
 
 
-            start_prob = next_seq_prob(model, tokenizer, passage, start_location)
-            end_prob = next_seq_prob(model, tokenizer, passage, end_location)
+            if row['same'] == True:
+                same_sense = "Same Sense"
+            else:
+                same_sense = "Different Sense"
 
-            if start_prob == 0 or end_prob == 0:
-                continue
 
+            ### Figure out how many tokens you're
+            ### comparing across sentences
+            n_tokens_s1 = len(tokenizer.encode(row['sentence1']))
+            n_tokens_s2 = len(tokenizer.encode(row['sentence2']))
+
+            ### Add to results dictionary
             results.append({
-                'start_prob': start_prob,
-                'end_prob': end_prob,
-                'passage': row['passage'],
-                'start': row['start'],
-                'end': row['end'],
-                'knowledge_cue': row['knowledge_cue'],
-                'first_mention': row['first_mention'],
-                'recent_mention': row['recent_mention'],
-                'log_odds': np.log2(start_prob / end_prob),
-                'condition': row['condition']
+                'sentence1': row['sentence1'],
+                'sentence2': row['sentence2'],
+                'word': row['word'],
+                'string': row['string'],
+                'Same_sense': same_sense,
+                'Distance': model_cosine,
+                'Layer': layer,
+                'mean_relatedness': row['mean_relatedness'],
+                'S1_ntokens': n_tokens_s1,
+                'S2_ntokens': n_tokens_s2
             })
 
-
-            
-            pbar.update(1)
 
     ### Create DataFRame
     df_results = pd.DataFrame(results)
@@ -140,21 +163,21 @@ if __name__ == "__main__":
     selected = random.sample(checkpoints, k=5)  # or use the entire list
     print(selected)
 
-    selected = [# "stage1-step102500-tokens860B",
-                # "stage1-step337000-tokens2827B",
-                # "stage1-step596057-tokens5001B"
-                # "stage1-step0-tokens0B",
-                # "stage1-step1000-tokens9B",
-                # "stage1-step10000-tokens84B",
-                # "stage1-step35000-tokens294B",
-                "stage1-step100000-tokens839B",
-                "stage1-step150000-tokens1259B",
+    selected = ["stage1-step102500-tokens860B",
+                "stage1-step337000-tokens2827B",
+                "stage1-step596057-tokens5001B"
+                "stage1-step0-tokens0B",
+                "stage1-step1000-tokens9B",
+                "stage1-step10000-tokens84B",
+                "stage1-step35000-tokens294B",
+                # "stage1-step100000-tokens839B",
+                # "stage1-step150000-tokens1259B",
 
                 ]
 
     for rev in selected:
         model_path = "allenai/OLMo-2-1124-13B"
-        print(f"Running FB with checkpoint: {rev}")
+        print(f"Running RAW-C with checkpoint: {rev}")
         main(
             model_path=model_path,
             revision=rev,  # pass revision into main
