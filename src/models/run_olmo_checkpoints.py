@@ -169,7 +169,9 @@ if __name__ == "__main__":
                 # "stage1-step0-tokens0B",
                 # "stage1-step1000-tokens9B",
                 # "stage1-step10000-tokens84B",
-                "stage1-step35000-tokens294B",
+                # "stage1-step35000-tokens294B",
+                "stage1-step100000-tokens839B",
+                "stage1-step150000-tokens1259B",
 
                 ]
 
