@@ -12,10 +12,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
 
-def run_model(model, tokenizer, sentence, device):
+def run_model(model, tokenizer, sentence):
     """Run model, return hidden states and attention"""
     # Tokenize sentence
-    inputs = tokenizer(sentence, return_tensors="pt").to(device)
+    inputs = tokenizer(sentence, return_tensors="pt")
 
     # Run model
     with torch.no_grad():
@@ -28,12 +28,12 @@ def run_model(model, tokenizer, sentence, device):
             'tokens': inputs}
 
 
-def get_embedding(hidden_states, inputs, tokenizer, target, layer, device):
+def get_embedding(hidden_states, inputs, tokenizer, target, layer):
     """Extract embedding for TARGET from set of hidden states and token ids."""
     
     # Tokenize target
     target_enc = tokenizer.encode(target, return_tensors="pt",
-                                  add_special_tokens=False).to(device)
+                                  add_special_tokens=False)
     
     # Get indices of target in input tokens
     target_inds = find_sublist_index(
@@ -91,25 +91,18 @@ def main(model_path, revision = None, suffix=None):
         target = " {w}".format(w = row['string'])
 
         ### Run model for each sentence
-        s1_outputs = run_model(model, tokenizer, row['sentence1'], device)
-        s2_outputs = run_model(model, tokenizer, row['sentence2'], device)
+        s1_outputs = run_model(model, tokenizer, row['sentence1'])
+        s2_outputs = run_model(model, tokenizer, row['sentence2'])
 
         ### Now, for each layer...
         for layer in range(n_layers+1): # `range` is non-inclusive for the last value of interval
 
             ### Get embeddings for word
-            s1 = get_embedding(s1_outputs['hidden_states'], s1_outputs['tokens'], tokenizer, target, layer, device)
-            s2 = get_embedding(s2_outputs['hidden_states'], s2_outputs['tokens'], tokenizer, target, layer, device)
+            s1 = get_embedding(s1_outputs['hidden_states'], s1_outputs['tokens'], tokenizer, target, layer)
+            s2 = get_embedding(s2_outputs['hidden_states'], s2_outputs['tokens'], tokenizer, target, layer)
 
             ### Now calculate cosine distance 
-            #.  note, tensors need to be copied to cpu to make this run;
-            #.  still faster to do this copy than to just have everything
-            #.  running on the cpu
-            if device.type == "mps":  
-                model_cosine = cosine(s1.cpu(), s2.cpu())
-
-            else: 
-                model_cosine = cosine(s1, s2)
+            model_cosine = cosine(s1, s2)
 
 
             if row['same'] == True:
