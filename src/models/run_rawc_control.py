@@ -12,34 +12,46 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
 
+def run_model(model, tokenizer, sentence, device):
+    """Run model, return hidden states and attention"""
+    # Tokenize sentence
+    inputs = tokenizer(sentence, return_tensors="pt").to(device)
 
-def next_seq_prob(model, tokenizer, seen, unseen):
-    device = next(model.parameters()).device  # get model's actual device
-    input_ids = tokenizer.encode(seen, return_tensors="pt").to(device)
-    unseen_ids = tokenizer.encode(unseen)
+    # Run model
+    with torch.no_grad():
+        output = model(**inputs, output_attentions=True)
+        hidden_states = output.hidden_states
+        attentions = output.attentions
 
-
-    log_probs = []
-    for unseen_id in unseen_ids:
-        with torch.no_grad():
-            logits = model(input_ids).logits
-
-        next_token_logits = logits[0, -1]
-        next_token_probs = torch.softmax(next_token_logits, dim=0)
-
-        prob = next_token_probs[unseen_id]
-        log_probs.append(torch.log(prob))
-
-        # Append next token to input
-        next_token_tensor = torch.tensor([[unseen_id]], device=device)
-        input_ids = torch.cat((input_ids, next_token_tensor), dim=1)
-
-    total_log_prob = sum(log_probs)
-    total_prob = torch.exp(total_log_prob)
-    return total_prob.item()
+    return {'hidden_states': hidden_states,
+            'attentions': attentions,
+            'tokens': inputs}
 
 
+def get_embedding(hidden_states, inputs, tokenizer, target, layer, device):
+    """Extract embedding for TARGET from set of hidden states and token ids."""
+    
+    # Tokenize target
+    target_enc = tokenizer.encode(target, return_tensors="pt",
+                                  add_special_tokens=False).to(device)
+    
+    # Get indices of target in input tokens
+    target_inds = find_sublist_index(
+        inputs["input_ids"][0].tolist(),
+        target_enc[0].tolist()
+    )
 
+    # Get layer
+    selected_layer = hidden_states[layer][0]
+
+    #grab just the embeddings for your target word's token(s)
+    token_embeddings = selected_layer[target_inds[0]:target_inds[1]]
+
+    #if a word is represented by >1 tokens, take mean
+    #across the multiple tokens' embeddings
+    embedding = torch.mean(token_embeddings, dim=0)
+    
+    return embedding
 
 
 def main(model_path, revision = None, suffix=None):
@@ -79,15 +91,15 @@ def main(model_path, revision = None, suffix=None):
         target = " {w}".format(w = row['string'])
 
         ### Run model for each sentence
-        s1_outputs = utils.run_model(model, tokenizer, row['sentence1'], device)
-        s2_outputs = utils.run_model(model, tokenizer, row['sentence2'], device)
+        s1_outputs = run_model(model, tokenizer, row['sentence1'], device)
+        s2_outputs = run_model(model, tokenizer, row['sentence2'], device)
 
         ### Now, for each layer...
         for layer in range(n_layers+1): # `range` is non-inclusive for the last value of interval
 
             ### Get embeddings for word
-            s1 = utils.get_embedding(s1_outputs['hidden_states'], s1_outputs['tokens'], tokenizer, target, layer, device)
-            s2 = utils.get_embedding(s2_outputs['hidden_states'], s2_outputs['tokens'], tokenizer, target, layer, device)
+            s1 = get_embedding(s1_outputs['hidden_states'], s1_outputs['tokens'], tokenizer, target, layer, device)
+            s2 = get_embedding(s2_outputs['hidden_states'], s2_outputs['tokens'], tokenizer, target, layer, device)
 
             ### Now calculate cosine distance 
             #.  note, tensors need to be copied to cpu to make this run;
