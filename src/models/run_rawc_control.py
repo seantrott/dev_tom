@@ -53,6 +53,15 @@ def get_embedding(hidden_states, inputs, tokenizer, target, layer):
     
     return embedding
 
+def find_sublist_index(mylist, sublist):
+    """Find the first occurence of sublist in list.
+    Return the start and end indices of sublist in list"""
+
+    for i in range(len(mylist)):
+        if mylist[i] == sublist[0] and mylist[i:i+len(sublist)] == sublist:
+            return i, i+len(sublist)
+    return None
+    
 
 def main(model_path, revision = None, suffix=None):
 
@@ -86,7 +95,7 @@ def main(model_path, revision = None, suffix=None):
     results = []
 
     n_layers = model.config.num_hidden_layers
-    
+
     ### Run model
     for (ix, row) in tqdm(df.iterrows(), total=df.shape[0]):
 
