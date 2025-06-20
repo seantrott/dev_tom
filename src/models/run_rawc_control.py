@@ -61,7 +61,7 @@ def find_sublist_index(mylist, sublist):
         if mylist[i] == sublist[0] and mylist[i:i+len(sublist)] == sublist:
             return i, i+len(sublist)
     return None
-    
+
 
 def main(model_path, revision = None, suffix=None):
 
@@ -83,7 +83,8 @@ def main(model_path, revision = None, suffix=None):
         model_path,
         revision=revision,
         device_map="auto",
-        use_auth_token=True
+        use_auth_token=True,
+        output_hidden_states = True
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
