@@ -7,6 +7,8 @@ import torch
 import os
 import random
 
+from scipy.spatial.distance import cosine
+
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
