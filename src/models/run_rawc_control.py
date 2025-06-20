@@ -14,6 +14,32 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
 
+
+MODELS = {
+    ### OLMo
+    'allenai/OLMo-2-1124-7B': 'OLMo 2 7B',
+    'allenai/OLMo-2-1124-7B-SFT': 'OLMo 2 7B SFT',
+    'allenai/OLMo-2-1124-7B-DPO': 'OLMo 2 7B DPO',
+    'allenai/OLMo-2-1124-7B-Instruct': 'OLMO 2 7B Instruct', 
+    'allenai/OLMo-2-1124-13B': 'OLMO 2 13B',
+    'allenai/OLMo-2-1124-13B-SFT': 'OLMO 2 13B SFT', 
+    'allenai/OLMo-2-1124-13B-DPO': 'OLMo 2 13B DPO', 
+    'allenai/OLMo-2-1124-13B-Instruct': 'OLMO 2 13B Instruct',
+    'allenai/OLMo-2-0325-32B': 'OLMO 2 32B',
+    'allenai/OLMo-2-0325-32B-SFT': 'OLMO 2 32B SFT', 
+    'allenai/OLMo-2-0325-32B-Instruct': 'OLMO 2 32B Instruct',
+    'allenai/OLMo-2-0325-32B-DPO': 'OLMO 2 32B DPO',
+    'allenai/OLMo-2-0425-1B': 'OLMO 2 1B',
+    'allenai/OLMo-2-0425-1B-SFT': 'OLMO 2 1B SFT',
+    'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
+    'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
+ 
+
+}
+
+
+
+
 def run_model(model, tokenizer, sentence):
     """Run model, return hidden states and attention"""
     # Tokenize sentence
@@ -89,7 +115,6 @@ def main(model_path, revision = None, suffix=None):
         output_hidden_states = True
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
     ### Load data
@@ -98,6 +123,7 @@ def main(model_path, revision = None, suffix=None):
     results = []
 
     n_layers = model.config.num_hidden_layers
+    print("Number of layers:", n_layers)
 
     ### Run model
     for (ix, row) in tqdm(df.iterrows(), total=df.shape[0]):
