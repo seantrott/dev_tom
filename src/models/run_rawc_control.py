@@ -119,6 +119,7 @@ def main(model_path, revision = None, suffix=None):
 
     ### Load data
     df = pd.read_csv("data/raw/rawc_stimuli.csv")
+    df = df[df['Class']=='N']
 
     results = []
 
@@ -211,7 +212,7 @@ if __name__ == "__main__":
 
     selected = ["stage1-step102500-tokens860B",
                 "stage1-step337000-tokens2827B",
-                "stage1-step596057-tokens5001B"
+                # "stage1-step596057-tokens5001B" ### TODO: Causes error?
                 "stage1-step0-tokens0B",
                 "stage1-step1000-tokens9B",
                 "stage1-step10000-tokens84B",
