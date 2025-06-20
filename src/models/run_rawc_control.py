@@ -210,8 +210,8 @@ if __name__ == "__main__":
     selected = random.sample(checkpoints, k=5)  # or use the entire list
     print(selected)
 
-    selected = ["stage1-step102500-tokens860B",
-                "stage1-step337000-tokens2827B",
+    selected = [# "stage1-step102500-tokens860B",
+                # "stage1-step337000-tokens2827B",
                 # "stage1-step596057-tokens5001B" ### TODO: Causes error?
                 "stage1-step0-tokens0B",
                 "stage1-step1000-tokens9B",
