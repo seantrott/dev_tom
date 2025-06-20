@@ -84,6 +84,9 @@ def main(model_path, revision = None, suffix=None):
     df = pd.read_csv("data/raw/rawc_stimuli.csv")
 
     results = []
+
+    n_layers = model.config.num_hidden_layers
+    
     ### Run model
     for (ix, row) in tqdm(df.iterrows(), total=df.shape[0]):
 
