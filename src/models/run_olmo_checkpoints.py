@@ -163,9 +163,14 @@ if __name__ == "__main__":
     selected = random.sample(checkpoints, k=5)  # or use the entire list
     print(selected)
 
-    selected = ["stage1-step102500-tokens860B",
-                "stage1-step337000-tokens2827B",
-                "stage1-step596057-tokens5001B"]
+    selected = [# "stage1-step102500-tokens860B",
+                # "stage1-step337000-tokens2827B",
+                # "stage1-step596057-tokens5001B"
+                "stage1-step0-tokens0B",
+                "stage1-step1000-tokens9B",
+                "stage1-step10000-tokens84B",
+
+                ]
 
     for rev in selected:
         model_path = "allenai/OLMo-2-1124-13B"
