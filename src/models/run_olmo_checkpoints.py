@@ -184,6 +184,23 @@ if __name__ == "__main__":
 
                 ]
 
+    selected = ['stage1-step8000-tokens68B', 'stage1-step64000-tokens537B', 'stage1-step4000-tokens34B', 
+                'stage1-step32000-tokens269B', 'stage1-step2000-tokens17B', 'stage1-step16000-tokens135B', 
+                'stage1-step1000-tokens9B', 'stage1-step0-tokens0B', 'stage1-step512000-tokens4295B', 
+                'stage1-step256000-tokens2148B', 'stage1-step128000-tokens1074B']
+
+    """
+    stage2 =     ['stage2-ingredient4-step32000-tokens269B', 'stage2-ingredient4-step16000-tokens135B', 
+                'stage2-ingredient4-step8000-tokens68B', 'stage2-ingredient4-step4000-tokens34B', 
+                'stage2-ingredient4-step2000-tokens17B', 'stage2-ingredient4-step1000-tokens9B', 
+                'stage2-ingredient3-step8000-tokens68B', 'stage2-ingredient3-step4000-tokens34B', 
+                'stage2-ingredient3-step2000-tokens17B', 'stage2-ingredient3-step1000-tokens9B', 
+                'stage2-ingredient2-step8000-tokens68B', 'stage2-ingredient2-step2000-tokens17B', 
+                'stage2-ingredient1-step8000-tokens68B', 'stage2-ingredient1-step4000-tokens34B', 
+                'stage2-ingredient1-step2000-tokens17B', 'stage2-ingredient1-step1000-tokens9B', 
+                'stage2-ingredient2-step4000-tokens34B']
+    """
+
     for rev in selected:
         model_path = "allenai/OLMo-2-1124-13B"
         print(f"Running FB with checkpoint: {rev}")
