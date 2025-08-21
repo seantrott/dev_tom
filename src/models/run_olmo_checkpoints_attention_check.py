@@ -112,37 +112,51 @@ def main(model_path, revision = None, suffix=None):
             ## === ATTN CHECK 1 ===
             passage_and_q1 = passage + " " + row["attn_check_1_q"]
 
-            start_prob_q1 = next_seq_prob(model, tokenizer, passage_and_q1, start_location)
-            end_prob_q1 = next_seq_prob(model, tokenizer, passage_and_q1, end_location)
+            q1a = row['attn_check_1_a']
+            q2a = ['attn_check_2_a']
 
-            if start_prob_q1 == 0 or end_prob_q1 == 0:
+            ### Get probabilities for answer for 1 vs. answer 2 (log-odds should be +)
+            correct_prob_q1 = next_seq_prob(model, tokenizer, passage_and_q1, q1a)
+            distractor_q1 = next_seq_prob(model, tokenizer, passage_and_q1, q2a)
+
+            if correct_prob_q1 == 0 or distractor_q1 == 0:
                 continue
 
             ## === ATTN CHECK 2 ===
             passage_and_q2 = passage + " " + row["attn_check_2_q"]
 
-            start_prob_q2 = next_seq_prob(model, tokenizer, passage_and_q2, start_location)
-            end_prob_q2 = next_seq_prob(model, tokenizer, passage_and_q2, end_location)
+            q1a = row['attn_check_1_a']
+            q2a = ['attn_check_2_a']
 
-            if start_prob_q2 == 0 or end_prob_q2 == 0:
+            ### Get probabilities for answer for 2 vs. answer 1 (log-odds should be +)
+            correct_prob_q2 = next_seq_prob(model, tokenizer, passage_and_q2, q2a)
+            distractor_q2 = next_seq_prob(model, tokenizer, passage_and_q2, q1a)
+
+            if correct_prob_q2 == 0 or distractor_q2 == 0:
                 continue
 
             ## === ATTN CHECK 3 ===
             passage_and_q3 = passage + " " + row["attn_check_3_q"]
 
-            start_prob_q3 = next_seq_prob(model, tokenizer, passage_and_q3, start_location)
-            end_prob_q3 = next_seq_prob(model, tokenizer, passage_and_q3, end_location)
+            q3a = row['attn_check_3_a']
+            q4a = ['attn_check_4_a']
 
-            if start_prob_q3 == 0 or end_prob_q3 == 0:
+            correct_prob_q3 = next_seq_prob(model, tokenizer, passage_and_q3, q3a)
+            distractor_q3 = next_seq_prob(model, tokenizer, passage_and_q3, q4a)
+
+            if correct_prob_q3 == 0 or distractor_q3 == 0:
                 continue
 
             ## === ATTN CHECK 4 ===
             passage_and_q4 = passage + " " + row["attn_check_4_q"]
 
-            start_prob_q4 = next_seq_prob(model, tokenizer, passage_and_q4, start_location)
-            end_prob_q4 = next_seq_prob(model, tokenizer, passage_and_q4, end_location)
+            q3a = row['attn_check_3_a']
+            q4a = ['attn_check_4_a']
 
-            if start_prob_q4 == 0 or end_prob_q4 == 0:
+            correct_prob_q4 = next_seq_prob(model, tokenizer, passage_and_q4, q4a)
+            distractor_q4 = next_seq_prob(model, tokenizer, passage_and_q4, q3a)
+
+            if correct_prob_q4 == 0 or distractor_q4 == 0:
                 continue
 
             results.append({
@@ -151,22 +165,22 @@ def main(model_path, revision = None, suffix=None):
                 'passage': row['passage'],
                 'attn_check_1_q': row["attn_check_1_q"],
                 'attn_check_1_a': row["attn_check_1_a"],
-                'log_odds_1': np.log2(start_prob_q1 / end_prob_q1)
+                'log_odds_1': np.log2(correct_prob_q1 / distractor_q1)
                 'start_prob_q1': start_prob_q1,
                 'end_prob_q1': end_prob_q1,
                 'attn_check_2_q': row["attn_check_2_q"],
                 'attn_check_2_a': row["attn_check_2_a"],
-                'log_odds_2': np.log2(start_prob_q2 / end_prob_q2),
+                'log_odds_2': np.log2(correct_prob_q2 / distractor_q2),
                 'start_prob_q2': start_prob_q2,
                 'end_prob_q2': end_prob_q2,
                 'attn_check_3_q': row["attn_check_3_q"],
                 'attn_check_3_a': row["attn_check_3_a"],
-                'log_odds_3': np.log2(start_prob_q3 / end_prob_q3),
+                'log_odds_3': np.log2(correct_prob_q3 / distractor_q3),
                 'start_prob_q3': start_prob_q3,
                 'end_prob_q3': end_prob_q3,
                 'attn_check_4_q': row["attn_check_4_q"],
                 'attn_check_4_a': row["attn_check_4_a"],
-                'log_odds_4': np.log2(start_prob_q4 / end_prob_q4),
+                'log_odds_4': np.log2(correct_prob_q4 / distractor_q4),
                 'start_prob_q4': start_prob_q4,
                 'end_prob_q4': end_prob_q4
             })
