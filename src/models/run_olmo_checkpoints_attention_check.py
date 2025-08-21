@@ -165,7 +165,7 @@ def main(model_path, revision = None, suffix=None):
                 'passage': row['passage'],
                 'attn_check_1_q': row["attn_check_1_q"],
                 'attn_check_1_a': row["attn_check_1_a"],
-                'log_odds_1': np.log2(correct_prob_q1 / distractor_q1)
+                'log_odds_1': np.log2(correct_prob_q1 / distractor_q1),
                 'start_prob_q1': start_prob_q1,
                 'end_prob_q1': end_prob_q1,
                 'attn_check_2_q': row["attn_check_2_q"],
