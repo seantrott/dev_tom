@@ -113,7 +113,7 @@ def main(model_path, revision = None, suffix=None):
             passage_and_q1 = passage + " " + row["attn_check_1_q"]
 
             q1a = row['attn_check_1_a']
-            q2a = ['attn_check_2_a']
+            q2a = row['attn_check_2_a']
 
             ### Get probabilities for answer for 1 vs. answer 2 (log-odds should be +)
             correct_prob_q1 = next_seq_prob(model, tokenizer, passage_and_q1, q1a)
@@ -126,7 +126,7 @@ def main(model_path, revision = None, suffix=None):
             passage_and_q2 = passage + " " + row["attn_check_2_q"]
 
             q1a = row['attn_check_1_a']
-            q2a = ['attn_check_2_a']
+            q2a = row['attn_check_2_a']
 
             ### Get probabilities for answer for 2 vs. answer 1 (log-odds should be +)
             correct_prob_q2 = next_seq_prob(model, tokenizer, passage_and_q2, q2a)
@@ -139,7 +139,7 @@ def main(model_path, revision = None, suffix=None):
             passage_and_q3 = passage + " " + row["attn_check_3_q"]
 
             q3a = row['attn_check_3_a']
-            q4a = ['attn_check_4_a']
+            q4a = row['attn_check_4_a']
 
             correct_prob_q3 = next_seq_prob(model, tokenizer, passage_and_q3, q3a)
             distractor_q3 = next_seq_prob(model, tokenizer, passage_and_q3, q4a)
@@ -151,7 +151,7 @@ def main(model_path, revision = None, suffix=None):
             passage_and_q4 = passage + " " + row["attn_check_4_q"]
 
             q3a = row['attn_check_3_a']
-            q4a = ['attn_check_4_a']
+            q4a = row['attn_check_4_a']
 
             correct_prob_q4 = next_seq_prob(model, tokenizer, passage_and_q4, q4a)
             distractor_q4 = next_seq_prob(model, tokenizer, passage_and_q4, q3a)
