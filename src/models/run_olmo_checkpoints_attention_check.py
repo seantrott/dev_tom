@@ -166,23 +166,23 @@ def main(model_path, revision = None, suffix=None):
                 'attn_check_1_q': row["attn_check_1_q"],
                 'attn_check_1_a': row["attn_check_1_a"],
                 'log_odds_1': np.log2(correct_prob_q1 / distractor_q1),
-                'start_prob_q1': start_prob_q1,
-                'end_prob_q1': end_prob_q1,
+                # 'start_prob_q1': start_prob_q1,
+                # 'end_prob_q1': end_prob_q1,
                 'attn_check_2_q': row["attn_check_2_q"],
                 'attn_check_2_a': row["attn_check_2_a"],
                 'log_odds_2': np.log2(correct_prob_q2 / distractor_q2),
-                'start_prob_q2': start_prob_q2,
-                'end_prob_q2': end_prob_q2,
+                # 'start_prob_q2': start_prob_q2,
+                # 'end_prob_q2': end_prob_q2,
                 'attn_check_3_q': row["attn_check_3_q"],
                 'attn_check_3_a': row["attn_check_3_a"],
                 'log_odds_3': np.log2(correct_prob_q3 / distractor_q3),
-                'start_prob_q3': start_prob_q3,
-                'end_prob_q3': end_prob_q3,
+                # 'start_prob_q3': start_prob_q3,
+                # 'end_prob_q3': end_prob_q3,
                 'attn_check_4_q': row["attn_check_4_q"],
                 'attn_check_4_a': row["attn_check_4_a"],
                 'log_odds_4': np.log2(correct_prob_q4 / distractor_q4),
-                'start_prob_q4': start_prob_q4,
-                'end_prob_q4': end_prob_q4
+                # 'start_prob_q4': start_prob_q4,
+                # 'end_prob_q4': end_prob_q4
             })
             
             pbar.update(1)
