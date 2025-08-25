@@ -23,6 +23,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 #from false_belief.src.models.run_fb_local import MODELS, next_seq_prob  # type: ignore
 #MODELS = {"allenai/olmo-13b"}
 
+MODELS = {
+    ### OLMo
+    "EleutherAI/pythia-14m": "Pythia 14m",
+}
+
+
 def next_seq_prob(model, tokenizer, seen, unseen):
     device = next(model.parameters()).device  # get model's actual device
     input_ids = tokenizer.encode(seen, return_tensors="pt").to(device)
@@ -100,11 +106,6 @@ def _answer_probabilities(
     # Leading space ensures independent tokenization for most tokenizers
     correct_prefixed = f" {correct_answer.strip()}"
     distractor_prefixed = f" {distractor_answer.strip()}"
-
-    print(prompt)
-    print(correct_prefixed)
-    print(distractor_prefixed)
-
 
     p_correct = next_seq_prob(model, tokenizer, prompt, correct_prefixed)
     p_distr = next_seq_prob(model, tokenizer, prompt, distractor_prefixed)
@@ -284,12 +285,7 @@ if __name__ == "__main__":
         main(args.model, summary=args.summary)
     else:
         # Only run select Olmo 13B checkpoints
-        SELECT_MODELS = [
-            # "allenai/olmo-13b"
-            "EleutherAI/pythia-14m"
-        ]
-
-        for model_path in SELECT_MODELS:
+        for model_path in MODELS.keys():
             
             # Grab the list of available revisions for this model
             refs = list_repo_refs(model_path)
