@@ -11,6 +11,7 @@ import os
 import numpy as np
 import pandas as pd
 import re
+import torch
 
 from huggingface_hub import list_repo_refs
 from itertools import chain
@@ -100,6 +101,11 @@ def _answer_probabilities(
     correct_prefixed = f" {correct_answer.strip()}"
     distractor_prefixed = f" {distractor_answer.strip()}"
 
+    print(prompt)
+    print(correct_prefixed)
+    print(distractor_prefixed)
+
+
     p_correct = next_seq_prob(model, tokenizer, prompt, correct_prefixed)
     p_distr = next_seq_prob(model, tokenizer, prompt, distractor_prefixed)
 
@@ -114,7 +120,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
 
     # Load attention-check data (canonical Q/As) and stimuli variants, then merge by item
     df_attn = pd.read_csv("data/raw/fb_attn_check.csv")
-    df_stims = pd.read_csv("data/raw/fb_stimuli.csv")
+    df_stims = pd.read_csv("data/raw/fb.csv")
 
     df_attn["item"] = df_attn["item"].astype(int)
     df_stims["item"] = df_stims["item"].astype(int)
@@ -279,7 +285,8 @@ if __name__ == "__main__":
     else:
         # Only run select Olmo 13B checkpoints
         SELECT_MODELS = [
-            "allenai/olmo-13b"
+            # "allenai/olmo-13b"
+            "EleutherAI/pythia-14m"
         ]
 
         for model_path in SELECT_MODELS:
