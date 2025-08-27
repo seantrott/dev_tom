@@ -34,14 +34,14 @@ my_colors <- all_colors[c(3, 5, 7)]  # Selecting specific colors from the palett
 
 ```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
-setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+# setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
 directory_path <- "../../data/processed/fb_local/"
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
   map(~ read_csv(.))
 df_all_models_fb <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
-nrow(df_all_models)
+nrow(df_all_models_fb)
 
 df_all_models_fb$tokens_seen_numeric <- as.numeric(sub("B", "", df_all_models_fb$tokens_seen)) * 1e9
 
@@ -128,7 +128,7 @@ mean(df_all_models_fb$correct)
 df_summ %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
-  select(model_shorthand, mean_accuracy) %>%
+  select(model_shorthand, mean_accuracy, step, stage) %>%
   head(5)
 
 
@@ -140,15 +140,18 @@ df_summ = df_summ %>%
          percent_max = 100 * (fb_clamped - 0.5) / (max_accuracy - 0.5))
 
 
+
 df_summ %>%
   mutate(step_modded = step + 1) %>%
   ggplot(aes(x = step_modded,
-             y = mean_accuracy)) +
+             y = mean_accuracy,
+             color = model_shorthand)) +
   geom_point(size = 3,
              alpha = .7) +
   geom_hline(yintercept = .83,##TODO: Calculate from scratch
              linetype = "dotted", color = "red",
              size = 1.2, alpha = .8) + 
+  geom_line(size = 1) +
   geom_hline(yintercept = .5, linetype = "dotted",
              size = 1.2, alpha = .5) +
   scale_x_log10() +
@@ -159,7 +162,7 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -169,7 +172,8 @@ df_summ %>%
 
 df_summ %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_accuracy)) +
+             y = mean_accuracy,
+             color = model_shorthand)) +
   geom_point(size = 3,
              alpha = .7) +
   geom_hline(yintercept = .83,##TODO: Calculate from scratch
@@ -177,7 +181,7 @@ df_summ %>%
              size = 1.2, alpha = .8) + 
   geom_hline(yintercept = .5, linetype = "dotted",
              size = 1.2, alpha = .5) +
-  # scale_x_log10() +
+  scale_x_log10() +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Tokens Seen",
@@ -185,44 +189,22 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~stage)
 
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = percent_max)) +
-  geom_point(size = 4,
-             alpha = .5) +
-  scale_x_log10() +
-  geom_line() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  labs(x = "Tokens Seen",
-       y = "% Max Performance (False Belief)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="none") +
-  coord_cartesian(ylim = c(0, 100)) +
-  facet_wrap(~stage)
 
 
 ### How do model properties predict the probability of a correct response?
-mod_full = glmer(data = df_all_models,
-                 correct ~ condition + knowledge_cue  + # stage +
-                   log10(tokens_seen_numeric_mod) + 
-                   (1 | start), 
+mod_full = glmer(data = df_all_models_fb,
+                 correct ~ condition + knowledge_cue +
+                   log10(tokens_seen_numeric_mod) * stage +
+                   (1 | start) +
+                   (1 | model_shorthand),
                  family = binomial())
 summary(mod_full)
-
-
-summary(lm(data = df_summ,
-           mean_accuracy ~ log10(tokens_seen_numeric_mod)))
 
 
 ### Plot coefficients
@@ -280,6 +262,7 @@ csv_list <- csv_files %>%
 df_olmo13_attn_check <- bind_rows(csv_list)
 nrow(df_olmo13_attn_check)
 
+### TODO: No tokens seen column?
 df_olmo13_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_olmo13_attn_check$tokens_seen)) * 1e9
 
 df_olmo13_attn_check = df_olmo13_attn_check %>%
@@ -298,14 +281,16 @@ table(df_olmo13_attn_check$step)
 ```
 
 ```{r}
+### Where does log odds 1 come from?
 df_olmo13_attn_check = df_olmo13_attn_check %>%
   mutate(correct = case_when(
-    log_odds_1 > 0 ~ TRUE,
-    log_odds_1 <= 0 ~ FALSE
+    log_odds > 0 ~ TRUE,
+    log_odds <= 0 ~ FALSE
   ))
 
 ## Accuracy of item start location
 
+### TODO: No step or tokens eseen?
 df_summ = df_olmo13_attn_check %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, stage) %>%
