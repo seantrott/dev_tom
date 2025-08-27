@@ -63,7 +63,7 @@ table(df_all_models_fb$step)
 ```
 
 
-# LLM Analysis
+# FB Analysis
 
 ## Sensitivity to mental states
 
@@ -229,30 +229,81 @@ df_coef %>%
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
 ```
 
-## Item-wise analysis
+## Phase shift modeling
+
+Here, we predict the probability of a correct response over tokens seen, focusing on stage 1.
+
+### Descriptive
 
 ```{r}
-df_item_accuracy = df_all_models %>%
-  group_by(start) %>%
-  summarise(mean_accuracy = mean(correct)) %>%
-  arrange(mean_accuracy)
+df_diff <- df_summ %>%
+  arrange(model_shorthand, tokens_seen_numeric_mod) %>%
+  group_by(model_shorthand) %>%
+  mutate(
+    acc_diff = c(NA, diff(mean_accuracy)),  # difference between consecutive points
+    tokens_diff = c(NA, diff(tokens_seen_numeric_mod)),  # optional, could normalize slope
+    slope = acc_diff / tokens_diff  # slope per token if you like
+  ) %>%
+  ungroup()
 
-df_item_accuracy %>%
-  ggplot(aes(x = reorder(start, mean_accuracy), y = mean_accuracy)) +
-  geom_bar(stat = "identity", alpha = .6) +
-  labs(x = "Item",
-       y = "Mean Accuracy",
-       color = "",
-       shape = "") +
-  theme_minimal() +
-  geom_hline(linetype = "dotted", yintercept = .5) +
-  coord_flip() +
-  theme(text = element_text(size = 15),
-        legend.position="bottom")
-  
+onsets <- df_diff %>%
+  group_by(model_shorthand) %>%
+  slice_max(acc_diff, n = 1) %>%
+  ungroup() %>%
+  dplyr::select(model_shorthand, tokens_seen_numeric_mod, acc_diff, slope)
+onsets
+
 ```
 
-## Situation Model -- Attention Check Results
+
+### Using GAM
+
+```{r}
+library(mgcv)
+library(dplyr)
+library(purrr)
+
+# Aggregate to get accuracy per checkpoint (helps GAM fit)
+df_summary <- df_all_models_fb %>%
+  filter(stage == "stage1") %>%
+  group_by(model_shorthand, 
+           # condition, 
+           # knowledge_cue,
+           tokens_seen_numeric_mod) %>%
+  summarise(acc = mean(correct), .groups = "drop") %>%
+  mutate(log_tokens = log10(tokens_seen_numeric_mod))
+
+# Fit a GAM for each model separately
+fits <- df_summary %>%
+  group_split(model_shorthand) %>%
+  set_names(map_chr(., ~ unique(.$model_shorthand))) %>%
+  map(~ gam(acc ~ s(tokens_seen_numeric_mod, k = 10),
+            data = ., family = binomial(link = "logit")))  # logistic is natural for accuracy
+
+df_pred <- map2_df(fits, names(fits), function(mod, name) {
+  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary$tokens_seen_numeric_mod),
+                                        max(df_summary$tokens_seen_numeric_mod),
+                                        length.out = 200))
+  newdat$acc_hat <- predict(mod, newdat, type = "response")
+  newdat$model_shorthand <- name
+  newdat
+})
+
+ggplot(df_summary, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
+  geom_point(alpha = 0.3) +
+  geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
+  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  scale_x_log10() +
+  theme_minimal()
+
+
+
+### TODO: Identify inflection points
+```
+
+
+# Situation Model -- Attention Check Results
 ```{r}
 directory_path <- "../../data/processed/attn-checks-local/"
 
