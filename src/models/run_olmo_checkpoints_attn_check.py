@@ -225,6 +225,25 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
     out["model_path"] = model_path
     out["model_shorthand"] = MODELS[model_path]
 
+
+    ### TODO: Check this (Sean added)
+    if revision:
+        parts = revision.split("-")  # e.g., ['stage2', 'ingredient4', 'step102500', 'tokens860B']
+        stage = next((p for p in parts if p.startswith("stage")), None)
+        ingredient = next((p for p in parts if p.startswith("ingredient")), None)
+        step = next((p for p in parts if p.startswith("step")), None)
+        tokens = next((p for p in parts if p.startswith("tokens")), None)
+
+        out['stage'] = stage
+        out['ingredient'] = ingredient
+        out['step'] = int(step.replace("step", "")) if step else None
+        out['tokens_seen'] = tokens.replace("tokens", "") if tokens else None
+    else:
+        out['stage'] = None
+        out['ingredient'] = None
+        out['step'] = None
+        out['tokens_seen'] = None
+
     name_part = model_path.split("/")[-1]
     filename = f"fb_attn-{name_part}-{suffix or 'default'}.csv"
     save_dir = "data/processed/attn-checks-local/"
