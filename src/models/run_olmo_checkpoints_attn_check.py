@@ -1,4 +1,4 @@
-"""Run attention checks for FB passages using local HF models.
+"""Run attention checks for FB passages using local HF models. Prefer this script over others!
 
 Reads `data/raw/fb_attn_check.csv` and, for each of four attention-check
 questions per item, computes next-token sequence probabilities for the
@@ -28,7 +28,7 @@ MODELS = {
     "EleutherAI/pythia-14m": "Pythia 14m",
     "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    "allenai/OLMo-2-1124-1B": "OLMO 2 1B"
+    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
 
@@ -58,35 +58,54 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 
 def sample_log_indices(k, mylist):
     """k: number of points to sample from list"""
-    # Generate logarithmically spaced indices
-    log_indices = np.logspace(0, np.log10(len(mylist) - 1), num=k, dtype=int)
-    # Remove duplicates (logspace can produce repeated indices)
-    log_indices = sorted(set(log_indices))
-    # Select the elements
-    log_spaced_list = [mylist[i] for i in log_indices]
-    print("Selected indices:", log_indices)
-    print("Selected elements:", log_spaced_list)
-    return log_spaced_list
+    if k > len(mylist):
+        raise ValueError("k cannot be larger than the length of the list")
+    # Generate more points than needed, to reduce chances of duplicates
+    oversample_factor = 2
+    raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
+    indices = np.unique(raw.astype(int))
+    if indices[-1] != len(mylist):
+        indices = np.hstack((indices, len(mylist)))
+    if indices[0] != 0:
+        indices = np.hstack((0, indices))
+    # Redo everything with a larger oversampling factor if you end up with fewer than 
+    # your intended target checkpoints
+    while len(indices) < k: 
+        oversample_factor += 1
+        raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
+        indices = np.unique(raw.astype(int))
+        if indices[-1] != len(mylist):
+            indices = np.hstack((indices, len(mylist)))
+        if indices[0] != 0:
+            indices = np.hstack((0, indices))
+    return indices
 
 def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
     """Return a revision list with stage-aware or fallback log sampling."""
     def parse_step(x):
         match = re.search(r"step(\d+)", x)
         return int(match.group(1)) if match else float("inf")
-
     checkpoints_sorted = sorted(all_revisions, key=parse_step)
     stage1_ckpts = [c for c in checkpoints_sorted if "stage1" in c]
     stage2_ckpts = [c for c in checkpoints_sorted if "stage2" in c]
-
+    min_k_stage1 = 40
     if stage1_ckpts and stage2_ckpts:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
-        logstage1 = sample_log_indices(40, stage1_ckpts)
-        logstage2 = sample_log_indices(10, stage2_ckpts)
+        logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
+        # treat stage2 differently
+        ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
+        n_ingredients = np.unique(ingredients_list)
+        min_k_stage2 = 5
+        logstage2 = []
+        for ingredient in range(n_ingredients): 
+            # filter stage2 checkpoints for those trained on the current ingredient
+            current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
+            # grab the same logspaced indices for each ingredient in stage2
+            logstage2.append(sample_log_indices(min_k_stage2, current_list))
         return list(dict.fromkeys([stage1_ckpts[0]] + logstage1 + [stage1_ckpts[-1]] +
                                   [stage2_ckpts[0]] + logstage2))
-
     print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
-    return sample_log_indices(min(30, len(checkpoints_sorted)), checkpoints_sorted)
+    return sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
 
 def _answer_probabilities(
     model,
