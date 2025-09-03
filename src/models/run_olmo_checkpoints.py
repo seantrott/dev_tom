@@ -38,17 +38,61 @@ MODELS = {
 
 def sample_log_indices(k, mylist):
     """k: number of points to sample from list"""
-    # Generate logarithmically spaced indices
-    log_indices = np.logspace(0, np.log10(len(mylist) - 1), num=k, dtype=int)
-    # Remove duplicates (logspace can produce repeated indices)
-    log_indices = sorted(set(log_indices))
-    # Select the elements
-    log_spaced_list = [mylist[i] for i in log_indices]
-    print("Selected indices:", log_indices)
-    print("Selected elements:", log_spaced_list)
-    return log_spaced_list
+    if k > len(mylist):
+        raise ValueError("k cannot be larger than the length of the list")
+    # Generate more points than needed, to reduce chances of duplicates
+    oversample_factor = 2
+    raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
+    indices = np.unique(raw.astype(int))
+    if indices[-1] != (len(mylist) - 1):
+        indices = np.hstack((indices, len(mylist)-1))
+    if indices[0] != 0:
+        indices = np.hstack((0, indices))
+    # Redo everything with a larger oversampling factor if you end up with fewer than 
+    # your intended target checkpoints
+    while len(indices) < k: 
+        oversample_factor += 1
+        raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
+        indices = np.unique(raw.astype(int))
+        if indices[-1] != (len(mylist) - 1):
+            indices = np.hstack((indices, len(mylist)-1))
+        if indices[0] != 0:
+            indices = np.hstack((0, indices))
+    return indices
 
+def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
+    """Return a revision list with stage-aware or fallback log sampling."""
+    def parse_step(x):
+        match = re.search(r"step(\d+)", x)
+        return int(match.group(1)) if match else float("inf")
+    checkpoints_sorted = sorted(all_revisions, key=parse_step)
+    stage1_ckpts = [c for c in checkpoints_sorted if "stage1" in c]
+    stage2_ckpts = [c for c in checkpoints_sorted if "stage2" in c]
+    min_k_stage1 = 40
+    if stage1_ckpts and stage2_ckpts:
+        print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
+        logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
+        selected1 = [stage1_ckpts[i] for i in logstage1]
+        
+        # treat stage2 differently
+        ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
+        n_ingredients = np.unique(ingredients_list)
+        min_k_stage2 = 5
+        selected2 = []
+        for ingredient in n_ingredients: 
+            # filter stage2 checkpoints for those trained on the current ingredient
+            current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
+            # grab the same logspaced indices for each ingredient in stage2
+            logstage2 = sample_log_indices(min_k_stage2, current_list)
+            selected2.append([current_list[i] for i in logstage2])
+        all_selected = selected1 + selected2 
+        return [item for sublist in all_selected for item in (sublist if isinstance(sublist, list) else [sublist])]
+        
+    print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
+    indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
+    return [checkpoints_sorted[i] for i in indices]
 
+    
 def next_seq_prob(model, tokenizer, seen, unseen):
     device = next(model.parameters()).device  # get model's actual device
     input_ids = tokenizer.encode(seen, return_tensors="pt").to(device)
@@ -74,7 +118,7 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 def main(model_path, revision = None, suffix=None):
 
     # Set up save path, filename, etc.
-    savepath = f"data/processed/fb_local/"
+    savepath = f"../../data/processed/fb_local/"
     if not os.path.exists(savepath): 
         os.makedirs(savepath)
 
@@ -163,82 +207,32 @@ def main(model_path, revision = None, suffix=None):
 if __name__ == "__main__":
 
     # Set base path to the directory where checkpoints are saved
-    refs = list_repo_refs("allenai/OLMo-2-1124-13B")
-    checkpoints = [r.name for r in refs.branches if "step" in r.name]
+    #refs = list_repo_refs("allenai/OLMo-2-1124-13B")
+    #checkpoints = [r.name for r in refs.branches if "step" in r.name]
 
-    # Sort the list of checkpoints by step or token
-    checkpoints_sorted = sorted(
-    checkpoints,
-    key=lambda x: int(re.search(r'step(\d+)', x).group(1))
-    )
+    model_path = "allenai/OLMo-2-1124-13B"
 
-    # Separate stage 1 checkpoints from stage 2
-    stage1_ckpts = [c for c in checkpoints_sorted if "stage1" in c]
-    stage2_ckpts = [c for c in checkpoints_sorted if "stage2" in c]
+    # Grab the list of available revisions for this model
+    refs = list_repo_refs(model_path)
 
-    logstage1 = sample_log_indices(20,stage1_ckpts)
-    logstage2 = sample_log_indices(10,stage2_ckpts)
+    # Combine and deduplicate all tag/branch names
+    all_revisions = [b.name for b in refs.branches] + [t.name for t in refs.tags]
+    if not all_revisions:
+        print(f"No usable checkpoints found for {model_path}, skipping.")
+        continue
+                
+    revision_list = get_revision_list(model_path, all_revisions)
 
-    # Now add the first and last checkpoints of each stage
-    stage1 = [stage1_ckpts[0], logstage1, stage1_ckpts[-1]]
-    stage1_flat = [elem for item in stage1 for elem in (item if isinstance(item, list) else [item])]
+    print(revision_list)
 
-    stage2 = [stage2_ckpts[0], logstage2]
-    stage2_flat = [elem for item in stage2 for elem in (item if isinstance(item, list) else [item])]
-
-    both_stages = [stage1_flat, stage2_flat]
-
-    selected = [elem for item in both_stages for elem in (item if isinstance(item, list) else [item])]
-    #selected = random.sample(checkpoints, k=5)  # or use the entire list
-    print(selected)
-
-    # selected = [# "stage1-step102500-tokens860B",
-    #             # "stage1-step337000-tokens2827B",
-    #             # "stage1-step596057-tokens5001B"
-    #             # "stage1-step0-tokens0B",
-    #             # "stage1-step1000-tokens9B",
-    #             # "stage1-step10000-tokens84B",
-    #             # "stage1-step35000-tokens294B",
-    #             # "stage1-step100000-tokens839B",
-    #             # "stage1-step150000-tokens1259B",
-    #             # "stage1-step50000-tokens420B",
-    #             # "stage1-step75000-tokens630B",
-    #             "stage1-step60000-tokens504B",
-    #             "stage1-step90000-tokens755B",
-    #             "stage1-step200000-tokens1678B",
-    #             "stage1-step300000-tokens2517B",
-    #             "stage1-step400000-tokens3356B",
-    #             "stage1-step500000-tokens4195B",
-    #             "stage2-ingredient1-step1000-tokens9B",
-
-    #             ]
-
-    #selected = ['stage1-step8000-tokens68B', 'stage1-step64000-tokens537B', 'stage1-step4000-tokens34B', 
-     #           'stage1-step32000-tokens269B', 'stage1-step2000-tokens17B', 'stage1-step16000-tokens135B', 
-       #         'stage1-step1000-tokens9B', 'stage1-step0-tokens0B', 'stage1-step512000-tokens4295B', 
-           #     'stage1-step256000-tokens2148B', 'stage1-step128000-tokens1074B']
-
-    """
-    stage2 =     ['stage2-ingredient4-step32000-tokens269B', 'stage2-ingredient4-step16000-tokens135B', 
-                'stage2-ingredient4-step8000-tokens68B', 'stage2-ingredient4-step4000-tokens34B', 
-                'stage2-ingredient4-step2000-tokens17B', 'stage2-ingredient4-step1000-tokens9B', 
-                'stage2-ingredient3-step8000-tokens68B', 'stage2-ingredient3-step4000-tokens34B', 
-                'stage2-ingredient3-step2000-tokens17B', 'stage2-ingredient3-step1000-tokens9B', 
-                'stage2-ingredient2-step8000-tokens68B', 'stage2-ingredient2-step2000-tokens17B', 
-                'stage2-ingredient1-step8000-tokens68B', 'stage2-ingredient1-step4000-tokens34B', 
-                'stage2-ingredient1-step2000-tokens17B', 'stage2-ingredient1-step1000-tokens9B', 
-                'stage2-ingredient2-step4000-tokens34B']
-    """
-
-    for rev in selected:
-        model_path = "allenai/OLMo-2-1124-13B"
+    for rev in revision_list:
         print(f"Running FB with checkpoint: {rev}")
 
         revision = rev # pass revision into main
         suffix = rev.replace("/", "_") # to tag output files uniquely
         
         # Set up save path, filename, etc.
-        savepath = f"data/processed/fb_local/"
+        savepath = f"../../data/processed/fb_local/"
         if not os.path.exists(savepath): 
             os.makedirs(savepath)
     

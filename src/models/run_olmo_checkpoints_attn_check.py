@@ -64,8 +64,8 @@ def sample_log_indices(k, mylist):
     oversample_factor = 2
     raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
     indices = np.unique(raw.astype(int))
-    if indices[-1] != len(mylist):
-        indices = np.hstack((indices, len(mylist)))
+    if indices[-1] != (len(mylist) - 1):
+        indices = np.hstack((indices, len(mylist)-1))
     if indices[0] != 0:
         indices = np.hstack((0, indices))
     # Redo everything with a larger oversampling factor if you end up with fewer than 
@@ -74,8 +74,8 @@ def sample_log_indices(k, mylist):
         oversample_factor += 1
         raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
         indices = np.unique(raw.astype(int))
-        if indices[-1] != len(mylist):
-            indices = np.hstack((indices, len(mylist)))
+        if indices[-1] != (len(mylist) - 1):
+            indices = np.hstack((indices, len(mylist)-1))
         if indices[0] != 0:
             indices = np.hstack((0, indices))
     return indices
@@ -92,20 +92,25 @@ def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
     if stage1_ckpts and stage2_ckpts:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
         logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
+        selected1 = [stage1_ckpts[i] for i in logstage1]
+        
         # treat stage2 differently
         ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
         n_ingredients = np.unique(ingredients_list)
         min_k_stage2 = 5
-        logstage2 = []
-        for ingredient in range(n_ingredients): 
+        selected2 = []
+        for ingredient in n_ingredients: 
             # filter stage2 checkpoints for those trained on the current ingredient
             current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
             # grab the same logspaced indices for each ingredient in stage2
-            logstage2.append(sample_log_indices(min_k_stage2, current_list))
-        return list(dict.fromkeys([stage1_ckpts[0]] + logstage1 + [stage1_ckpts[-1]] +
-                                  [stage2_ckpts[0]] + logstage2))
+            logstage2 = sample_log_indices(min_k_stage2, current_list)
+            selected2.append([current_list[i] for i in logstage2])
+        all_selected = selected1 + selected2 
+        return [item for sublist in all_selected for item in (sublist if isinstance(sublist, list) else [sublist])]
+        
     print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
-    return sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
+    indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
+    return [checkpoints_sorted[i] for i in indices]
 
 def _answer_probabilities(
     model,
@@ -142,8 +147,8 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision = revision)
 
     # Load attention-check data (canonical Q/As) and stimuli variants, then merge by item
-    df_attn = pd.read_csv("data/raw/fb_attn_check.csv")
-    df_stims = pd.read_csv("data/raw/fb.csv")
+    df_attn = pd.read_csv("../../data/raw/fb_attn_check.csv")
+    df_stims = pd.read_csv("../../data/raw/fb.csv")
 
     df_attn["item"] = df_attn["item"].astype(int)
     df_stims["item"] = df_stims["item"].astype(int)
@@ -265,7 +270,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
 
     name_part = model_path.split("/")[-1]
     filename = f"fb_attn-{name_part}-{suffix or 'default'}.csv"
-    save_dir = "data/processed/attn-checks-local/"
+    save_dir = "../../data/processed/attn-checks-local/"
     os.makedirs(save_dir, exist_ok=True)
     out.to_csv(os.path.join(save_dir, filename), index=False)
 
@@ -345,7 +350,7 @@ if __name__ == "__main__":
 
                 suffix = rev.replace("/", "_")
 
-                savepath = f"data/processed/attn-checks-local/"
+                savepath = f"../../data/processed/attn-checks-local/"
                 if not os.path.exists(savepath): 
                     os.makedirs(savepath)
 
