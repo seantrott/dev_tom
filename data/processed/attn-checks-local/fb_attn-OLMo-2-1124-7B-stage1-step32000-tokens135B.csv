@@ -1,0 +1,769 @@
+item,item_id,condition,question_id,question,correct_answer,distractor_answer,prob_correct,prob_distractor,log_odds,is_correct,model_path,model_shorthand,stage,ingredient,step,tokens_seen
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.325289249420166,0.4949697256088257,-0.6056171435927102,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6145376563072205,0.23784546554088593,1.3694768946739326,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.1278088539838791,0.160322904586792,-0.32699276860525917,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.26129260659217834,0.13906264305114746,0.9099313884014296,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.325289249420166,0.4949697256088257,-0.6056171435927102,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6145376563072205,0.23784546554088593,1.3694768946739326,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.1278088539838791,0.160322904586792,-0.32699276860525917,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.26129260659217834,0.13906264305114746,0.9099313884014296,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.25081726908683777,0.5266647338867188,-1.070248175164068,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.7482836246490479,0.10891357809305191,2.7804013797903293,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.15004239976406097,0.08725637942552567,0.7820377250546758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14082150161266327,0.14185254275798798,-0.01052438010085918,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.25081726908683777,0.5266647338867188,-1.070248175164068,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.7482836246490479,0.10891357809305191,2.7804013797903293,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.15004239976406097,0.08725637942552567,0.7820377250546758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14082150161266327,0.14185254275798798,-0.01052438010085918,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.26380655169487,0.49608471989631653,-0.911106126199262,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.5166073441505432,0.31381717324256897,0.7191438490202321,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.12052413076162338,0.1578042209148407,-0.38881376994220695,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.23982210457324982,0.12007357180118561,0.9980459903676037,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.26380655169487,0.49608471989631653,-0.911106126199262,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.5166073441505432,0.31381717324256897,0.7191438490202321,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.12052413076162338,0.1578042209148407,-0.38881376994220695,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.23982210457324982,0.12007357180118561,0.9980459903676037,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.26371461153030396,0.47980043292045593,-0.8634569511194673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.7205936908721924,0.10308434814214706,2.805360723273109,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.15645195543766022,0.0836460292339325,0.9033507296945024,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14526531100273132,0.14949548244476318,-0.04141165666294017,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.26371461153030396,0.47980043292045593,-0.8634569511194673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.7205936908721924,0.10308434814214706,2.805360723273109,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.15645195543766022,0.0836460292339325,0.9033507296945024,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14526531100273132,0.14949548244476318,-0.04141165666294017,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.31256866455078125,0.5107847452163696,-0.7085422856641925,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6292620301246643,0.22193558514118195,1.503519885112473,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.13135096430778503,0.18665215373039246,-0.5069253636201982,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.2700377106666565,0.13742013275623322,0.9745675112913188,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.31256866455078125,0.5107847452163696,-0.7085422856641925,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6292620301246643,0.22193558514118195,1.503519885112473,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.13135096430778503,0.18665215373039246,-0.5069253636201982,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.2700377106666565,0.13742013275623322,0.9745675112913188,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.29918161034584045,0.4786091148853302,-0.6778263720871873,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6828890442848206,0.16397815942764282,2.0581475164111396,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.17851033806800842,0.10698895156383514,0.7385458060416658,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14859534800052643,0.16237081587314606,-0.1279033985443323,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.29918161034584045,0.4786091148853302,-0.6778263720871873,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6828890442848206,0.16397815942764282,2.0581475164111396,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.17851033806800842,0.10698895156383514,0.7385458060416658,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.14859534800052643,0.16237081587314606,-0.1279033985443323,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.2420043796300888,0.5019177794456482,-1.0524178949776317,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.4879254698753357,0.32840242981910706,0.571195992879033,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.12238962203264236,0.17265042662620544,-0.49637266854796935,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.23540911078453064,0.12158916890621185,0.9531554364705395,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.2420043796300888,0.5019177794456482,-1.0524178949776317,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.4879254698753357,0.32840242981910706,0.571195992879033,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.12238962203264236,0.17265042662620544,-0.49637266854796935,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.23540911078453064,0.12158916890621185,0.9531554364705395,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.32184165716171265,0.4288727045059204,-0.4141984274090555,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6358073353767395,0.18422798812389374,1.7870974071591423,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.18119925260543823,0.10806598514318466,0.7456645129608918,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.15568199753761292,0.16936394572257996,-0.12152465934544314,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,1,"At the start of the story, David put the wine in the",garage,fridge,0.32184165716171265,0.4288727045059204,-0.4141984274090555,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,2,"At the end of the story, the wine was in the",fridge,garage,0.6358073353767395,0.18422798812389374,1.7870974071591423,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,3,The person who put the wine in the garage was,David,Marta,0.18119925260543823,0.10806598514318466,0.7456645129608918,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+7,,,4,The person who moved the wine to the fridge was,Marta,David,0.15568199753761292,0.16936394572257996,-0.12152465934544314,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.7331008911132812,0.08444304764270782,3.1179612060024486,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.4249550998210907,0.19634626805782318,1.1139102390597755,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07414621859788895,0.11297111958265305,-0.6075089797885287,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.25705721974372864,0.1059747189283371,1.2783693923774468,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.7331008911132812,0.08444304764270782,3.1179612060024486,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.4249550998210907,0.19634626805782318,1.1139102390597755,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07414621859788895,0.11297111958265305,-0.6075089797885287,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.25705721974372864,0.1059747189283371,1.2783693923774468,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.714946985244751,0.10666584223508835,2.7447380134296036,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7069142460823059,0.06193576380610466,3.512690599982777,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.09665178507566452,0.0539633072912693,0.8408176074528368,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.08753862231969833,0.1053868904709816,-0.2677038309135411,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.714946985244751,0.10666584223508835,2.7447380134296036,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7069142460823059,0.06193576380610466,3.512690599982777,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.09665178507566452,0.0539633072912693,0.8408176074528368,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.08753862231969833,0.1053868904709816,-0.2677038309135411,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6902710795402527,0.1050555408000946,2.716010786494475,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.4208270311355591,0.2119622677564621,0.9894199089799931,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07345039397478104,0.11438857764005661,-0.6391008636055188,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.24820494651794434,0.11160293966531754,1.1531568386435458,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6902710795402527,0.1050555408000946,2.716010786494475,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.4208270311355591,0.2119622677564621,0.9894199089799931,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07345039397478104,0.11438857764005661,-0.6391008636055188,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.24820494651794434,0.11160293966531754,1.1531568386435458,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.673213005065918,0.1273912638425827,2.401796702025466,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7642078399658203,0.06834273785352707,3.483105108981672,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.09284184873104095,0.05338935926556587,0.7982230158217758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.0822708010673523,0.10694620758295059,-0.3784329278832049,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.673213005065918,0.1273912638425827,2.401796702025466,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7642078399658203,0.06834273785352707,3.483105108981672,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.09284184873104095,0.05338935926556587,0.7982230158217758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.0822708010673523,0.10694620758295059,-0.3784329278832049,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.7207484245300293,0.07866829633712769,3.195641532521423,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.3473271131515503,0.2522835433483124,0.46124893393751243,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07962529361248016,0.14095836877822876,-0.8239704417487314,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.28907087445259094,0.1291661560535431,1.1621951498553889,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.7207484245300293,0.07866829633712769,3.195641532521423,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.3473271131515503,0.2522835433483124,0.46124893393751243,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.07962529361248016,0.14095836877822876,-0.8239704417487314,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.28907087445259094,0.1291661560535431,1.1621951498553889,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6686517596244812,0.11731699109077454,2.5108430618788486,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7046064734458923,0.07633329182863235,3.2064334162315977,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.11057940870523453,0.07561268657445908,0.5483825418401541,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.11992903053760529,0.1216568723320961,-0.02063689365385741,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6686517596244812,0.11731699109077454,2.5108430618788486,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.7046064734458923,0.07633329182863235,3.2064334162315977,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.11057940870523453,0.07561268657445908,0.5483825418401541,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.11992903053760529,0.1216568723320961,-0.02063689365385741,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6632757782936096,0.1085536852478981,2.6112001377700986,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.30093881487846375,0.27157971262931824,0.14809448412943715,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.08177336305379868,0.14547835290431976,-0.83110161719027,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.27798765897750854,0.13622641563415527,1.0290143540141976,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6632757782936096,0.1085536852478981,2.6112001377700986,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.30093881487846375,0.27157971262931824,0.14809448412943715,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.08177336305379868,0.14547835290431976,-0.83110161719027,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.27798765897750854,0.13622641563415527,1.0290143540141976,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6543954014778137,0.12254630029201508,2.416835680823515,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.6561886668205261,0.1270884871482849,2.3682773333773115,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.10480543971061707,0.07645109295845032,0.45510456706356367,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.11656831949949265,0.1266176998615265,-0.11930334133470558,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,1,"At the start of the story, Sarah put the painting in the",hall,bedroom,0.6543954014778137,0.12254630029201508,2.416835680823515,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,2,"At the end of the story, the painting was in the",bedroom,hall,0.6561886668205261,0.1270884871482849,2.3682773333773115,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,3,The person who put the painting in the hall was,Sarah,James,0.10480543971061707,0.07645109295845032,0.45510456706356367,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+8,,,4,The person who moved the painting to the bedroom was,James,Sarah,0.11656831949949265,0.1266176998615265,-0.11930334133470558,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.3808022141456604,0.3397696912288666,0.1644847028294914,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3832293152809143,0.3081400692462921,0.314621628226747,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.19489344954490662,0.1854604333639145,0.07157417062398762,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.20440323650836945,0.20018087327480316,0.030113904737854018,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.3808022141456604,0.3397696912288666,0.1644847028294914,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3832293152809143,0.3081400692462921,0.314621628226747,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.19489344954490662,0.1854604333639145,0.07157417062398762,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.20440323650836945,0.20018087327480316,0.030113904737854018,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.3174329996109009,0.3746543526649475,-0.23910809727679633,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.49706023931503296,0.2005738615989685,1.3092870953436793,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07950495928525925,0.10829772800207138,-0.44588621731435624,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.15362876653671265,0.12580560147762299,0.2882522223244322,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.3174329996109009,0.3746543526649475,-0.23910809727679633,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.49706023931503296,0.2005738615989685,1.3092870953436793,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07950495928525925,0.10829772800207138,-0.44588621731435624,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.15362876653671265,0.12580560147762299,0.2882522223244322,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.34819355607032776,0.35154861211776733,-0.013834695217162744,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.2977789342403412,0.38349321484565735,-0.36495935528758405,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.19828146696090698,0.17147839069366455,0.209523054768592,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.203031986951828,0.20227110385894775,0.0054168032727228855,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.34819355607032776,0.35154861211776733,-0.013834695217162744,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.2977789342403412,0.38349321484565735,-0.36495935528758405,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.19828146696090698,0.17147839069366455,0.209523054768592,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.203031986951828,0.20227110385894775,0.0054168032727228855,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.31921082735061646,0.3595724105834961,-0.1717727420761121,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3714999854564667,0.2746119499206543,0.43596774760500473,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.0832693949341774,0.11075557768344879,-0.41152110919332996,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.16423942148685455,0.12337207049131393,0.41278462301232793,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.31921082735061646,0.3595724105834961,-0.1717727420761121,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3714999854564667,0.2746119499206543,0.43596774760500473,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.0832693949341774,0.11075557768344879,-0.41152110919332996,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.16423942148685455,0.12337207049131393,0.41278462301232793,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.2426224797964096,0.4622318744659424,-0.9299035209824613,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.4830261468887329,0.18810175359249115,1.360587987743684,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.21138343214988708,0.16321098804473877,0.3731241165012997,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.1656874716281891,0.23006437718868256,-0.47357309814216536,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.2426224797964096,0.4622318744659424,-0.9299035209824613,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.4830261468887329,0.18810175359249115,1.360587987743684,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.21138343214988708,0.16321098804473877,0.3731241165012997,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.1656874716281891,0.23006437718868256,-0.47357309814216536,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.22432959079742432,0.4312591850757599,-0.9429352484756846,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.4905553162097931,0.16277678310871124,1.5915208850761973,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07362749427556992,0.0972677618265152,-0.40171711725394643,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.12981711328029633,0.11467339098453522,0.17894991600493984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.22432959079742432,0.4312591850757599,-0.9429352484756846,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.4905553162097931,0.16277678310871124,1.5915208850761973,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07362749427556992,0.0972677618265152,-0.40171711725394643,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.12981711328029633,0.11467339098453522,0.17894991600493984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.24826407432556152,0.39176642894744873,-0.6581182683808082,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.30825573205947876,0.26485905051231384,0.2189029141139517,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.2196292132139206,0.14790356159210205,0.5704131684793873,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.16672614216804504,0.23290914297103882,-0.4822869420197582,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.24826407432556152,0.39176642894744873,-0.6581182683808082,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.30825573205947876,0.26485905051231384,0.2189029141139517,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.2196292132139206,0.14790356159210205,0.5704131684793873,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.16672614216804504,0.23290914297103882,-0.4822869420197582,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.2341616302728653,0.3827511966228485,-0.708902192953248,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3720107078552246,0.1944391280412674,0.9360255785593907,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07856719195842743,0.0984470322728157,-0.32542071764390995,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.1365199089050293,0.11826736479997635,0.20705933170503046,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,1,"At the start of the story, Lisa put the grater in the",cupboard,drawer,0.2341616302728653,0.3827511966228485,-0.708902192953248,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,2,"At the end of the story, the grater was in the",drawer,cupboard,0.3720107078552246,0.1944391280412674,0.9360255785593907,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,3,The person who put the grater in the cupboard was,Lisa,Robert,0.07856719195842743,0.0984470322728157,-0.32542071764390995,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+9,,,4,The person who moved the grater to the drawer was,Robert,Lisa,0.1365199089050293,0.11826736479997635,0.20705933170503046,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.42120975255966187,0.32450273633003235,0.3763081968358541,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.27704980969429016,0.17291678488254547,0.6800674591180319,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.0543944276869297,0.5378386974334717,-3.3056427901350474,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5921024084091187,0.04332512617111206,3.772570866103885,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.42120975255966187,0.32450273633003235,0.3763081968358541,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.27704980969429016,0.17291678488254547,0.6800674591180319,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.0543944276869297,0.5378386974334717,-3.3056427901350474,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5921024084091187,0.04332512617111206,3.772570866103885,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.33549046516418457,0.3583091199398041,-0.09493299975248087,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.3350759446620941,0.18120738863945007,0.8868463364248451,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.12921065092086792,0.22156918048858643,-0.7780322241649051,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.16889682412147522,0.10328799486160278,0.709469620591549,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.3394724726676941,0.35570400953292847,-0.06738264354479231,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.33628928661346436,0.18291524052619934,0.8785275330531364,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.1361972689628601,0.23624424636363983,-0.7945814188688555,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.18527093529701233,0.11195789277553558,0.7266803353220137,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.6036692261695862,0.17842617630958557,1.7584309735979828,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.16302010416984558,0.2636147141456604,-0.6933810060248102,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.040089093148708344,0.6081678867340088,-3.923187951420706,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5725222826004028,0.0460394062101841,3.636390712426018,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.6036692261695862,0.17842617630958557,1.7584309735979828,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.16302010416984558,0.2636147141456604,-0.6933810060248102,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.040089093148708344,0.6081678867340088,-3.923187951420706,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5725222826004028,0.0460394062101841,3.636390712426018,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.5453110337257385,0.20755310356616974,1.3935988420926098,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.19508464634418488,0.47111719846725464,-1.2719857609114706,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.09371595829725266,0.18945135176181793,-1.0154607923923575,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.14076651632785797,0.08412010967731476,0.7427815694234968,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.5472965240478516,0.2035016119480133,1.4272824716212322,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.19305936992168427,0.4717201292514801,-1.288886589317422,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.09906179457902908,0.2067771852016449,-1.0616763525848212,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.15507623553276062,0.09069701284170151,0.7738506786249141,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.32025131583213806,0.41645365953445435,-0.3789514718199567,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.2805272936820984,0.20898813009262085,0.4247201397168782,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.05982284992933273,0.5451934337615967,-3.1879996401719146,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5908947587013245,0.047456786036491394,3.638214898242157,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.32025131583213806,0.41645365953445435,-0.3789514718199567,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.2805272936820984,0.20898813009262085,0.4247201397168782,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.05982284992933273,0.5451934337615967,-3.1879996401719146,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5908947587013245,0.047456786036491394,3.638214898242157,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.25200027227401733,0.44753119349479675,-0.8285629510776272,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.3409850001335144,0.20298407971858978,0.7483416971903832,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.12219703942537308,0.23569421470165253,-0.9477070148029761,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.18248626589775085,0.10639965534210205,0.7782944118214379,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.25662580132484436,0.4428669214248657,-0.7872070163860045,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.3422571122646332,0.20473138988018036,0.7413482050897984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.13045872747898102,0.2465970665216446,-0.9185621764176829,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.19635151326656342,0.11414032429456711,0.7826301496846177,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.5101650953292847,0.25643956661224365,0.9923453198040791,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.17442525923252106,0.28900131583213806,-0.7284670835858996,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.04867655783891678,0.6077228784561157,-3.6421145482472217,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5633994340896606,0.05365223437547684,3.3924479554506948,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.5101650953292847,0.25643956661224365,0.9923453198040791,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.17442525923252106,0.28900131583213806,-0.7284670835858996,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.04867655783891678,0.6077228784561157,-3.6421145482472217,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.5633994340896606,0.05365223437547684,3.3924479554506948,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.465758740901947,0.2793411612510681,0.737554672397406,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.22690428793430328,0.451481431722641,-0.9925827819022488,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.09622626006603241,0.20284472405910492,-1.0758732157809816,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.1503314971923828,0.0853753313422203,0.8162561342310974,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,1,"At the start of the story, John put the shovel in the",toolbox,van,0.4685615301132202,0.27566832304000854,0.7653050135266397,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,2,"At the end of the story, the shovel was in the",van,toolbox,0.2281513810157776,0.4496341049671173,-0.9787600822938476,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,3,The person who put the shovel in the toolbox was,John,Karen,0.10254569351673126,0.21636232733726501,-1.0771824152458154,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+10,,,4,The person who moved the shovel to the van was,Karen,John,0.16294722259044647,0.0918273776769638,0.8274085096686238,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.0900932177901268,0.40366098284721375,-2.163653735942657,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.6423070430755615,0.053572408854961395,3.5837010434378285,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005522078834474087,0.1721048653125763,-4.961932587626271,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.10997612774372101,0.008075968362390995,3.767411326207785,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.0900932177901268,0.40366098284721375,-2.163653735942657,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.6423070430755615,0.053572408854961395,3.5837010434378285,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005522078834474087,0.1721048653125763,-4.961932587626271,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.10997612774372101,0.008075968362390995,3.767411326207785,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.11494448781013489,0.2158402055501938,-0.9090263443792065,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.4993983805179596,0.09293755143880844,2.4258576020303675,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005621771328151226,0.2349994033575058,-5.385488512021615,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.240348219871521,0.010757796466350555,4.4816716141198905,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.11494448781013489,0.2158402055501938,-0.9090263443792065,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.4993983805179596,0.09293755143880844,2.4258576020303675,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005621771328151226,0.2349994033575058,-5.385488512021615,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.240348219871521,0.010757796466350555,4.4816716141198905,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.1245630607008934,0.34968143701553345,-1.4891649128600748,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.46911635994911194,0.10236348956823349,2.196244579454276,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005774626508355141,0.18356859683990479,-4.990447828334667,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.1474880427122116,0.008941397070884705,4.0439539189703675,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.1245630607008934,0.34968143701553345,-1.4891649128600748,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.46911635994911194,0.10236348956823349,2.196244579454276,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005774626508355141,0.18356859683990479,-4.990447828334667,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.1474880427122116,0.008941397070884705,4.0439539189703675,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.136736661195755,0.19833119213581085,-0.5365114888737673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.3299638032913208,0.14472030103206635,1.189040456888009,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005337932612746954,0.22100690007209778,-5.371666509888201,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.22496050596237183,0.010479499585926533,4.424030011844941,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.136736661195755,0.19833119213581085,-0.5365114888737673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.3299638032913208,0.14472030103206635,1.189040456888009,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.005337932612746954,0.22100690007209778,-5.371666509888201,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.22496050596237183,0.010479499585926533,4.424030011844941,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.10901127010583878,0.4252117872238159,-1.9637042947100964,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.6082075834274292,0.08066872507333755,2.9144824445126574,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.006137191317975521,0.20601391792297363,-5.069019438223118,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.1306346207857132,0.008876392617821693,3.8794199985735958,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.1209624782204628,0.4436591863632202,-1.874892238892003,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.608394980430603,0.09077493101358414,2.7446424164098584,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.010223805904388428,0.21019209921360016,-4.361704184032698,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.14159636199474335,0.014831727370619774,3.255025663504641,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.13686475157737732,0.2446575164794922,-0.8380126667263162,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.47354045510292053,0.11395658552646637,2.055003381999633,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.006134341936558485,0.2696203887462616,-5.457877200670316,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.23642706871032715,0.010470044799149036,4.497055699808915,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.13686475157737732,0.2446575164794922,-0.8380126667263162,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.47354045510292053,0.11395658552646637,2.055003381999633,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.006134341936558485,0.2696203887462616,-5.457877200670316,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.23642706871032715,0.010470044799149036,4.497055699808915,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.11845319718122482,0.3991982042789459,-1.752788091967336,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.4795656204223633,0.12037594616413116,1.9941810992942834,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.0069114090874791145,0.2214593142271042,-5.001917990684019,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.17255982756614685,0.010575676336884499,4.028274805160453,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.11796537041664124,0.45182591676712036,-1.937403617969021,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.528876781463623,0.12209552526473999,2.1149213128525957,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.010726351290941238,0.21682831645011902,-4.3373218631134725,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.1760724037885666,0.015774061903357506,3.480542695558387,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.13898463547229767,0.2435307651758194,-0.8091786349462685,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.34510043263435364,0.15861088037490845,1.1215245421046913,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.00586721720173955,0.2558589279651642,-5.446528364616759,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.23275484144687653,0.010682123713195324,4.44554077418024,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,1,"At the start of the story, Patrick put the ticket in the",suitcase,backpack,0.13898463547229767,0.2435307651758194,-0.8091786349462685,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,2,"At the end of the story, the ticket was in the",backpack,suitcase,0.34510043263435364,0.15861088037490845,1.1215245421046913,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,3,The person who put the ticket in the suitcase was,Patrick,Nicole,0.00586721720173955,0.2558589279651642,-5.446528364616759,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+11,,,4,The person who moved the ticket to the backpack was,Nicole,Patrick,0.23275484144687653,0.010682123713195324,4.44554077418024,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.29783934354782104,0.5204347372055054,-0.8051829186005354,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.7267688512802124,0.11169290542602539,2.701959037364007,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.010652860626578331,0.11328180134296417,-3.4106033152618815,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.15364162623882294,0.011161670088768005,3.78294432468349,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.29783934354782104,0.5204347372055054,-0.8051829186005354,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.7267688512802124,0.11169290542602539,2.701959037364007,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.010652860626578331,0.11328180134296417,-3.4106033152618815,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.15364162623882294,0.011161670088768005,3.78294432468349,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.2714614272117615,0.5478171706199646,-1.0129472705385607,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.8073994517326355,0.08310388773679733,3.280294731813633,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.006747824605554342,0.06377679854631424,-3.2405372996904735,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.09735708683729172,0.008420843631029129,3.5312493195947754,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.2714614272117615,0.5478171706199646,-1.0129472705385607,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.8073994517326355,0.08310388773679733,3.280294731813633,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.006747824605554342,0.06377679854631424,-3.2405372996904735,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.09735708683729172,0.008420843631029129,3.5312493195947754,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.48849067091941833,0.3279710114002228,0.5747627062065029,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.43673062324523926,0.4111221134662628,0.08717672165510097,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.009233836084604263,0.10782671719789505,-3.5456407592524903,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11998448520898819,0.009449497796595097,3.6664663997756053,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.48849067091941833,0.3279710114002228,0.5747627062065029,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.43673062324523926,0.4111221134662628,0.08717672165510097,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.009233836084604263,0.10782671719789505,-3.5456407592524903,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11998448520898819,0.009449497796595097,3.6664663997756053,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.4836602509021759,0.33634525537490845,0.5240510692537884,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.35719335079193115,0.5173149108886719,-0.5343375511118988,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.005542397033423185,0.07922033965587616,-3.8372889187012498,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11479339003562927,0.006569357588887215,4.127143464081298,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.4836602509021759,0.33634525537490845,0.5240510692537884,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.35719335079193115,0.5173149108886719,-0.5343375511118988,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.005542397033423185,0.07922033965587616,-3.8372889187012498,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11479339003562927,0.006569357588887215,4.127143464081298,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.32534122467041016,0.520363986492157,-0.6775674781538324,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.6899743676185608,0.16010431945323944,2.107530536275346,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.012178567238152027,0.10356306284666061,-3.088093217469379,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.1350298672914505,0.012023810297250748,3.4893124947763026,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.32534122467041016,0.520363986492157,-0.6775674781538324,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.6899743676185608,0.16010431945323944,2.107530536275346,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.012178567238152027,0.10356306284666061,-3.088093217469379,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.1350298672914505,0.012023810297250748,3.4893124947763026,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.27376100420951843,0.5868979692459106,-1.100192759144405,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.7933672070503235,0.10970545560121536,2.8543534944456783,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.0073817940428853035,0.05533607304096222,-2.9061768747475223,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.08782977610826492,0.00958882737904787,3.195283822628806,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.27376100420951843,0.5868979692459106,-1.100192759144405,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.7933672070503235,0.10970545560121536,2.8543534944456783,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.0073817940428853035,0.05533607304096222,-2.9061768747475223,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.08782977610826492,0.00958882737904787,3.195283822628806,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.5027524828910828,0.35172978043556213,0.5153808104646614,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.4423034191131592,0.4343782663345337,0.026084473463865946,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.011234148405492306,0.1066225916147232,-3.2465504828184666,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11404908448457718,0.010859379544854164,3.392641284002941,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.5027524828910828,0.35172978043556213,0.5153808104646614,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.4423034191131592,0.4343782663345337,0.026084473463865946,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.011234148405492306,0.1066225916147232,-3.2465504828184666,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.11404908448457718,0.010859379544854164,3.392641284002941,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.5048539042472839,0.34862592816352844,0.5341860877252204,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.33512082695961,0.5571162104606628,-0.7332969454507576,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.005640613380819559,0.08775622397661209,-3.9595774898210494,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.12547840178012848,0.00714496336877346,4.134368633717661,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,1,"At the start of the story, Hannah put the saddle in the",stable,hut,0.5044894814491272,0.3487106263637543,0.5327938611461586,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,2,"At the end of the story, the saddle was in the",hut,stable,0.3439202308654785,0.551952064037323,-0.6824689933060245,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,3,The person who put the saddle in the stable was,Hannah,Martin,0.0062152608297765255,0.0729002058506012,-3.552036046507727,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+12,,,4,The person who moved the saddle to the hut was,Martin,Hannah,0.10373008996248245,0.0074165500700473785,3.805942391137788,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.7291935086250305,0.20882895588874817,1.8039799508134329,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.3824399411678314,0.509516179561615,-0.4138947565321193,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.029493192210793495,0.3431456983089447,-3.540367382298606,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.48435431718826294,0.0618414506316185,2.969416734423255,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.7291935086250305,0.20882895588874817,1.8039799508134329,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.3824399411678314,0.509516179561615,-0.4138947565321193,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.029493192210793495,0.3431456983089447,-3.540367382298606,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.48435431718826294,0.0618414506316185,2.969416734423255,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.653322160243988,0.24864080548286438,1.3937314932649216,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.303451269865036,0.5496244430541992,-0.856981307590595,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.020533528178930283,0.27360042929649353,-3.736017048588975,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.47549694776535034,0.029635434970259666,4.004040942652968,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.653322160243988,0.24864080548286438,1.3937314932649216,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.303451269865036,0.5496244430541992,-0.856981307590595,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.020533528178930283,0.27360042929649353,-3.736017048588975,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.47549694776535034,0.029635434970259666,4.004040942652968,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.65294349193573,0.2690761387348175,1.2789436805517285,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.29484236240386963,0.5859134793281555,-0.9907438174102244,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.030919237062335014,0.3159589469432831,-3.353160492822254,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.47005903720855713,0.054970528930425644,3.0961116976231744,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.65294349193573,0.2690761387348175,1.2789436805517285,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.29484236240386963,0.5859134793281555,-0.9907438174102244,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.030919237062335014,0.3159589469432831,-3.353160492822254,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.47005903720855713,0.054970528930425644,3.0961116976231744,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.6321398615837097,0.2651898264884949,1.2532183612396712,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.28381818532943726,0.5733743906021118,-1.014510437558363,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.020676983520388603,0.2719462513923645,-3.7172239019953666,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.457408607006073,0.028925996273756027,3.9830449582017926,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.6321398615837097,0.2651898264884949,1.2532183612396712,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.28381818532943726,0.5733743906021118,-1.014510437558363,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.020676983520388603,0.2719462513923645,-3.7172239019953666,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.457408607006073,0.028925996273756027,3.9830449582017926,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5840063095092773,0.3482641577720642,0.7458019528051354,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.4770717918872833,0.42469215393066406,0.16778893019854044,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.03978754207491875,0.31671813130378723,-2.9928107777252912,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.4308549463748932,0.07173074036836624,2.5865388199226484,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5840063095092773,0.3482641577720642,0.7458019528051354,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.4770717918872833,0.42469215393066406,0.16778893019854044,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.03978754207491875,0.31671813130378723,-2.9928107777252912,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.4308549463748932,0.07173074036836624,2.5865388199226484,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5060194730758667,0.38290780782699585,0.4021958267084003,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.40536725521087646,0.4504011869430542,-0.1519810739859497,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.022388700395822525,0.2530807852745056,-3.498755286309444,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.45617786049842834,0.03174997866153717,3.844768903201129,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5060194730758667,0.38290780782699585,0.4021958267084003,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.40536725521087646,0.4504011869430542,-0.1519810739859497,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.022388700395822525,0.2530807852745056,-3.498755286309444,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.45617786049842834,0.03174997866153717,3.844768903201129,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5685034394264221,0.3487530052661896,0.7049634284465822,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.3344392776489258,0.5489726662635803,-0.714990025994132,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.043686866760253906,0.29836559295654297,-2.771809631964654,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.4176247715950012,0.06972089409828186,2.5825443127646954,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.5685034394264221,0.3487530052661896,0.7049634284465822,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.3344392776489258,0.5489726662635803,-0.714990025994132,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.043686866760253906,0.29836559295654297,-2.771809631964654,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.4176247715950012,0.06972089409828186,2.5825443127646954,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.49421241879463196,0.3875797986984253,0.35063788676432317,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.36628463864326477,0.49389123916625977,-0.4312281797298111,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.023289287462830544,0.2538967430591583,-3.446503482482886,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.44304928183555603,0.03069642186164856,3.851324781148328,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,1,"At the start of the story, Sean put the book in the",box,basket,0.49421241879463196,0.3875797986984253,0.35063788676432317,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,2,"At the end of the story, the book was in the",basket,box,0.36628463864326477,0.49389123916625977,-0.4312281797298111,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,3,The person who put the book in the box was,Sean,Anna,0.023289287462830544,0.2538967430591583,-3.446503482482886,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+1,,,4,The person who moved the book to the basket was,Anna,Sean,0.44304928183555603,0.03069642186164856,3.851324781148328,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6278135776519775,0.1859252154827118,1.7556137860624885,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.8494625687599182,0.042608942836523056,4.317322214406903,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2293083667755127,0.26974600553512573,-0.23431260059003098,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.27715086936950684,0.2338174730539322,0.24528878736948728,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6278135776519775,0.1859252154827118,1.7556137860624885,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.8494625687599182,0.042608942836523056,4.317322214406903,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2293083667755127,0.26974600553512573,-0.23431260059003098,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.27715086936950684,0.2338174730539322,0.24528878736948728,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6276581287384033,0.18086138367652893,1.7950945633534736,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6579313278198242,0.18196941912174225,1.8542409905931887,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1304681897163391,0.38965144753456116,-1.5784860789212916,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.4217807352542877,0.1265292465686798,1.7370223070231756,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6276581287384033,0.18086138367652893,1.7950945633534736,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6579313278198242,0.18196941912174225,1.8542409905931887,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1304681897163391,0.38965144753456116,-1.5784860789212916,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.4217807352542877,0.1265292465686798,1.7370223070231756,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6076374650001526,0.21172113716602325,1.5210455166842043,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.82523113489151,0.053592801094055176,3.9446871258747125,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2443741112947464,0.28149494528770447,-0.20401756069703086,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.2760041356086731,0.27801769971847534,-0.010486849294871623,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6076374650001526,0.21172113716602325,1.5210455166842043,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.82523113489151,0.053592801094055176,3.9446871258747125,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2443741112947464,0.28149494528770447,-0.20401756069703086,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.2760041356086731,0.27801769971847534,-0.010486849294871623,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.5797868371009827,0.22846265137195587,1.343564244677738,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6765397787094116,0.15000692009925842,2.173145706790789,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1196819618344307,0.3892797827720642,-1.7016016910468963,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.42710140347480774,0.10791081190109253,1.9847392188299966,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.5797868371009827,0.22846265137195587,1.343564244677738,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6765397787094116,0.15000692009925842,2.173145706790789,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1196819618344307,0.3892797827720642,-1.7016016910468963,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.42710140347480774,0.10791081190109253,1.9847392188299966,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.629306972026825,0.1703968346118927,1.8848653909750792,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.8276317119598389,0.04619554057717323,4.163163430399186,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.25369247794151306,0.2519022524356842,0.010216721409313323,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.24863961338996887,0.23968420922756195,0.05292130051084745,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.629306972026825,0.1703968346118927,1.8848653909750792,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.8276317119598389,0.04619554057717323,4.163163430399186,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.25369247794151306,0.2519022524356842,0.010216721409313323,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.24863961338996887,0.23968420922756195,0.05292130051084745,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6404116749763489,0.15740524232387543,2.024516018961325,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6614755988121033,0.1619587540626526,2.0300614882586485,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.13520286977291107,0.37017732858657837,-1.4530907663055859,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.39003145694732666,0.12748755514621735,1.6132340618750212,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6404116749763489,0.15740524232387543,2.024516018961325,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.6614755988121033,0.1619587540626526,2.0300614882586485,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.13520286977291107,0.37017732858657837,-1.4530907663055859,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.39003145694732666,0.12748755514621735,1.6132340618750212,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6062780618667603,0.19800683856010437,1.614429362045858,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.7691754102706909,0.07580526918172836,3.342942604053892,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2532189190387726,0.28046512603759766,-0.14743619396693947,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.26366961002349854,0.271170973777771,-0.040471461286900975,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6062780618667603,0.19800683856010437,1.614429362045858,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.7691754102706909,0.07580526918172836,3.342942604053892,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.2532189190387726,0.28046512603759766,-0.14743619396693947,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.26366961002349854,0.271170973777771,-0.040471461286900975,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6270056962966919,0.17543038725852966,1.8375798833156385,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.5231520533561707,0.2642759382724762,0.9851852477285961,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1185678243637085,0.3990497589111328,-1.7508560921270075,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.4170907735824585,0.10681453347206116,1.965253441547517,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,1,"At the start of the story, Mary put the jam in the",cupboard,fridge,0.6270056962966919,0.17543038725852966,1.8375798833156385,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,2,"At the end of the story, the jam was in the",fridge,cupboard,0.5231520533561707,0.2642759382724762,0.9851852477285961,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,3,The person who put the jam in the cupboard was,Mary,James,0.1185678243637085,0.3990497589111328,-1.7508560921270075,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+2,,,4,The person who moved the jam to the fridge was,James,Mary,0.4170907735824585,0.10681453347206116,1.965253441547517,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5737399458885193,0.1788807064294815,1.681399176483742,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6532148718833923,0.12212591618299484,2.419188252155649,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.019199471920728683,0.20499667525291443,-3.4164619760677906,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.22937777638435364,0.021039186045527458,3.44657482392347,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5737399458885193,0.1788807064294815,1.681399176483742,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6532148718833923,0.12212591618299484,2.419188252155649,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.019199471920728683,0.20499667525291443,-3.4164619760677906,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.22937777638435364,0.021039186045527458,3.44657482392347,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5780709981918335,0.08240143954753876,2.810505247669222,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.3693806529045105,0.2316022515296936,0.673459025477638,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.013583478517830372,0.2270716428756714,-4.063222667087282,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.2803652286529541,0.015044755302369595,4.219974888031708,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5780709981918335,0.08240143954753876,2.810505247669222,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.3693806529045105,0.2316022515296936,0.673459025477638,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.013583478517830372,0.2270716428756714,-4.063222667087282,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.2803652286529541,0.015044755302369595,4.219974888031708,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5558695793151855,0.2422059029340744,1.1985124047066618,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.5865010619163513,0.1955975443124771,1.5842454627336802,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.01814403012394905,0.20875123143196106,-3.5242178623606817,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.24124377965927124,0.02062225714325905,3.548217591710354,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5558695793151855,0.2422059029340744,1.1985124047066618,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.5865010619163513,0.1955975443124771,1.5842454627336802,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.01814403012394905,0.20875123143196106,-3.5242178623606817,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.24124377965927124,0.02062225714325905,3.548217591710354,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5328899621963501,0.15484927594661713,1.7829730207797894,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.33978351950645447,0.2760944664478302,0.29945390592173554,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.012710324488580227,0.23318521678447723,-4.19740356182259,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.2784174978733063,0.014182562939822674,4.295059712392982,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5328899621963501,0.15484927594661713,1.7829730207797894,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.33978351950645447,0.2760944664478302,0.29945390592173554,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.012710324488580227,0.23318521678447723,-4.19740356182259,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.2784174978733063,0.014182562939822674,4.295059712392982,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.545357882976532,0.1885271817445755,1.5324307423102859,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6619632840156555,0.09979749470949173,2.7296756956688886,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.01920974627137184,0.17193856835365295,-3.1619828302143373,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.18817850947380066,0.020957401022315025,3.166570156556608,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.545357882976532,0.1885271817445755,1.5324307423102859,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6619632840156555,0.09979749470949173,2.7296756956688886,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.01920974627137184,0.17193856835365295,-3.1619828302143373,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.18817850947380066,0.020957401022315025,3.166570156556608,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5116704702377319,0.10126856714487076,2.3370285302509513,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.38549408316612244,0.21453584730625153,0.8454899855924758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.014521211385726929,0.19469444453716278,-3.744978002706035,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.22922945022583008,0.016093946993350983,3.8322023147731623,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.5116704702377319,0.10126856714487076,2.3370285302509513,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.38549408316612244,0.21453584730625153,0.8454899855924758,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.014521211385726929,0.19469444453716278,-3.744978002706035,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.22922945022583008,0.016093946993350983,3.8322023147731623,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.52364581823349,0.2633048892021179,0.9918570260312256,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6002984046936035,0.1691790372133255,1.8271290171843708,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.018730979412794113,0.176020085811615,-3.232241822625866,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.20498453080654144,0.020900286734104156,3.2939204005052924,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.52364581823349,0.2633048892021179,0.9918570260312256,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.6002984046936035,0.1691790372133255,1.8271290171843708,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.018730979412794113,0.176020085811615,-3.232241822625866,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.20498453080654144,0.020900286734104156,3.2939204005052924,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.48874035477638245,0.15789854526519775,1.6300703517446045,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.3071056604385376,0.28493890166282654,0.10808250271976297,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.013481806963682175,0.19861054420471191,-3.8808564386706976,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.23026758432388306,0.01534782350063324,3.9072053472279444,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,1,"At the start of the story, Cameron put the shirt in the",sink,basket,0.48874035477638245,0.15789854526519775,1.6300703517446045,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,2,"At the end of the story, the shirt was in the",basket,sink,0.3071056604385376,0.28493890166282654,0.10808250271976297,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,3,The person who put the shirt in the sink was,Cameron,Helen,0.013481806963682175,0.19861054420471191,-3.8808564386706976,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+3,,,4,The person who moved the shirt to the basket was,Helen,Cameron,0.23026758432388306,0.01534782350063324,3.9072053472279444,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.856079638004303,0.10677492618560791,3.003172110957616,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.6593926548957825,0.24539810419082642,1.4260137130496195,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.00856174435466528,0.5865758061408997,-6.098268998100364,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5756046772003174,0.011840570718050003,5.603267789090418,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.856079638004303,0.10677492618560791,3.003172110957616,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.6593926548957825,0.24539810419082642,1.4260137130496195,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.00856174435466528,0.5865758061408997,-6.098268998100364,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5756046772003174,0.011840570718050003,5.603267789090418,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8904685378074646,0.07381589710712433,3.5925611827484536,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.4751846492290497,0.3977341651916504,0.2566837364960434,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.010390379466116428,0.5095047354698181,-5.615775306384086,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5001890063285828,0.011916719377040863,5.39141432115668,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8904685378074646,0.07381589710712433,3.5925611827484536,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.4751846492290497,0.3977341651916504,0.2566837364960434,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.010390379466116428,0.5095047354698181,-5.615775306384086,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5001890063285828,0.011916719377040863,5.39141432115668,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8966607451438904,0.07151161879301071,3.6483126726918935,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5422406792640686,0.38697096705436707,0.48670801863640983,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.009601596742868423,0.5727161169052124,-5.898402047375049,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.582720935344696,0.013837214559316635,5.396179681324145,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8966607451438904,0.07151161879301071,3.6483126726918935,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5422406792640686,0.38697096705436707,0.48670801863640983,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.009601596742868423,0.5727161169052124,-5.898402047375049,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.582720935344696,0.013837214559316635,5.396179681324145,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8914569616317749,0.07495437562465668,3.572080541910612,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.37558239698410034,0.5310893654823303,-0.49982519373784673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.008200248703360558,0.5069316029548645,-5.949979630958188,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5091860890388489,0.010100937448441982,5.655631907321121,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8914569616317749,0.07495437562465668,3.572080541910612,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.37558239698410034,0.5310893654823303,-0.49982519373784673,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.008200248703360558,0.5069316029548645,-5.949979630958188,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5091860890388489,0.010100937448441982,5.655631907321121,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.7584514021873474,0.19341471791267395,1.9713591616566262,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5654664039611816,0.3116574287414551,0.8594802103785197,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.01180027611553669,0.5480702519416809,-5.53746830764726,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5517709851264954,0.016162315383553505,5.093363798732811,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.7584514021873474,0.19341471791267395,1.9713591616566262,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5654664039611816,0.3116574287414551,0.8594802103785197,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.01180027611553669,0.5480702519416809,-5.53746830764726,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5517709851264954,0.016162315383553505,5.093363798732811,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.7998641729354858,0.15197578072547913,2.3959136027393733,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.40973401069641113,0.41389280557632446,-0.014569520133912904,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.013878951780498028,0.47528526186943054,-5.097823149385958,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.4774954319000244,0.015001258812844753,4.992331458292455,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.7998641729354858,0.15197578072547913,2.3959136027393733,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.40973401069641113,0.41389280557632446,-0.014569520133912904,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.013878951780498028,0.47528526186943054,-5.097823149385958,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.4774954319000244,0.015001258812844753,4.992331458292455,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8164197206497192,0.14189468324184418,2.524490498155431,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5154262185096741,0.4007740020751953,0.3629770005742068,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.011007498018443584,0.5540787577629089,-5.65353256847335,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5597190260887146,0.016104603186249733,5.119157770370667,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8164197206497192,0.14189468324184418,2.524490498155431,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.5154262185096741,0.4007740020751953,0.3629770005742068,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.011007498018443584,0.5540787577629089,-5.65353256847335,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5597190260887146,0.016104603186249733,5.119157770370667,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8054335117340088,0.14779984951019287,2.446120699323161,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.37866541743278503,0.5007640719413757,-0.403207388192875,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.011360205709934235,0.5042039752006531,-5.471946628182315,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5126237869262695,0.012683170847594738,5.3369130488744,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,1,"At the start of the story, Paula put the football in the",shed,garage,0.8054335117340088,0.14779984951019287,2.446120699323161,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,2,"At the end of the story, the football was in the",garage,shed,0.37866541743278503,0.5007640719413757,-0.403207388192875,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,3,The person who put the football in the shed was,Paula,Tim,0.011360205709934235,0.5042039752006531,-5.471946628182315,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+4,,,4,The person who moved the football to the garage was,Tim,Paula,0.5126237869262695,0.012683170847594738,5.3369130488744,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.4784298539161682,0.28510957956314087,0.7467909021508131,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.7645896077156067,0.0687279924750328,3.475715866844884,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.025763634592294693,0.483411967754364,-4.229845149692547,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6072835922241211,0.033914875239133835,4.162380299767129,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.4784298539161682,0.28510957956314087,0.7467909021508131,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.7645896077156067,0.0687279924750328,3.475715866844884,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.025763634592294693,0.483411967754364,-4.229845149692547,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6072835922241211,0.033914875239133835,4.162380299767129,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.486194372177124,0.23940666019916534,1.0220699058546114,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6759193539619446,0.11258731037378311,2.5858068927777595,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02366073802113533,0.3656713664531708,-3.949980682490708,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.43869510293006897,0.038567617535591125,3.5077566686946984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.486194372177124,0.23940666019916534,1.0220699058546114,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6759193539619446,0.11258731037378311,2.5858068927777595,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02366073802113533,0.3656713664531708,-3.949980682490708,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.43869510293006897,0.038567617535591125,3.5077566686946984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.48324212431907654,0.3070162534713745,0.6544311861411339,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6539671421051025,0.1649157702922821,1.987488785816033,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.026950350031256676,0.5047003626823425,-4.227051207429487,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6350393295288086,0.03256691247224808,4.285367088592619,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.48324212431907654,0.3070162534713745,0.6544311861411339,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6539671421051025,0.1649157702922821,1.987488785816033,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.026950350031256676,0.5047003626823425,-4.227051207429487,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6350393295288086,0.03256691247224808,4.285367088592619,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.42355725169181824,0.33548352122306824,0.33631508624893797,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6777744889259338,0.12520070374011993,2.436562664031948,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02381395548582077,0.3769269287586212,-3.9844056924913347,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.44909974932670593,0.03592569753527641,3.6439478433391796,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.42355725169181824,0.33548352122306824,0.33631508624893797,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6777744889259338,0.12520070374011993,2.436562664031948,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02381395548582077,0.3769269287586212,-3.9844056924913347,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.44909974932670593,0.03592569753527641,3.6439478433391796,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.47626322507858276,0.29020050168037415,0.7147091410807545,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.7323060035705566,0.09662666916847229,2.9219532872831415,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02640679106116295,0.49372467398643494,-4.224725844090455,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.5999051928520203,0.0330609530210495,4.18153430197298,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.47626322507858276,0.29020050168037415,0.7147091410807545,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.7323060035705566,0.09662666916847229,2.9219532872831415,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02640679106116295,0.49372467398643494,-4.224725844090455,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.5999051928520203,0.0330609530210495,4.18153430197298,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.5384365916252136,0.2144065797328949,1.3284272773662424,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6140910983085632,0.18181979656219482,1.7559434014328041,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.023027559742331505,0.37419945001602173,-4.022373997914263,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.43359848856925964,0.035679891705513,3.6031765862222267,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.5384365916252136,0.2144065797328949,1.3284272773662424,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.6140910983085632,0.18181979656219482,1.7559434014328041,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.023027559742331505,0.37419945001602173,-4.022373997914263,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.43359848856925964,0.035679891705513,3.6031765862222267,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.5449578762054443,0.25091826915740967,1.1189272016722909,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.5252320170402527,0.28249478340148926,0.8947306358573045,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02719728648662567,0.5076273679733276,-4.222235228072866,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6254585385322571,0.032265499234199524,4.276849998572394,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.5449578762054443,0.25091826915740967,1.1189272016722909,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.5252320170402527,0.28249478340148926,0.8947306358573045,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.02719728648662567,0.5076273679733276,-4.222235228072866,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.6254585385322571,0.032265499234199524,4.276849998572394,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.4984793961048126,0.2764037251472473,0.8507568148874551,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.5819638967514038,0.207564115524292,1.4873726089165196,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.023001955822110176,0.37268441915512085,-4.018126063757489,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.4457031488418579,0.034005362540483475,3.7122489755008727,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,1,"At the start of the story, Ed put the keys in the",hall,study,0.4984793961048126,0.2764037251472473,0.8507568148874551,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,2,"At the end of the story, the keys were in the",study,hall,0.5819638967514038,0.207564115524292,1.4873726089165196,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,3,The person who put the keys in the hall was,Ed,Seana,0.023001955822110176,0.37268441915512085,-4.018126063757489,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+5,,,4,The person who moved the keys to the study was,Seana,Ed,0.4457031488418579,0.034005362540483475,3.7122489755008727,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5816684365272522,0.2210065722465515,1.3961077475270984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.43503037095069885,0.4270124137401581,0.02683811267456559,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.08484058827161789,0.1578271985054016,-0.8955193182898789,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.16996338963508606,0.07448038458824158,1.1902915936321465,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5816684365272522,0.2210065722465515,1.3961077475270984,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.43503037095069885,0.4270124137401581,0.02683811267456559,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.08484058827161789,0.1578271985054016,-0.8955193182898789,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.16996338963508606,0.07448038458824158,1.1902915936321465,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5612106323242188,0.21461114287376404,1.386817357024447,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.3224932551383972,0.47146689891815186,-0.5478874974368971,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.11102785170078278,0.10397489368915558,0.09468641688099,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1462954431772232,0.09087805449962616,0.6868809776491569,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5612106323242188,0.21461114287376404,1.386817357024447,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.3224932551383972,0.47146689891815186,-0.5478874974368971,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.11102785170078278,0.10397489368915558,0.09468641688099,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1462954431772232,0.09087805449962616,0.6868809776491569,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.8197342157363892,0.0834684818983078,3.2958527803824107,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.11381075531244278,0.8085904717445374,-2.8287723020493387,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.07150907814502716,0.15603744983673096,-1.1256940151743955,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.16547928750514984,0.056555137038230896,1.54892067225091,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.8197342157363892,0.0834684818983078,3.2958527803824107,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.11381075531244278,0.8085904717445374,-2.8287723020493387,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.07150907814502716,0.15603744983673096,-1.1256940151743955,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.16547928750514984,0.056555137038230896,1.54892067225091,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.7631911635398865,0.12151888757944107,2.650863899329407,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.12835031747817993,0.7740205526351929,-2.592285010420273,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.08121704310178757,0.12823085486888885,-0.6588890359534222,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1525285840034485,0.058610714972019196,1.3798432889521997,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.7631911635398865,0.12151888757944107,2.650863899329407,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.12835031747817993,0.7740205526351929,-2.592285010420273,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.08121704310178757,0.12823085486888885,-0.6588890359534222,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1525285840034485,0.058610714972019196,1.3798432889521997,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.6254025101661682,0.19658905267715454,1.66960202426897,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.4498252868652344,0.42135292291641235,0.09433563112866507,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.07236430794000626,0.14171698689460754,-0.9696624960261143,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1505637913942337,0.058030612766742706,1.3754887945586896,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.6254025101661682,0.19658905267715454,1.66960202426897,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.4498252868652344,0.42135292291641235,0.09433563112866507,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.07236430794000626,0.14171698689460754,-0.9696624960261143,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.1505637913942337,0.058030612766742706,1.3754887945586896,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5332828760147095,0.2551773190498352,1.063400899491357,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.38956916332244873,0.42006394267082214,-0.10872946930262306,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.09247750788927078,0.11045648157596588,-0.25630365307635133,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.144054114818573,0.06975343078374863,1.0462747888429493,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.5332828760147095,0.2551773190498352,1.063400899491357,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.38956916332244873,0.42006394267082214,-0.10872946930262306,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.09247750788927078,0.11045648157596588,-0.25630365307635133,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.144054114818573,0.06975343078374863,1.0462747888429493,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.8277767300605774,0.08385402709245682,3.3032897169579134,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.08650070428848267,0.8384647965431213,-3.276966428299586,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.06514601409435272,0.1513119339942932,-1.2157769611212998,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.15435758233070374,0.04946035146713257,1.6419319558270273,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.8277767300605774,0.08385402709245682,3.3032897169579134,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.08650070428848267,0.8384647965431213,-3.276966428299586,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.06514601409435272,0.1513119339942932,-1.2157769611212998,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.15435758233070374,0.04946035146713257,1.6419319558270273,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.7683556079864502,0.12523652613162994,2.6171187731958896,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.10166700184345245,0.8050655722618103,-2.985254796680765,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.06947693973779678,0.12566444277763367,-0.8549703776282498,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.14483149349689484,0.04795602709054947,1.5945913004879926,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,1,"At the start of the story, Laura put the stapler in the",drawer,cabinet,0.7683556079864502,0.12523652613162994,2.6171187731958896,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,2,"At the end of the story, the stapler was in the",cabinet,drawer,0.10166700184345245,0.8050655722618103,-2.985254796680765,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,3,The person who put the stapler in the drawer was,Laura,Ross,0.06947693973779678,0.12566444277763367,-0.8549703776282498,False,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
+6,,,4,The person who moved the stapler to the cabinet was,Ross,Laura,0.14483149349689484,0.04795602709054947,1.5945913004879926,True,allenai/OLMo-2-1124-7B,OLMO 2 7B,stage1,,32000,135B
