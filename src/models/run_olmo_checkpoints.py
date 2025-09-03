@@ -1,5 +1,7 @@
 """Run FB task by loading models from HF locally."""
 
+import argparse
+
 import pandas as pd
 import numpy as np
 import transformers
@@ -12,28 +14,35 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
-
 MODELS = {
     ### OLMo
-    'allenai/OLMo-2-1124-7B': 'OLMo 2 7B',
-    'allenai/OLMo-2-1124-7B-SFT': 'OLMo 2 7B SFT',
-    'allenai/OLMo-2-1124-7B-DPO': 'OLMo 2 7B DPO',
-    'allenai/OLMo-2-1124-7B-Instruct': 'OLMO 2 7B Instruct', 
-    'allenai/OLMo-2-1124-13B': 'OLMO 2 13B',
-    'allenai/OLMo-2-1124-13B-SFT': 'OLMO 2 13B SFT', 
-    'allenai/OLMo-2-1124-13B-DPO': 'OLMo 2 13B DPO', 
-    'allenai/OLMo-2-1124-13B-Instruct': 'OLMO 2 13B Instruct',
-    'allenai/OLMo-2-0325-32B': 'OLMO 2 32B',
-    'allenai/OLMo-2-0325-32B-SFT': 'OLMO 2 32B SFT', 
-    'allenai/OLMo-2-0325-32B-Instruct': 'OLMO 2 32B Instruct',
-    'allenai/OLMo-2-0325-32B-DPO': 'OLMO 2 32B DPO',
-    'allenai/OLMo-2-0425-1B': 'OLMO 2 1B',
-    'allenai/OLMo-2-0425-1B-SFT': 'OLMO 2 1B SFT',
-    'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
-    'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
+    "EleutherAI/pythia-14m": "Pythia 14m",
+    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+}
+
+#MODELS = {
+    ### OLMo
+  #  'allenai/OLMo-2-1124-7B': 'OLMo 2 7B',
+  #  'allenai/OLMo-2-1124-7B-SFT': 'OLMo 2 7B SFT',
+  #  'allenai/OLMo-2-1124-7B-DPO': 'OLMo 2 7B DPO',
+   # 'allenai/OLMo-2-1124-7B-Instruct': 'OLMO 2 7B Instruct', 
+   # 'allenai/OLMo-2-1124-13B': 'OLMO 2 13B',
+#    'allenai/OLMo-2-1124-13B-SFT': 'OLMO 2 13B SFT', 
+   # 'allenai/OLMo-2-1124-13B-DPO': 'OLMo 2 13B DPO', 
+   # 'allenai/OLMo-2-1124-13B-Instruct': 'OLMO 2 13B Instruct',
+  #  'allenai/OLMo-2-0325-32B': 'OLMO 2 32B',
+   # 'allenai/OLMo-2-0325-32B-SFT': 'OLMO 2 32B SFT', 
+   # 'allenai/OLMo-2-0325-32B-Instruct': 'OLMO 2 32B Instruct',
+   # 'allenai/OLMo-2-0325-32B-DPO': 'OLMO 2 32B DPO',
+   # 'allenai/OLMo-2-0425-1B': 'OLMO 2 1B',
+   # 'allenai/OLMo-2-0425-1B-SFT': 'OLMO 2 1B SFT',
+   # 'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
+   # 'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
  
 
-}
+#}
 
 
 def sample_log_indices(k, mylist):
@@ -205,50 +214,69 @@ def main(model_path, revision = None, suffix=None):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run FB attention checks")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help=(
+            "Optional HuggingFace model id (e.g., EleutherAI/pythia-14m). "
+            "If not set, iterate default roster with skip rules."
+        ),
+    )
+    parser.add_argument(
+        "--summary",
+        action="store_true",
+        help="Print correctness summary (overall and by Q1-4) after running",
+    )
+    args = parser.parse_args()
 
-    # Set base path to the directory where checkpoints are saved
-    #refs = list_repo_refs("allenai/OLMo-2-1124-13B")
-    #checkpoints = [r.name for r in refs.branches if "step" in r.name]
 
-    model_path = "allenai/OLMo-2-1124-13B"
 
-    # Grab the list of available revisions for this model
-    refs = list_repo_refs(model_path)
-
-    # Combine and deduplicate all tag/branch names
-    all_revisions = [b.name for b in refs.branches] + [t.name for t in refs.tags]
-    if not all_revisions:
-        print(f"No usable checkpoints found for {model_path}, skipping.")
-        continue
+    if args.model is not None:
+        print("Running:", args.model)
+        main(args.model, summary=args.summary)
+    else:
+        # Only run select Olmo 13B checkpoints
+        for model_path in MODELS.keys():
+            
+            # Grab the list of available revisions for this model
+            refs = list_repo_refs(model_path)
+        
+            # Combine and deduplicate all tag/branch names
+            all_revisions = [b.name for b in refs.branches] + [t.name for t in refs.tags]
+            if not all_revisions:
+                print(f"No usable checkpoints found for {model_path}, skipping.")
+                continue
+                    
+            revision_list = get_revision_list(model_path, all_revisions)
+        
+            print(revision_list)
+        
+            for rev in revision_list:
+                print(f"Running FB with checkpoint: {rev}")
+        
+                revision = rev # pass revision into main
+                suffix = rev.replace("/", "_") # to tag output files uniquely
                 
-    revision_list = get_revision_list(model_path, all_revisions)
-
-    print(revision_list)
-
-    for rev in revision_list:
-        print(f"Running FB with checkpoint: {rev}")
-
-        revision = rev # pass revision into main
-        suffix = rev.replace("/", "_") # to tag output files uniquely
+                # Set up save path, filename, etc.
+                savepath = f"../../data/processed/fb_local/"
+                if not os.path.exists(savepath): 
+                    os.makedirs(savepath)
+            
+                if "/" in model_path:
+                    filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
+                else:
+                    filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
+            
+                # Skip this checkpoint's analysis if you've already run it before
+                print("Checking if we've already run this analysis...")
+                if os.path.exists(os.path.join(savepath,filename)):
+                    print("Already run this model for this checkpoint.")
+                    continue
         
-        # Set up save path, filename, etc.
-        savepath = f"../../data/processed/fb_local/"
-        if not os.path.exists(savepath): 
-            os.makedirs(savepath)
-    
-        if "/" in model_path:
-            filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
-        else:
-            filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
-    
-        # Skip this checkpoint's analysis if you've already run it before
-        print("Checking if we've already run this analysis...")
-        if os.path.exists(os.path.join(savepath,filename)):
-            print("Already run this model for this checkpoint.")
-            continue
-
-        main(model_path=model_path,
-             revision=revision,  
-             suffix=suffix)   
-        
-        
+                main(model_path=model_path,
+                     revision=revision,  
+                     suffix=suffix)   
+                
+            
