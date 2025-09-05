@@ -26,9 +26,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 MODELS = {
     ### OLMo
     "EleutherAI/pythia-14m": "Pythia 14m",
-    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    # "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    # "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    # "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
 
@@ -165,11 +165,14 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
         "attn_check_4_a",
     ]
 
-    df = df_stims[["item", "passage_hr"]].merge(
+    df = df_stims[["item", "item_id", "passage_hr", "passage", "condition", "knowledge_cue",
+                    "first_mention", "recent_mention"]].merge(
         df_attn[attn_cols],
         on="item",
         how="inner",
     )
+
+    print(df.columns)
 
     results = []
 
@@ -228,6 +231,11 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
                             "item": row.get("item", None),
                             "item_id": row.get("item_id", None),
                             "condition": row.get("condition", None),
+                            "knowledge_cue": row.get("knowledge_cue", None),
+                            "first_mention": row.get("first_mention", None),
+                            "recent_mention": row.get("recent_mention", None),
+                            "passage_hr": "passage_hr",
+                            "passage": "passage",
                             "question_id": spec["qid"],
                             "question": spec["q"],
                             "correct_answer": spec["a"],
@@ -238,6 +246,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
                             "is_correct": bool(p_correct > p_distr),
                         }
                     )
+                    print(results)
                 finally:
                     pbar.update(1)
 
@@ -360,7 +369,7 @@ if __name__ == "__main__":
 
                 if os.path.exists(output_path):
                     print("Already run this model for this checkpoint.")
-                    continue
+                    # continue
 
                 main(model_path=model_path, revision=rev, suffix=suffix, summary=args.summary)
 

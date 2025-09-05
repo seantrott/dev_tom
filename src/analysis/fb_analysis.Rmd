@@ -65,42 +65,7 @@ table(df_all_models_fb$step)
 
 # FB Analysis
 
-## Sensitivity to mental states
-
-```{r}
-### Visualization
-df_all_models_fb %>%
-  ggplot(aes(x = log_odds,
-             y = reorder(model_id, tokens_seen_numeric),
-             fill = condition)) +
-  geom_density_ridges2(aes(height = ..density..), 
-                       color=NA, 
-                       scale=.85, 
-                       # size=1, 
-                       alpha = .8,
-                       stat="density") +
-  labs(x = "Log Odds (Start vs. End)",
-       y = "",
-       fill = "") +
-  theme_minimal() +
-  geom_vline(xintercept = 0, linetype = "dotted") +
-  theme(
-    legend.position = "bottom"
-  ) + 
-  theme(axis.title = element_text(size=rel(1.2)),
-        axis.text = element_text(size = rel(1.2)),
-        legend.text = element_text(size = rel(1.2)),
-        legend.title = element_text(size = rel(1.2)),
-        strip.text.x = element_text(size = rel(1.2))) +
-    scale_fill_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                    begin = 0.8, end = 0.15)) +
-  
-  facet_wrap(~knowledge_cue)
-
-
-```
-
-
+## Sensitivity to FB over time
 
 
 
@@ -132,15 +97,6 @@ df_summ %>%
   head(5)
 
 
-### To account for starting at chance
-
-max_accuracy = max(df_summ$mean_accuracy)
-df_summ = df_summ %>%
-  mutate(fb_clamped = pmax(mean_accuracy, 0.5),
-         percent_max = 100 * (fb_clamped - 0.5) / (max_accuracy - 0.5))
-
-
-
 df_summ %>%
   mutate(step_modded = step + 1) %>%
   ggplot(aes(x = step_modded,
@@ -162,7 +118,7 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -189,7 +145,7 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -232,29 +188,6 @@ df_coef %>%
 ## Phase shift modeling
 
 Here, we predict the probability of a correct response over tokens seen, focusing on stage 1.
-
-### Descriptive
-
-```{r}
-df_diff <- df_summ %>%
-  arrange(model_shorthand, tokens_seen_numeric_mod) %>%
-  group_by(model_shorthand) %>%
-  mutate(
-    acc_diff = c(NA, diff(mean_accuracy)),  # difference between consecutive points
-    tokens_diff = c(NA, diff(tokens_seen_numeric_mod)),  # optional, could normalize slope
-    slope = acc_diff / tokens_diff  # slope per token if you like
-  ) %>%
-  ungroup()
-
-onsets <- df_diff %>%
-  group_by(model_shorthand) %>%
-  slice_max(acc_diff, n = 1) %>%
-  ungroup() %>%
-  dplyr::select(model_shorthand, tokens_seen_numeric_mod, acc_diff, slope)
-onsets
-
-```
-
 
 ### Using GAM
 
@@ -304,6 +237,10 @@ ggplot(df_summary, aes(x = tokens_seen_numeric_mod, y = acc, color = model_short
 
 
 # Situation Model -- Attention Check Results
+
+
+**TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
+
 ```{r}
 directory_path <- "../../data/processed/attn-checks-local/"
 
@@ -312,8 +249,9 @@ csv_list <- csv_files %>%
   map(~ read_csv(.))
 df_olmo13_attn_check <- bind_rows(csv_list)
 nrow(df_olmo13_attn_check)
+table(df_olmo13_attn_check$model_path)
 
-### TODO: No tokens seen column?
+
 df_olmo13_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_olmo13_attn_check$tokens_seen)) * 1e9
 
 df_olmo13_attn_check = df_olmo13_attn_check %>%
@@ -332,302 +270,144 @@ table(df_olmo13_attn_check$step)
 ```
 
 ```{r}
-### Where does log odds 1 come from?
 df_olmo13_attn_check = df_olmo13_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
     log_odds <= 0 ~ FALSE
+  )) %>%
+  mutate(q_label = case_when(
+    question_id == 1 ~ "Item was first in {START}",
+    question_id == 2 ~ "At end of story, item in {END}",
+    question_id == 3 ~ "Original person was {X}",
+    question_id == 4 ~ "Second person was {Y}"
   ))
 
 ## Accuracy of item start location
 
-### TODO: No step or tokens eseen?
+
 df_summ = df_olmo13_attn_check %>%
-  group_by(model_path, model_shorthand,
+  group_by(model_path, model_shorthand, question_id,
            step, tokens_seen_numeric, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-df_summ %>%
-  select(model_path, mean_accuracy)
-mean(df_olmo13_attn_check$correct)
+
 
 df_summ %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
-  select(model_path, mean_accuracy) %>%
+  select(model_path, step, mean_accuracy) %>%
   head(5)
 
-max_accuracy = max(df_summ$mean_accuracy)
 df_summ = df_summ %>%
-  mutate(clamped = pmax(mean_accuracy, 0.5),
-         percent_max = 100 * (clamped - 0.5) / (max_accuracy - 0.5))
-
+  mutate(q_label = case_when(
+    question_id == 1 ~ "Item was first in {START}",
+    question_id == 2 ~ "At end of story, item in {END}",
+    question_id == 3 ~ "Original person was {X}",
+    question_id == 4 ~ "Second person was {Y}"
+  ))
 
 df_summ %>%
-  mutate(step_modded = step + 1) %>%
-  ggplot(aes(x = step_modded,
+  filter(stage == "stage1") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_point(size = 3,
+             alpha = .7) +
+  geom_hline(yintercept = .5, linetype = "dotted",
+             size = 1.2, alpha = .5) +
+  scale_x_log10() +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") +
+  facet_wrap(~reorder(q_label, question_id))
+
+
+### Final step
+df_model_max = df_olmo13_attn_check %>%
+  group_by(model_shorthand) %>%
+  summarise(max_step = max(step, na.rm = TRUE))
+
+df_olmo13_attn_check %>% 
+  inner_join(df_model_max) %>%
+  filter(step == max_step) %>%
+  ggplot(aes(x = log_odds,
+             y = factor(question_id),
+             fill = model_shorthand)) +
+  geom_density_ridges2(aes(height = ..density..), 
+                       color=NA, 
+                       scale=.85, 
+                       # size=1, 
+                       alpha = .8,
+                       stat="density") +
+  labs(x = "Log Odds (Start vs. End)",
+       y = "",
+       fill = "") +
+  theme_minimal() +
+  geom_vline(xintercept = 0, linetype = "dotted") +
+  theme(
+    legend.position = "bottom"
+  ) + 
+  theme(axis.title = element_text(size=rel(1.2)),
+        axis.text = element_text(size = rel(1.2)),
+        legend.text = element_text(size = rel(1.2)),
+        legend.title = element_text(size = rel(1.2)),
+        strip.text.x = element_text(size = rel(1.2))) +
+    scale_fill_manual(values = viridisLite::viridis(4, option = "mako", 
+                                                    begin = 0.8, end = 0.15)) 
+
+
+df_olmo13_attn_check %>% 
+  inner_join(df_model_max) %>%
+  filter(step == max_step) %>%
+  group_by(model_shorthand, question_id) %>%
+  summarise(mean_accuracy = mean(correct),
+            step = mean(step))
+
+
+
+df_items = df_olmo13_attn_check %>% 
+  inner_join(df_model_max) %>%
+  filter(step == max_step) %>%
+  group_by(model_shorthand, item, question_id, q_label,
+           correct_answer, distractor_answer) %>%
+  summarise(mean_accuracy = mean(correct))
+
+
+df_items %>%
+  filter(model_shorthand == "OLMO 2 1B") %>%
+  ggplot(aes(x = factor(item),
              y = mean_accuracy)) +
-  geom_point(size = 3,
-             alpha = .7) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
-  scale_x_log10() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Step",
-       y = "Accuracy (Q1: item start location?)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") +
-  facet_wrap(~stage)
-
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = percent_max)) +
-  geom_point(size = 4,
-             alpha = .5) +
-  scale_x_log10() +
-  geom_line() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  labs(x = "Tokens Seen",
-       y = "% Max Performance (Situation Model: item start)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="none") +
-  coord_cartesian(ylim = c(0, 100)) +
-  facet_wrap(~stage)
-
-## Accuracy of item end locations
-df_olmo13_attn_check = df_olmo13_attn_check %>%
-  mutate(correct_2 = case_when(
-    log_odds_2 > 0 ~ TRUE,
-    log_odds_2 <= 0 ~ FALSE
-  ))
-
-df_summ = df_olmo13_attn_check %>%
-  group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage) %>%
-  summarise(mean_accuracy_2 = mean(correct_2)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-df_summ %>%
-  select(model_path, mean_accuracy_2)
-mean(df_olmo13_attn_check$correct_2)
-
-df_summ %>%
-  ungroup() %>%
-  arrange(desc(mean_accuracy_2)) %>%
-  select(model_path, mean_accuracy_2) %>%
-  head(5)
-
-max_accuracy_2 = max(df_summ$mean_accuracy_2)
-df_summ = df_summ %>%
-  mutate(clamped_2 = pmax(mean_accuracy_2, 0.5),
-         percent_max_2 = 100 * (clamped_2 - 0.5) / (max_accuracy_2 - 0.5))
+  geom_bar(stat = "identity") +
+  facet_wrap(~q_label) +
+  labs(x = "Scenario",
+       y = "Accuracy") +
+  theme_minimal()
 
 
-df_summ %>%
-  mutate(step_modded = step + 1) %>%
-  ggplot(aes(x = step_modded,
-             y = mean_accuracy_2)) +
-  geom_point(size = 3,
-             alpha = .7) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
-  scale_x_log10() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Step",
-       y = "Accuracy (Q2: item end location?)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") +
-  facet_wrap(~stage)
+### do they get the same problems wrong?
+df_data_wide = df_olmo13_attn_check %>% 
+  inner_join(df_model_max) %>%
+  filter(step == max_step) %>%
+  group_by(model_shorthand, item, question_id, q_label) %>%
+  pivot_wider(
+    names_from = model_shorthand,
+    values_from = log_odds
+  )
 
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = percent_max_2)) +
-  geom_point(size = 4,
-             alpha = .5) +
-  scale_x_log10() +
-  geom_line() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  labs(x = "Tokens Seen",
-       y = "% Max Performance (Situation Model: item end)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="none") +
-  coord_cartesian(ylim = c(0, 100)) +
-  facet_wrap(~stage)
-
-## Accuracy of person moving item to start location
-df_olmo13_attn_check = df_olmo13_attn_check %>%
-  mutate(correct_3 = case_when(
-    log_odds_3 > 0 ~ TRUE,
-    log_odds_3 <= 0 ~ FALSE
-  ))
-
-df_summ = df_olmo13_attn_check %>%
-  group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage) %>%
-  summarise(mean_accuracy_3 = mean(correct_3)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-df_summ %>%
-  select(model_path, mean_accuracy_3)
-mean(df_olmo13_attn_check$correct_3)
-
-df_summ %>%
-  ungroup() %>%
-  arrange(desc(mean_accuracy_3)) %>%
-  select(model_path, mean_accuracy_3) %>%
-  head(5)
-
-max_accuracy_3 = max(df_summ$mean_accuracy_3)
-df_summ = df_summ %>%
-  mutate(clamped_3 = pmax(mean_accuracy_3, 0.5),
-         percent_max_3 = 100 * (clamped_3 - 0.5) / (max_accuracy_3 - 0.5))
-
-
-df_summ %>%
-  mutate(step_modded = step + 1) %>%
-  ggplot(aes(x = step_modded,
-             y = mean_accuracy_3)) +
-  geom_point(size = 3,
-             alpha = .7) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
-  scale_x_log10() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Step",
-       y = "Accuracy (Q3: person who moved item to start?)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") +
-  facet_wrap(~stage)
-
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = percent_max_3)) +
-  geom_point(size = 4,
-             alpha = .5) +
-  scale_x_log10() +
-  geom_line() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  labs(x = "Tokens Seen",
-       y = "% Max Performance (Situation Model: person start)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="none") +
-  coord_cartesian(ylim = c(0, 100)) +
-  facet_wrap(~stage)
-
-## Accuracy of person moving item to end location
-df_olmo13_attn_check = df_olmo13_attn_check %>%
-  mutate(correct_4 = case_when(
-    log_odds_4 > 0 ~ TRUE,
-    log_odds_4 <= 0 ~ FALSE
-  ))
-
-df_summ = df_olmo13_attn_check %>%
-  group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage) %>%
-  summarise(mean_accuracy_4 = mean(correct_4)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-df_summ %>%
-  select(model_path, mean_accuracy_4)
-mean(df_olmo13_attn_check$correct_4)
-
-df_summ %>%
-  ungroup() %>%
-  arrange(desc(mean_accuracy_4)) %>%
-  select(model_path, mean_accuracy_4) %>%
-  head(5)
-
-max_accuracy_3 = max(df_summ$mean_accuracy_4)
-df_summ = df_summ %>%
-  mutate(clamped_4 = pmax(mean_accuracy_4, 0.5),
-         percent_max_4 = 100 * (clamped_4 - 0.5) / (max_accuracy_4 - 0.5))
-
-
-df_summ %>%
-  mutate(step_modded = step + 1) %>%
-  ggplot(aes(x = step_modded,
-             y = mean_accuracy_4)) +
-  geom_point(size = 3,
-             alpha = .7) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
-  scale_x_log10() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Step",
-       y = "Accuracy (Q4: person who moved item to end?)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") +
-  facet_wrap(~stage)
-
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = percent_max_4)) +
-  geom_point(size = 4,
-             alpha = .5) +
-  scale_x_log10() +
-  geom_line() +
-  # geom_text_repel(aes(label=model_shorthand), size=3) +
-  labs(x = "Tokens Seen",
-       y = "% Max Performance (Situation Model: person end)",
-       color = "",
-       shape = "") +
-  theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  theme(text = element_text(size = 15),
-        legend.position="none") +
-  coord_cartesian(ylim = c(0, 100)) +
-  facet_wrap(~stage)
-
-
+df_items_wide %>%
+  ggplot(aes(x = `OLMO 2 13B`,
+             y = `OLMO 2 1B`,
+             )) +
+  geom_point() +
+  theme_minimal()
 ```
 
 
