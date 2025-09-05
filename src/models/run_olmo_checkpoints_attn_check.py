@@ -26,9 +26,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 MODELS = {
     ### OLMo
     "EleutherAI/pythia-14m": "Pythia 14m",
-    # "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    # "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    # "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
 
@@ -369,7 +369,7 @@ if __name__ == "__main__":
 
                 if os.path.exists(output_path):
                     print("Already run this model for this checkpoint.")
-                    # continue
+                    continue
 
                 main(model_path=model_path, revision=rev, suffix=suffix, summary=args.summary)
 
