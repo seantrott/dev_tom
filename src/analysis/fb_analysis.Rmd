@@ -382,7 +382,7 @@ df_items = df_olmo13_attn_check %>%
 
 
 df_items %>%
-  filter(model_shorthand == "OLMO 2 1B") %>%
+  filter(model_shorthand == "OLMO 2 13B") %>%
   ggplot(aes(x = factor(item),
              y = mean_accuracy)) +
   geom_bar(stat = "identity") +
