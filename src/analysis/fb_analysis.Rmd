@@ -3,10 +3,10 @@ title: "Analysis of False Belief Task over Pre-training"
 author: "Sean Trott, Cameron Jones, Pam Rivière"
 date: "April 24, 2025"
 output:
-  html_document:
-    keep_md: yes
-    toc: yes
-    toc_float: yes
+  pdf_document: 
+       fig_caption: yes
+       keep_md: yes
+       keep_tex: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -25,6 +25,8 @@ library(ggridges)
 library(lmerTest)
 library(ggrepel)
 library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
 
 all_colors <- viridis::viridis(10, option = "mako")
 my_colors <- all_colors[c(3, 5, 7)]  # Selecting specific colors from the palette
@@ -35,29 +37,33 @@ my_colors <- all_colors[c(3, 5, 7)]  # Selecting specific colors from the palett
 ```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
 # setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+
+# Grab data for false belief task
 directory_path <- "../../data/processed/fb_local/"
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
   map(~ read_csv(.))
-df_all_models_fb <- bind_rows(csv_list) %>%
+df_tmp <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
-nrow(df_all_models_fb)
+nrow(df_tmp)
 
-df_all_models_fb$tokens_seen_numeric <- as.numeric(sub("B", "", df_all_models_fb$tokens_seen)) * 1e9
+df_tmp$tokens_seen_numeric <- as.numeric(sub("B", "", df_tmp$tokens_seen)) * 1e9
 
-df_all_models_fb = df_all_models_fb %>%
+df_tmp = df_tmp %>%
   # filter(stage == "stage1") %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 
-length(unique(df_all_models_fb$model_id))
-table(df_all_models_fb$model_path)
-table(df_all_models_fb$model_shorthand)
-table(df_all_models_fb$tokens_seen_numeric)
-table(df_all_models_fb$step)
+length(unique(df_tmp$model_id))
+table(df_tmp$model_path)
+table(df_tmp$model_shorthand)
+table(df_tmp$tokens_seen_numeric)
+table(df_tmp$step)
 
-
+metadata <- read_csv("../../data/raw/metadata_models.csv")
+# merge the metadata with the fb task df
+df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
 
 
 ```
@@ -96,14 +102,42 @@ df_summ %>%
   select(model_shorthand, mean_accuracy, step, stage) %>%
   head(5)
 
+df_summ = df_all_models_fb %>%
+  group_by(model_path, model_shorthand,
+           step, tokens_seen_numeric, stage, n_params_approx) %>%
+  summarise(mean_accuracy = mean(correct)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+# Get the final step for each model and extract final accuracy
+final_accuracy <- df_summ %>%
+  group_by(model_path) %>%
+  filter(step == max(step)) %>%  # Get the final step for each model
+  ungroup()
+
+# Plot accuracy at final step by model parameter size
+ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_text(aes(label = model_shorthand), vjust = -0.8, hjust = 0.5, size = 3) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +  # Log scale for params
+  labs(
+    title = "False Belief Task Accuracy at Final Step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.6),
+        plot.subtitle = element_text(hjust = 0.6))
+
 
 df_summ %>%
   mutate(step_modded = step + 1) %>%
   ggplot(aes(x = step_modded,
              y = mean_accuracy,
              color = model_shorthand)) +
-  geom_point(size = 3,
-             alpha = .7) +
+  #geom_point(size = 3,
+  #           alpha = .7) +
   geom_hline(yintercept = .83,##TODO: Calculate from scratch
              linetype = "dotted", color = "red",
              size = 1.2, alpha = .8) + 
@@ -130,8 +164,9 @@ df_summ %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
-  geom_point(size = 3,
-             alpha = .7) +
+  #geom_point(size = 3,
+    #         alpha = .7) +
+  geom_line(size = 1) +
   geom_hline(yintercept = .83,##TODO: Calculate from scratch
              linetype = "dotted", color = "red",
              size = 1.2, alpha = .8) + 
@@ -151,6 +186,32 @@ df_summ %>%
         legend.position="bottom") +
   facet_wrap(~stage)
 
+# Plot of just Stage 1
+df_summ %>%
+  filter(stage == "stage1") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  #geom_point(size = 3,
+    #         alpha = .7) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_hline(yintercept = .83,##TODO: Calculate from scratch
+             linetype = "dashed", color = "red",
+             size = 1.2, alpha = .8) + 
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_x_log10() +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
 
 
 ### How do model properties predict the probability of a correct response?
@@ -197,7 +258,7 @@ library(dplyr)
 library(purrr)
 
 # Aggregate to get accuracy per checkpoint (helps GAM fit)
-df_summary <- df_all_models_fb %>%
+df_summary_fb <- df_all_models_fb %>%
   filter(stage == "stage1") %>%
   group_by(model_shorthand, 
            # condition, 
@@ -207,22 +268,22 @@ df_summary <- df_all_models_fb %>%
   mutate(log_tokens = log10(tokens_seen_numeric_mod))
 
 # Fit a GAM for each model separately
-fits <- df_summary %>%
+fits <- df_summary_fb %>%
   group_split(model_shorthand) %>%
   set_names(map_chr(., ~ unique(.$model_shorthand))) %>%
   map(~ gam(acc ~ s(tokens_seen_numeric_mod, k = 10),
             data = ., family = binomial(link = "logit")))  # logistic is natural for accuracy
 
 df_pred <- map2_df(fits, names(fits), function(mod, name) {
-  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary$tokens_seen_numeric_mod),
-                                        max(df_summary$tokens_seen_numeric_mod),
+  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
+                                        max(df_summary_fb$tokens_seen_numeric_mod),
                                         length.out = 200))
   newdat$acc_hat <- predict(mod, newdat, type = "response")
   newdat$model_shorthand <- name
   newdat
 })
 
-ggplot(df_summary, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
+ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
   geom_point(alpha = 0.3) +
   geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
   scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
@@ -391,23 +452,7 @@ df_items %>%
        y = "Accuracy") +
   theme_minimal()
 
-
-### do they get the same problems wrong?
-df_data_wide = df_olmo13_attn_check %>% 
-  inner_join(df_model_max) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, item, question_id, q_label) %>%
-  pivot_wider(
-    names_from = model_shorthand,
-    values_from = log_odds
-  )
-
-df_items_wide %>%
-  ggplot(aes(x = `OLMO 2 13B`,
-             y = `OLMO 2 1B`,
-             )) +
-  geom_point() +
-  theme_minimal()
 ```
+
 
 
