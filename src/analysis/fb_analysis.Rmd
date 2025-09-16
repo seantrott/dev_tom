@@ -102,16 +102,22 @@ df_summ %>%
   select(model_shorthand, mean_accuracy, step, stage) %>%
   head(5)
 
+# Get the final step for each model and extract final accuracy
 df_summ = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, stage, n_params_approx) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-# Get the final step for each model and extract final accuracy
 final_accuracy <- df_summ %>%
-  group_by(model_path) %>%
+  group_by(model_shorthand) %>%
   filter(step == max(step)) %>%  # Get the final step for each model
+  ungroup()
+
+final_accuracy <- df_summ %>%
+  filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
+  group_by(model_shorthand) %>%
+  slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
   ungroup()
 
 # Plot accuracy at final step by model parameter size
@@ -130,6 +136,22 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   theme(plot.title = element_text(hjust = 0.6),
         plot.subtitle = element_text(hjust = 0.6))
 
+# Plot displays fb task accuracy for all steps, final step in red
+ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
+  geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
+  geom_point(alpha = 0.3, size = 1, color = "gray") +
+  geom_point(data = final_accuracy, size = 4, color = "red", alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "Model Training Progression and Final Accuracy",
+    subtitle = "Red points highlight accuracy at final pretraining step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal()
 
 df_summ %>%
   mutate(step_modded = step + 1) %>%
@@ -216,7 +238,7 @@ df_summ %>%
 
 ### How do model properties predict the probability of a correct response?
 mod_full = glmer(data = df_all_models_fb,
-                 correct ~ condition + knowledge_cue +
+                 correct ~ condition + knowledge_cue + 
                    log10(tokens_seen_numeric_mod) * stage +
                    (1 | start) +
                    (1 | model_shorthand),
