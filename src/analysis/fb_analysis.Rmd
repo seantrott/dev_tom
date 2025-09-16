@@ -146,7 +146,7 @@ ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
   scale_x_log10(labels = scales::comma_format()) +
   labs(
-    title = "Model Training Progression and Final Accuracy",
+    title = "False Belief Task Accuracy: Progression and Final Step",
     subtitle = "Red points highlight accuracy at final pretraining step",
     x = "Number of Parameters (log scale)",
     y = "Accuracy"
@@ -310,7 +310,12 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
   geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
   scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
-  scale_x_log10() +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "Development of False Belief Task Performance",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy"
+  ) +
   theme_minimal()
 
 
