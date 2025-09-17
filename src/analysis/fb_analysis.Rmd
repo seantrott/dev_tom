@@ -174,27 +174,32 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~stage)
 
+## merge stepwise tokens data for Pythia models
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge the metadata with the fb task df
+df_summ_tokenmerge <- df_summ %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-
-df_summ %>%
+df_summ_tokenmerge %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
   #geom_point(size = 3,
     #         alpha = .7) +
   geom_line(size = 1) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
+  geom_hline(yintercept = .5, linetype = "dashed",
              size = 1.2, alpha = .5) +
-  scale_x_log10() +
+  scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Tokens Seen",
@@ -202,7 +207,7 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -452,32 +457,32 @@ df_olmo13_attn_check %>%
                                                     begin = 0.8, end = 0.15)) 
 
 
-df_olmo13_attn_check %>% 
-  inner_join(df_model_max) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, question_id) %>%
-  summarise(mean_accuracy = mean(correct),
-            step = mean(step))
+#df_olmo13_attn_check %>% 
+#  inner_join(df_model_max) %>%
+#  filter(step == max_step) %>%
+#  group_by(model_shorthand, question_id) %>%
+#  summarise(mean_accuracy = mean(correct),
+#            step = mean(step))
 
 
 
-df_items = df_olmo13_attn_check %>% 
-  inner_join(df_model_max) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, item, question_id, q_label,
-           correct_answer, distractor_answer) %>%
-  summarise(mean_accuracy = mean(correct))
+#df_items = df_olmo13_attn_check %>% 
+ # inner_join(df_model_max) %>%
+ # filter(step == max_step) %>%
+ # group_by(model_shorthand, item, question_id, q_label,
+ #          correct_answer, distractor_answer) %>%
+ # summarise(mean_accuracy = mean(correct))
 
 
-df_items %>%
-  filter(model_shorthand == "OLMO 2 13B") %>%
-  ggplot(aes(x = factor(item),
-             y = mean_accuracy)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~q_label) +
-  labs(x = "Scenario",
-       y = "Accuracy") +
-  theme_minimal()
+#df_items %>%
+#  filter(model_shorthand == "OLMO 2 13B") %>%
+#  ggplot(aes(x = factor(item),
+ #            y = mean_accuracy)) +
+ ## geom_bar(stat = "identity") +
+#  facet_wrap(~q_label) +
+#  labs(x = "Scenario",
+ #      y = "Accuracy") +
+ # theme_minimal()
 
 ```
 
