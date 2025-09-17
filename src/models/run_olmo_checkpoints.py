@@ -14,6 +14,9 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
+from del_models import clear_huggingface_cache
+
+
 MODELS = {
     ### OLMo
     #"EleutherAI/pythia-14m": "Pythia 14m",
@@ -280,6 +283,9 @@ if __name__ == "__main__":
         
                 main(model_path=model_path,
                      revision=revision,  
-                     suffix=suffix)   
+                     suffix=suffix)  
+
+                clear_huggingface_cache()
+                
                 
             
