@@ -257,10 +257,22 @@ df_summ_tokenmerge %>%
         legend.position="bottom") 
 
 
+# merge the df_all_models_fb with the pythia number of tokens seen
+df_all_models_fb_merge <- df_all_models_fb %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+olmo_and_pythia <- df_all_models_fb_merge %>%
+  filter(stage == "stage1" | is.na(stage)) 
+  
 ### How do model properties predict the probability of a correct response?
-mod_full = glmer(data = df_all_models_fb,
+mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
-                   log10(tokens_seen_numeric_mod) * stage +
+                   log10(tokens_seen_numeric_mod) +
                    (1 | start) +
                    (1 | model_shorthand),
                  family = binomial())
