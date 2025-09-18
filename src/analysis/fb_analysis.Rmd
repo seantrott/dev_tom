@@ -66,6 +66,14 @@ metadata <- read_csv("../../data/raw/metadata_models.csv")
 df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
 
 
+df_all_models_fb = df_all_models_fb %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
+  ))
+
+
 ```
 
 
@@ -89,7 +97,7 @@ df_all_models_fb = df_all_models_fb %>%
 
 df_summ = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage) %>%
+           step, tokens_seen_numeric, model_family, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 df_summ %>%
@@ -105,12 +113,13 @@ df_summ %>%
 # Get the final step for each model and extract final accuracy
 df_summ = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage, n_params_approx) %>%
+           step, tokens_seen_numeric, 
+           model_family, stage, n_params_approx) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 final_accuracy <- df_summ %>%
-  group_by(model_shorthand) %>%
+  group_by(model_shorthand, model_family) %>%
   filter(step == max(step)) %>%  # Get the final step for each model
   ungroup()
 
@@ -140,9 +149,13 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
 ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
-  geom_point(data = final_accuracy, size = 4, color = "red", alpha = 0.8) +
+  geom_point(data = final_accuracy, size = 4, 
+             aes(color = model_family), 
+             alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1.2, alpha = .5) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
   geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
   scale_x_log10(labels = scales::comma_format()) +
   labs(
@@ -152,6 +165,8 @@ ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
     y = "Accuracy"
   ) +
   theme_minimal()
+
+
 
 df_summ %>%
   mutate(step_modded = step + 1) %>%
@@ -196,7 +211,7 @@ df_summ_tokenmerge %>%
              color = model_shorthand)) +
   #geom_point(size = 3,
     #         alpha = .7) +
-  geom_line(size = 1) +
+  geom_line(size = 1, alpha=0.7) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1.2, alpha = .5) +
   scale_x_log10(labels = scales::comma_format()) +
@@ -208,13 +223,13 @@ df_summ_tokenmerge %>%
        shape = "") +
   theme_bw() +
   scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+                                                  begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~stage)
 
 # Plot of just Stage 1
-df_summ %>%
+df_summ_tokenmerge %>%
   filter(stage == "stage1") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -347,6 +362,16 @@ table(df_olmo13_attn_check$model_path)
 
 df_olmo13_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_olmo13_attn_check$tokens_seen)) * 1e9
 
+## merge stepwise tokens data for Pythia models
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge the metadata with the fb task df
+df_olmo13_attn_check <- df_olmo13_attn_check %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
 df_olmo13_attn_check = df_olmo13_attn_check %>%
   # filter(stage == "stage1") %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
@@ -376,11 +401,9 @@ df_olmo13_attn_check = df_olmo13_attn_check %>%
   ))
 
 ## Accuracy of item start location
-
-
 df_summ = df_olmo13_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
-           step, tokens_seen_numeric, stage) %>%
+           step, tokens_seen_numeric_mod, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
@@ -409,6 +432,30 @@ df_summ %>%
   geom_hline(yintercept = .5, linetype = "dotted",
              size = 1.2, alpha = .5) +
   scale_x_log10() +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") +
+  facet_wrap(~reorder(q_label, question_id))
+
+# plot same for the Pythias as well
+df_summ %>%
+  filter(grepl("Pythia", model_shorthand)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_point(size = 3,
+             alpha = .7) +
+  geom_hline(yintercept = .5, linetype = "dotted",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Tokens Seen",
