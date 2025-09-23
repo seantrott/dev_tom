@@ -231,10 +231,8 @@ df_summ %>%
         legend.position="bottom") +
   facet_wrap(~stage)
 
-
-
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias
-df_summ_tokenmerge %>%
+df_summ %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -262,16 +260,8 @@ df_summ_tokenmerge %>%
         legend.position="bottom") 
 
 
-# merge the df_all_models_fb with the pythia number of tokens seen
-df_all_models_fb_merge <- df_all_models_fb %>%
-  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
-
-olmo_and_pythia <- df_all_models_fb_merge %>%
+# Filter for only stage1 olmo data and pythia models (e.g. exclude olmo stage2)
+olmo_and_pythia <- df_all_models_fb %>%
   filter(stage == "stage1" | is.na(stage)) 
   
 ### PAPER LMER: How do model properties predict the probability of a correct response?
