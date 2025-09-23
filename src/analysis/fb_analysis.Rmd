@@ -87,15 +87,53 @@ df_all_models_fb = df_all_models_fb %>%
     model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
   ))
 
+# How many unique checkpoints per model, per stage (in the case of stages)?
+df_all_models_fb %>% 
+  group_by(model_shorthand,stage) %>% 
+  summarise(unique_steps = n_distinct(step))
 
+df_all_models_fb %>% 
+  group_by(model_shorthand,stage) %>% 
+  summarise(unique_tokens = n_distinct(tokens_seen_numeric_mod))
+
+
+# Tracking down duplicate tokens_seen_numeric_mod for different steps
+# Find tokens_seen values that appear with multiple different steps
+duplicates <- df_all_models_fb %>%
+  group_by(model_shorthand, stage, tokens_seen_numeric_mod) %>%
+  summarise(
+    unique_steps = n_distinct(step),
+    steps = list(unique(step)),
+    .groups = "drop"
+  ) %>%
+  filter(unique_steps > 1)
+
+# Get the actual rows where this occurs
+problem_tokens <- duplicates$tokens_seen_numeric_mod
+
+df_all_models_fb %>%
+  filter(tokens_seen_numeric_mod %in% problem_tokens) %>%
+  arrange(tokens_seen_numeric_mod, step)
+
+tmp <- df_all_models_fb %>%
+  filter(model_shorthand == "Olmo 2 7b") %>%
+  filter(tokens_seen_numeric_mod %in% problem_tokens) %>% 
+  arrange(tokens_seen_numeric_mod, step)
+
+#For Olmo 2 7b --> see filenames for 
+#   ....stage1_step600_3B, 
+#.  ....stage1_step700_3B
+#.  ....stage1_step850_4B
+#.  ....stage1_step900_4B
+# The tokens seen is duplicated for each of these steps, which is why you get 
+# 73 unique steps, but 71 unique tokens seen for Olmo 2 7b
+ 
 ```
 
 
 # FB Analysis
 
 ## Sensitivity to FB over time
-
-
 
 ## Accuracy metric
 
@@ -307,6 +345,7 @@ library(mgcv)
 library(dplyr)
 library(purrr)
 
+# Aggregate to get accuracy per checkpoint (helps GAM fit) for just Olmo stage1 & pythia
 df_summary_fb <- olmo_and_pythia %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   group_by(model_shorthand, 
@@ -317,16 +356,6 @@ df_summary_fb <- olmo_and_pythia %>%
   mutate(log_tokens = log10(tokens_seen_numeric_mod))
 
 
-# Aggregate to get accuracy per checkpoint (helps GAM fit) for just Olmo
-df_summary_fb <- df_all_models_fb %>%
-  filter(stage == "stage1" | is.na(stage)) %>%
-  group_by(model_shorthand, 
-           condition, 
-           knowledge_cue,
-           tokens_seen_numeric_mod) %>%
-  summarise(acc = mean(correct), .groups = "drop") %>%
-  mutate(log_tokens = log10(tokens_seen_numeric_mod))
-
 # Fit a GAM for each model separately
 fits <- df_summary_fb %>%
   group_split(model_shorthand) %>%
@@ -334,27 +363,27 @@ fits <- df_summary_fb %>%
   map(~ gam(acc ~ s(tokens_seen_numeric_mod, k = 10),
             data = ., family = binomial(link = "logit")))  # logistic is natural for accuracy
 
-#df_pred <- map2_df(fits, names(fits), function(mod, name) {
-#  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
-#                                        max(df_summary_fb$tokens_seen_numeric_mod),
-#                                        length.out = 200))
-#  newdat$acc_hat <- predict(mod, newdat, type = "response")
-#  newdat$model_shorthand <- name
-#  newdat
-#})
+df_pred <- map2_df(fits, names(fits), function(mod, name) {
+  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
+                                        max(df_summary_fb$tokens_seen_numeric_mod),
+                                        length.out = 200))
+  newdat$acc_hat <- predict(mod, newdat, type = "response")
+  newdat$model_shorthand <- name
+  newdat
+})
 
-#ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
-#  geom_point(alpha = 0.3) +
-#  geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
-#  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
-#                                                  begin = 0.8, end = 0.15)) +
-#  scale_x_log10(labels = scales::comma_format()) +
-#  labs(
-#    title = "Development of False Belief Task Performance",
-#    x = "Number of Tokens Seen (log scale)",
-#    y = "Accuracy"
-#  ) +
-#  theme_minimal()
+ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
+  geom_point(alpha = 0.3) +
+  geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "Development of False Belief Task Performance",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal()
 
 
 
