@@ -28,8 +28,6 @@ library(ggcorrplot)
 library(dplyr)
 library(ggplot2)
 
-all_colors <- viridis::viridis(10, option = "mako")
-my_colors <- all_colors[c(3, 5, 7)]  # Selecting specific colors from the palette
 ```
 
 # Load LLM data
@@ -54,6 +52,13 @@ df_tmp = df_tmp %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
+
+# sort df columns by model name and step value
+df_tmp <- df_tmp %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
 
 length(unique(df_tmp$model_id))
 table(df_tmp$model_path)
@@ -64,6 +69,15 @@ table(df_tmp$step)
 metadata <- read_csv("../../data/raw/metadata_models.csv")
 # merge the metadata with the fb task df
 df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
+
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge stepwise tokens data for Pythia models
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 
 df_all_models_fb = df_all_models_fb %>%
@@ -145,7 +159,7 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   theme(plot.title = element_text(hjust = 0.6),
         plot.subtitle = element_text(hjust = 0.6))
 
-# Plot displays fb task accuracy for all steps, final step in red
+# PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
 ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
@@ -194,17 +208,7 @@ df_summ %>%
         legend.position="bottom") +
   facet_wrap(~stage)
 
-## merge stepwise tokens data for Pythia models
-tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
-# merge the metadata with the fb task df
-df_summ_tokenmerge <- df_summ %>%
-  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
-df_summ_tokenmerge %>%
+df_summ %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -229,30 +233,31 @@ df_summ_tokenmerge %>%
 
 
 
-# Plot of Olmo stage1 and Pythias
+# PAPER FIGURE: Plot of Olmo stage1 and Pythias
 df_summ_tokenmerge %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
-  geom_line(size = 1.5, alpha = 0.7) +
+  geom_line(size = 1.5, alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1.2, alpha = .5) +
   scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
-  scale_y_continuous(limits = c(0, 1)) +
+  #scale_y_continuous(limits = c(0.25, 0.75)) +
   labs(x = "Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
   theme_bw() +
   scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+                                                  begin = 0.8, end = 0.1)) +
   labs(
     title = "False Belief Task Accuracy Over Pretraining",
     x = "Number of Tokens Seen (log scale)",
     y = "Accuracy"
   ) +
+  theme_minimal() + 
   theme(text = element_text(size = 15),
         legend.position="bottom") 
 
@@ -269,7 +274,7 @@ df_all_models_fb_merge <- df_all_models_fb %>%
 olmo_and_pythia <- df_all_models_fb_merge %>%
   filter(stage == "stage1" | is.na(stage)) 
   
-### How do model properties predict the probability of a correct response?
+### PAPER LMER: How do model properties predict the probability of a correct response?
 mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
                    log10(tokens_seen_numeric_mod) +
@@ -312,12 +317,22 @@ library(mgcv)
 library(dplyr)
 library(purrr)
 
-# Aggregate to get accuracy per checkpoint (helps GAM fit)
-df_summary_fb <- df_all_models_fb %>%
-  filter(stage == "stage1") %>%
+df_summary_fb <- olmo_and_pythia %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
   group_by(model_shorthand, 
-           # condition, 
-           # knowledge_cue,
+           condition, 
+           knowledge_cue,
+           tokens_seen_numeric_mod) %>%
+  summarise(acc = mean(correct), .groups = "drop") %>%
+  mutate(log_tokens = log10(tokens_seen_numeric_mod))
+
+
+# Aggregate to get accuracy per checkpoint (helps GAM fit) for just Olmo
+df_summary_fb <- df_all_models_fb %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  group_by(model_shorthand, 
+           condition, 
+           knowledge_cue,
            tokens_seen_numeric_mod) %>%
   summarise(acc = mean(correct), .groups = "drop") %>%
   mutate(log_tokens = log10(tokens_seen_numeric_mod))
@@ -329,27 +344,27 @@ fits <- df_summary_fb %>%
   map(~ gam(acc ~ s(tokens_seen_numeric_mod, k = 10),
             data = ., family = binomial(link = "logit")))  # logistic is natural for accuracy
 
-df_pred <- map2_df(fits, names(fits), function(mod, name) {
-  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
-                                        max(df_summary_fb$tokens_seen_numeric_mod),
-                                        length.out = 200))
-  newdat$acc_hat <- predict(mod, newdat, type = "response")
-  newdat$model_shorthand <- name
-  newdat
-})
+#df_pred <- map2_df(fits, names(fits), function(mod, name) {
+#  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
+#                                        max(df_summary_fb$tokens_seen_numeric_mod),
+#                                        length.out = 200))
+#  newdat$acc_hat <- predict(mod, newdat, type = "response")
+#  newdat$model_shorthand <- name
+#  newdat
+#})
 
-ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
-  geom_point(alpha = 0.3) +
-  geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
-  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  scale_x_log10(labels = scales::comma_format()) +
-  labs(
-    title = "Development of False Belief Task Performance",
-    x = "Number of Tokens Seen (log scale)",
-    y = "Accuracy"
-  ) +
-  theme_minimal()
+#ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
+#  geom_point(alpha = 0.3) +
+#  geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
+#  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+#                                                  begin = 0.8, end = 0.15)) +
+#  scale_x_log10(labels = scales::comma_format()) +
+#  labs(
+#    title = "Development of False Belief Task Performance",
+#    x = "Number of Tokens Seen (log scale)",
+#    y = "Accuracy"
+#  ) +
+#  theme_minimal()
 
 
 
@@ -368,40 +383,43 @@ directory_path <- "../../data/processed/attn-checks-local/"
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
   map(~ read_csv(.))
-df_olmo13_attn_check <- bind_rows(csv_list)
-nrow(df_olmo13_attn_check)
-table(df_olmo13_attn_check$model_path)
+df_attn_check <- bind_rows(csv_list)
+nrow(df_attn_check)
+table(df_attn_check$model_path)
 
 
-df_olmo13_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_olmo13_attn_check$tokens_seen)) * 1e9
+df_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_attn_check$tokens_seen)) * 1e9
 
 ## merge stepwise tokens data for Pythia models
 tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
 # merge the metadata with the fb task df
-df_olmo13_attn_check <- df_olmo13_attn_check %>%
+df_attn_check <- df_attn_check %>%
   left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
             by = c("model_shorthand", "step")) %>%
   mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
   select(-tokens_seen_from_df1) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-df_olmo13_attn_check = df_olmo13_attn_check %>%
+tmp <- df_attn_check %>%
+  filter(grepl("Pythia", model_shorthand))
+
+df_attn_check = df_attn_check %>%
   # filter(stage == "stage1") %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 
-length(unique(df_olmo13_attn_check$model_id))
-table(df_olmo13_attn_check$model_path)
-table(df_olmo13_attn_check$model_shorthand)
-table(df_olmo13_attn_check$tokens_seen_numeric)
-table(df_olmo13_attn_check$step)
+length(unique(df_attn_check$model_id))
+table(df_attn_check$model_path)
+table(df_attn_check$model_shorthand)
+table(df_attn_check$tokens_seen_numeric)
+table(df_attn_check$step)
 
 
 ```
 
 ```{r}
-df_olmo13_attn_check = df_olmo13_attn_check %>%
+df_attn_check = df_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
     log_odds <= 0 ~ FALSE
@@ -414,7 +432,7 @@ df_olmo13_attn_check = df_olmo13_attn_check %>%
   ))
 
 ## Accuracy of item start location
-df_summ = df_olmo13_attn_check %>%
+df_summ = df_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
            step, tokens_seen_numeric_mod, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
