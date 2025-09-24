@@ -483,9 +483,6 @@ df_attn_check <- df_attn_check %>%
   select(-tokens_seen_from_df1) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-tmp <- df_attn_check %>%
-  filter(grepl("Pythia", model_shorthand))
-
 length(unique(df_attn_check$model_id))
 table(df_attn_check$model_path)
 table(df_attn_check$model_shorthand)
@@ -512,8 +509,7 @@ df_attn_check = df_attn_check %>%
 df_summ = df_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
            step, tokens_seen_numeric_mod, stage) %>%
-  summarise(mean_accuracy = mean(correct)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+  summarise(mean_accuracy = mean(correct)) 
 
 
 df_summ %>%
@@ -530,11 +526,14 @@ df_summ = df_summ %>%
     question_id == 4 ~ "Second person was {Y}"
   ))
 
+# PAPER FIGURE - attention check results per question
 df_summ %>%
-  filter(stage == "stage1") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
+  #geom_line(size = 1,
+  #           alpha = .5)+
   geom_point(size = 3,
              alpha = .7) +
   geom_hline(yintercept = .5, linetype = "dotted",
@@ -542,18 +541,19 @@ df_summ %>%
   scale_x_log10() +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Tokens Seen",
+  labs(title = "Development of Situation Model", 
+       x = "Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~reorder(q_label, question_id))
 
-# plot same for the Pythias as well
+# PAPER FIGURE: plot same for the Pythias as well
 df_summ %>%
   filter(grepl("Pythia", model_shorthand)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
@@ -566,7 +566,8 @@ df_summ %>%
   scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Tokens Seen",
+  labs(title = "Development of Situation Model",
+       x = "Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
@@ -579,11 +580,11 @@ df_summ %>%
 
 
 ### Final step
-df_model_max = df_olmo13_attn_check %>%
+df_model_max = df_attn_check %>%
   group_by(model_shorthand) %>%
   summarise(max_step = max(step, na.rm = TRUE))
 
-df_olmo13_attn_check %>% 
+df_attn_check %>% 
   inner_join(df_model_max) %>%
   filter(step == max_step) %>%
   ggplot(aes(x = log_odds,
@@ -593,7 +594,7 @@ df_olmo13_attn_check %>%
                        color=NA, 
                        scale=.85, 
                        # size=1, 
-                       alpha = .8,
+                       alpha = .6,
                        stat="density") +
   labs(x = "Log Odds (Start vs. End)",
        y = "",
@@ -608,7 +609,7 @@ df_olmo13_attn_check %>%
         legend.text = element_text(size = rel(1.2)),
         legend.title = element_text(size = rel(1.2)),
         strip.text.x = element_text(size = rel(1.2))) +
-    scale_fill_manual(values = viridisLite::viridis(4, option = "mako", 
+    scale_fill_manual(values = viridisLite::viridis(7, option = "mako", 
                                                     begin = 0.8, end = 0.15)) 
 
 
