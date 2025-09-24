@@ -45,8 +45,12 @@ df_tmp <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
 nrow(df_tmp)
 
+# Create a column with numeric versions of the tokens seen for that step, using 
+# the Olmo file naming convention
 df_tmp$tokens_seen_numeric <- as.numeric(sub("B", "", df_tmp$tokens_seen)) * 1e9
 
+# Create a column with a modified version of the numeric tokens seen, for plotting
+# and analysis purposes (just +1)
 df_tmp = df_tmp %>%
   # filter(stage == "stage1") %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
@@ -59,12 +63,6 @@ df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step
 # sort df columns by model name and step value
 df_tmp <- df_tmp %>%
   arrange(model_shorthand, step)  # arrange in ascending order
-
-length(unique(df_tmp$model_id))
-table(df_tmp$model_path)
-table(df_tmp$model_shorthand)
-table(df_tmp$tokens_seen_numeric)
-table(df_tmp$step)
 
 metadata <- read_csv("../../data/raw/metadata_models.csv")
 # merge the metadata with the fb task df
@@ -86,6 +84,12 @@ df_all_models_fb = df_all_models_fb %>%
                            "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
     model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
   ))
+
+length(unique(df_tmp$model_id))
+table(df_tmp$model_path)
+table(df_tmp$model_shorthand)
+table(df_tmp$tokens_seen_numeric)
+table(df_tmp$step)
 
 # How many unique checkpoints per model, per stage (in the case of stages)?
 df_all_models_fb %>% 
@@ -126,7 +130,11 @@ tmp <- df_all_models_fb %>%
 #.  ....stage1_step850_4B
 #.  ....stage1_step900_4B
 # The tokens seen is duplicated for each of these steps, which is why you get 
-# 73 unique steps, but 71 unique tokens seen for Olmo 2 7b
+# 73 unique steps, but 71 unique tokens seen for Olmo 2 7b, and this is just a 
+# property of how the tokens seen appear on the 7b HuggingFace revisions
+# this will mean that you should keep in mind which column name (`step` or 
+# `tokens_seen_numeric_mod`) you want to group by for your analysis -- there are
+# as many actually unique data points as there are number of `step` x number of conditions
  
 ```
 
@@ -145,7 +153,6 @@ df_all_models_fb = df_all_models_fb %>%
     condition == "True Belief" & log_odds <= 0 ~ TRUE,
     TRUE ~ FALSE  # all other cases are incorrect
   ))
-
 
 df_summ = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
@@ -351,6 +358,7 @@ df_summary_fb <- olmo_and_pythia %>%
   group_by(model_shorthand, 
            condition, 
            knowledge_cue,
+           step,
            tokens_seen_numeric_mod) %>%
   summarise(acc = mean(correct), .groups = "drop") %>%
   mutate(log_tokens = log10(tokens_seen_numeric_mod))
@@ -372,6 +380,7 @@ df_pred <- map2_df(fits, names(fits), function(mod, name) {
   newdat
 })
 
+# PAPER FIGURE: plot of GAM fits for each model
 ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
   geom_point(alpha = 0.3) +
   geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
@@ -396,6 +405,42 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 
 **TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
 
+
+df_tmp = df_tmp %>%
+  # filter(stage == "stage1") %>%
+  mutate(model_id = paste(stage, "step", "-", step)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
+
+# sort df columns by model name and step value
+df_tmp <- df_tmp %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
+# merge the metadata with the fb task df
+df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
+
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge stepwise tokens data for Pythia models
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+df_all_models_fb = df_all_models_fb %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
+  ))
+
+
 ```{r}
 directory_path <- "../../data/processed/attn-checks-local/"
 
@@ -406,12 +451,31 @@ df_attn_check <- bind_rows(csv_list)
 nrow(df_attn_check)
 table(df_attn_check$model_path)
 
-
 df_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_attn_check$tokens_seen)) * 1e9
 
-## merge stepwise tokens data for Pythia models
-tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+df_attn_check = df_attn_check %>%
+  mutate(model_id = paste(stage, "step", "-", step)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_attn_check$step[is.na(df_attn_check$step)] <- 143000 #hard-coded the final step 
+
+# sort df columns by model name and step value
+df_attn_check <- df_attn_check %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
 # merge the metadata with the fb task df
+df_attn_check <- df_attn_check %>% left_join(metadata, by = "model_shorthand")
+
+
+# Change the model shorthand naming convention to match that in the df_attn_check 
+# dataframe!
+tokens_seen_pythia <- tokens_seen_pythia %>%
+  mutate(model_shorthand = str_replace(model_shorthand, "b", "B"))
+
+# merge stepwise tokens data for Pythia models
 df_attn_check <- df_attn_check %>%
   left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
             by = c("model_shorthand", "step")) %>%
@@ -421,12 +485,6 @@ df_attn_check <- df_attn_check %>%
 
 tmp <- df_attn_check %>%
   filter(grepl("Pythia", model_shorthand))
-
-df_attn_check = df_attn_check %>%
-  # filter(stage == "stage1") %>%
-  mutate(model_id = paste(stage, "step", "-", step)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
 
 length(unique(df_attn_check$model_id))
 table(df_attn_check$model_path)
