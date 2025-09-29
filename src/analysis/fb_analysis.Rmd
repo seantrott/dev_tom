@@ -628,7 +628,7 @@ fb_and_attn_q1 <- bind_rows(
   df_summ_fb %>% mutate(task_type = "false belief"),
   df_summ_attn %>%
     filter(question_id == 1) %>%
-    mutate(task_type = "attention check 1")) %>%
+    mutate(task_type = "situation model 1")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
 
@@ -681,7 +681,7 @@ fb_and_attn_q2 <- bind_rows(
   df_summ_fb %>% mutate(task_type = "false belief"),
   df_summ_attn %>%
     filter(question_id == 2) %>%
-    mutate(task_type = "attention check 2")) %>%
+    mutate(task_type = "situation model 2")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
 
@@ -715,7 +715,7 @@ fb_and_attn_q2 %>%
        shape = "") +
   theme_bw() +
   scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+                                                  begin = 0.7, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
@@ -730,7 +730,7 @@ fb_and_attn_q3 <- bind_rows(
   df_summ_fb %>% mutate(task_type = "false belief"),
   df_summ_attn %>%
     filter(question_id == 3) %>%
-    mutate(task_type = "attention check 3")) %>%
+    mutate(task_type = "situation model 3")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
 
@@ -764,7 +764,7 @@ fb_and_attn_q3 %>%
        shape = "") +
   theme_bw() +
   scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+                                                  begin = 0.7, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
@@ -779,7 +779,7 @@ fb_and_attn_q4 <- bind_rows(
   df_summ_fb %>% mutate(task_type = "false belief"),
   df_summ_attn %>%
     filter(question_id == 4) %>%
-    mutate(task_type = "attention check 4")) %>%
+    mutate(task_type = "situation model 4")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
     mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
 
@@ -813,15 +813,29 @@ fb_and_attn_q4 %>%
        shape = "") +
   theme_bw() +
   scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+                                                  begin = 0.7, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
 
 
+## ====== ====== ====== ====== ====== 
+## ====== FB + ALL ATTN CHECKS ======
+## ====== ====== ====== ====== ======
 
+# Concatenate the individual attention check dataframes, keeping only one instance
+# of the rows corresponding to false belief task accuracies
+fb_and_all_attn <- bind_rows(
+  fb_and_attn_q1,
+  fb_and_attn_q2 %>% filter(task_type == "situation model 2"),
+  fb_and_attn_q3 %>% filter(task_type == "situation model 3"),
+  fb_and_attn_q4 %>% filter(task_type == "situation model 4")
+)
 
-
+fb_and_all_attn %>%
+  group_by(model_shorthand,step,tokens_seen_numeric,tokens_seen_numeric_mod, task_type)%>%
+  mutate(overall_accuracy = mean(mean_accuracy))
+  
 
 
 
