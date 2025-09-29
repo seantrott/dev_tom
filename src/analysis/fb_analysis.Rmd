@@ -2,15 +2,22 @@
 title: "Analysis of False Belief Task over Pre-training"
 author: "Sean Trott, Cameron Jones, Pam Rivière"
 date: "April 24, 2025"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
 output:
-  pdf_document: 
-       fig_caption: yes
-       keep_md: yes
-       keep_tex: yes
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(dpi = 300, fig.format = "png")
+
 ```
 
 
@@ -30,7 +37,7 @@ library(ggplot2)
 
 ```
 
-# Load LLM data
+# Load LLM False Belief Data
 
 ```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
@@ -154,35 +161,35 @@ df_all_models_fb = df_all_models_fb %>%
     TRUE ~ FALSE  # all other cases are incorrect
   ))
 
-df_summ = df_all_models_fb %>%
+df_summ_fb = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, model_family, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-df_summ %>%
+df_summ_fb %>%
   select(model_shorthand, mean_accuracy)
 mean(df_all_models_fb$correct)
 
-df_summ %>%
+df_summ_fb %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
   select(model_shorthand, mean_accuracy, step, stage) %>%
   head(5)
 
 # Get the final step for each model and extract final accuracy
-df_summ = df_all_models_fb %>%
+df_summ_fb = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, 
            model_family, stage, n_params_approx) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-final_accuracy <- df_summ %>%
+final_accuracy <- df_summ_fb %>%
   group_by(model_shorthand, model_family) %>%
   filter(step == max(step)) %>%  # Get the final step for each model
   ungroup()
 
-final_accuracy <- df_summ %>%
+final_accuracy <- df_summ_fb %>%
   filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
   group_by(model_shorthand) %>%
   slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
@@ -205,7 +212,7 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
         plot.subtitle = element_text(hjust = 0.6))
 
 # PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
-ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
+ggplot(df_summ_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
   geom_point(data = final_accuracy, size = 4, 
@@ -226,7 +233,7 @@ ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
   theme_minimal()
 
 
-df_summ %>%
+df_summ_fb %>%
   mutate(step_modded = step + 1) %>%
   ggplot(aes(x = step_modded,
              y = mean_accuracy,
@@ -253,7 +260,7 @@ df_summ %>%
         legend.position="bottom") +
   facet_wrap(~stage)
 
-df_summ %>%
+df_summ_fb %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -277,7 +284,7 @@ df_summ %>%
   facet_wrap(~stage)
 
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias
-df_summ %>%
+df_summ_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -406,41 +413,6 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 **TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
 
 
-df_tmp = df_tmp %>%
-  # filter(stage == "stage1") %>%
-  mutate(model_id = paste(stage, "step", "-", step)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
-## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
-## must change this to the actual value of the final step, 143000
-df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
-
-# sort df columns by model name and step value
-df_tmp <- df_tmp %>%
-  arrange(model_shorthand, step)  # arrange in ascending order
-
-metadata <- read_csv("../../data/raw/metadata_models.csv")
-# merge the metadata with the fb task df
-df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
-
-tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
-# merge stepwise tokens data for Pythia models
-df_all_models_fb <- df_all_models_fb %>%
-  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
-
-df_all_models_fb = df_all_models_fb %>%
-  mutate(model_family = case_when(
-    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
-                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
-    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
-  ))
-
-
 ```{r}
 directory_path <- "../../data/processed/attn-checks-local/"
 
@@ -506,19 +478,19 @@ df_attn_check = df_attn_check %>%
   ))
 
 ## Accuracy of item start location
-df_summ = df_attn_check %>%
+df_summ_attn = df_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
            step, tokens_seen_numeric_mod, stage) %>%
   summarise(mean_accuracy = mean(correct)) 
 
 
-df_summ %>%
+df_summ_attn %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
   select(model_path, step, mean_accuracy) %>%
   head(5)
 
-df_summ = df_summ %>%
+df_summ_attn = df_summ_attn %>%
   mutate(q_label = case_when(
     question_id == 1 ~ "Item was first in {START}",
     question_id == 2 ~ "At end of story, item in {END}",
@@ -527,7 +499,7 @@ df_summ = df_summ %>%
   ))
 
 # PAPER FIGURE - attention check results per question
-df_summ %>%
+df_summ_attn %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -554,7 +526,7 @@ df_summ %>%
   facet_wrap(~reorder(q_label, question_id))
 
 # PAPER FIGURE: plot same for the Pythias as well
-df_summ %>%
+df_summ_attn %>%
   filter(grepl("Pythia", model_shorthand)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -639,6 +611,219 @@ df_attn_check %>%
 #  labs(x = "Scenario",
  #      y = "Accuracy") +
  # theme_minimal()
+
+```
+
+```{r}
+# Want to plot:
+# 1. overall Situation Model accuracy superimposed over False Belief Task accuracy
+# 2. individual situation model items accuracy over False Belief Task accuracy
+
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 1 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q1 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 1) %>%
+    mutate(task_type = "attention check 1")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Define your desired order
+model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b", 
+                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b")
+
+# Convert to factor with desired order
+fb_and_attn_q1 <- fb_and_attn_q1 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_1 <- df_summ_attn %>%
+  filter(question_id == 1) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
+fb_and_attn_q1 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_1,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+
+
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 2 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q2 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 2) %>%
+    mutate(task_type = "attention check 2")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q2 <- fb_and_attn_q2 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_2 <- df_summ_attn %>%
+  filter(question_id == 2) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 2 and false belief by tokens seen
+fb_and_attn_q2 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_2,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+
+
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 3 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q3 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 3) %>%
+    mutate(task_type = "attention check 3")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q3 <- fb_and_attn_q3 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_3 <- df_summ_attn %>%
+  filter(question_id == 3) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
+fb_and_attn_q3 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_3,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+
+ 
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 4 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q4 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 4) %>%
+    mutate(task_type = "attention check 4")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q4 <- fb_and_attn_q4 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_4 <- df_summ_attn %>%
+  filter(question_id == 4) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
+fb_and_attn_q4 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_4,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+
+
+
+
+
+
+
 
 ```
 

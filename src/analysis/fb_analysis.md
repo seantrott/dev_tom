@@ -2,6 +2,12 @@
 title: "Analysis of False Belief Task over Pre-training"
 author: "Sean Trott, Cameron Jones, Pam Rivière"
 date: "April 24, 2025"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
 output:
   html_document:
     keep_md: yes
@@ -20,6 +26,8 @@ output:
 ```r
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
 # setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+
+# Grab data for false belief task
 directory_path <- "../../data/processed/fb_local/"
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
@@ -3160,28 +3168,1493 @@ csv_list <- csv_files %>%
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (3): start_prob, end_prob, log_odds
+## lgl (4): stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (3): start_prob, end_prob, log_odds
+## lgl (4): stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (3): start_prob, end_prob, log_odds
+## lgl (4): stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 192 Columns: 16
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (9): passage, start, end, knowledge_cue, first_mention, recent_mention, ...
+## dbl (4): start_prob, end_prob, log_odds, step
+## lgl (3): stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
-df_all_models_fb <- bind_rows(csv_list) %>%
+df_tmp <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
-nrow(df_all_models_fb)
+nrow(df_tmp)
 ```
 
 ```
-## [1] 68928
+## [1] 98880
 ```
 
 ```r
-df_all_models_fb$tokens_seen_numeric <- as.numeric(sub("B", "", df_all_models_fb$tokens_seen)) * 1e9
+# Create a column with numeric versions of the tokens seen for that step, using 
+# the Olmo file naming convention
+df_tmp$tokens_seen_numeric <- as.numeric(sub("B", "", df_tmp$tokens_seen)) * 1e9
 
-df_all_models_fb = df_all_models_fb %>%
+# Create a column with a modified version of the numeric tokens seen, for plotting
+# and analysis purposes (just +1)
+df_tmp = df_tmp %>%
   # filter(stage == "stage1") %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
 
-length(unique(df_all_models_fb$model_id))
+# sort df columns by model name and step value
+df_tmp <- df_tmp %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
+```
+
+```
+## Rows: 7 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (2): model_shorthand, model_stage
+## dbl (4): n_params_approx, n_heads, n_layers, total_train_tokens_approx
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
+# merge the metadata with the fb task df
+df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
+
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+```
+
+```
+## Rows: 616 Columns: 3
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (1): model_shorthand
+## dbl (1): step
+## num (1): tokens_seen_numeric
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
+# merge stepwise tokens data for Pythia models
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+df_all_models_fb = df_all_models_fb %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
+  ))
+
+length(unique(df_tmp$model_id))
 ```
 
 ```
@@ -3189,29 +4662,33 @@ length(unique(df_all_models_fb$model_id))
 ```
 
 ```r
-table(df_all_models_fb$model_path)
+table(df_tmp$model_path)
 ```
 
 ```
 ## 
 ##  allenai/OLMo-2-0425-1B allenai/OLMo-2-1124-13B  allenai/OLMo-2-1124-7B 
 ##                   18048                   21312                   19584 
-##   EleutherAI/pythia-14m 
+##   EleutherAI/pythia-12b   EleutherAI/pythia-14m    EleutherAI/pythia-1b 
+##                    9984                    9984                    9984 
+##  EleutherAI/pythia-6.9b 
 ##                    9984
 ```
 
 ```r
-table(df_all_models_fb$model_shorthand)
+table(df_tmp$model_shorthand)
 ```
 
 ```
 ## 
-## Olmo 2 13b  Olmo 2 1b  Olmo 2 7b Pythia 14m 
-##      21312      18048      19584       9984
+##  Olmo 2 13b   Olmo 2 1b   Olmo 2 7b  Pythia 12b  Pythia 14m   Pythia 1b 
+##       21312       18048       19584        9984        9984        9984 
+## Pythia 6.9b 
+##        9984
 ```
 
 ```r
-table(df_all_models_fb$tokens_seen_numeric)
+table(df_tmp$tokens_seen_numeric)
 ```
 
 ```
@@ -3265,61 +4742,178 @@ table(df_all_models_fb$tokens_seen_numeric)
 ```
 
 ```r
-table(df_all_models_fb$step)
+table(df_tmp$step)
 ```
 
 ```
 ## 
 ##       0       1       2       4       8      16      32      64     128     150 
-##     576     192     192     192     192     192     192     192     192     192 
+##    1152     768     768     768     768     768     768     768     768     192 
 ##     256     300     512     600     700     850     900    1000    1100    2000 
-##     192     192     192     192     192     192     192    2304     192    2496 
+##     768     192     768     192     192     192     192    2880     192    3072 
 ##    2150    3000    4000    5000    6000    7000    8000    9000   10000   11000 
-##     192    2496    2112    1920    1920    1536    1344    1536    1344    1344 
+##     192    3072    2688    2496    2496    2112    1920    1536    1920    1920 
 ##   11931   12000   13000   14000   15000   16000   17000   18000   19000   20000 
-##    1344    1152     384     192     768     384     960     192     576     576 
+##    1344    1728     384     768    1344     384    1536     192    1152     576 
 ##   21000   22000   23000   23100   23852   24000   25000   26000   27000   29000 
-##     384     192     768     192     576     576     192     384     192     384 
+##     960     192    1344     192     576     576     768     384     768     384 
 ##   30000   31000   32000   33000   34000   35000   35773   36000   37000   38000 
-##     384     576     192     192     192     384     192     192     192     192 
+##     960     576     192     768     192     960     192     192     192     768 
 ##   39000   40000   41000   42000   43000   44000   45000   47000   48000   49000 
-##     192     192     192     192     192     192     192     192     384     192 
+##     192     192     192     768     192     192     768     192     384     768 
 ##   50000   53000   57000   58000   60000   61000   63000   64000   66000   66200 
-##     384     576     192     384     384     192     192     192     192     192 
+##     384    1152     768     384     384     768     192     192     768     192 
 ##   68000   69000   70000   71000   74000   75000   76000   77000   80000   81000 
-##     192     192     384     192     192     192     192     192     192     192 
+##     192     192     384     768     192     192     768     192     192     192 
 ##   82000   84000   88000   90000   92000   95000   1e+05  101000  101500  102000 
-##     192     192     384     384     192     384     384     192     192     192 
+##     768     192     960     384     192     960     384     768     192     192 
 ##  102500  103000  105700  109000  110000  111000  112000  117000  120000  122000 
-##     192     192     192     192     192     192     192     384     192     192 
-##  122500  125000  129000  130000  134000  136000  140000  146000  149000  150000 
-##     192     192     192     192     384     192     192     192     192     384 
-##  151000  160000  167000  170000  176000  180000  185000  190000  192000   2e+05 
+##     192     192     192     768     192     192     192     960     192     192 
+##  122500  125000  129000  130000  134000  136000  140000  143000  146000  149000 
+##     192     768     192     192     960     192     192     768     192     192 
+##  150000  151000  160000  167000  170000  176000  180000  185000  190000  192000 
+##     384     192     192     192     192     192     192     192     192     192 
+##   2e+05  204000  210000  217000  225000  229000  230000  240000  247000  250000 
+##     192     192     384     192     192     192     192     192     192     384 
+##  260000  271000  273000  290000  298000   3e+05  310000  312000  323000  326000 
+##     192     192     192     192     384     192     192     192     192     192 
+##  330000  337000  353000  356000  360000  380000  386000  388000   4e+05  410000 
 ##     192     192     192     192     192     192     192     192     192     192 
-##  204000  210000  217000  225000  229000  230000  240000  247000  250000  260000 
-##     192     384     192     192     192     192     192     192     384     192 
-##  271000  273000  290000  298000   3e+05  310000  312000  323000  326000  330000 
-##     192     192     192     384     192     192     192     192     192     192 
-##  337000  353000  356000  360000  380000  386000  388000   4e+05  410000  419000 
+##  419000  423000  440000  449000  450000  459000  462000  480000  499000   5e+05 
 ##     192     192     192     192     192     192     192     192     192     192 
-##  423000  440000  449000  450000  459000  462000  480000  499000   5e+05  504000 
+##  504000  510000  546000  550000  590000  596000  596057   6e+05  630000  648000 
+##     192     192     192     384     192     192     192     384     192     192 
+##  656000  680000  717000  730000  780000  781000  810000  840000  852000   9e+05 
 ##     192     192     192     192     192     192     192     192     192     192 
-##  510000  546000  550000  590000  596000  596057   6e+05  630000  648000  656000 
-##     192     192     384     192     192     192     384     192     192     192 
-##  680000  717000  730000  780000  781000  810000  840000  852000   9e+05  928646 
+##  928646  960000 1030000 1080000 1100000 1180000 1270000 1350000 1440000 1450000 
 ##     192     192     192     192     192     192     192     192     192     192 
-##  960000 1030000 1080000 1100000 1180000 1270000 1350000 1440000 1450000 1550000 
-##     192     192     192     192     192     192     192     192     192     192 
-## 1660000 1780000 1900000 1907359 
-##     192     192     192     192
+## 1550000 1660000 1780000 1900000 1907359 
+##     192     192     192     192     192
+```
+
+```r
+# How many unique checkpoints per model, per stage (in the case of stages)?
+df_all_models_fb %>% 
+  group_by(model_shorthand,stage) %>% 
+  summarise(unique_steps = n_distinct(step))
+```
+
+```
+## `summarise()` has grouped output by 'model_shorthand'. You can override using
+## the `.groups` argument.
+```
+
+```
+## # A tibble: 10 × 3
+## # Groups:   model_shorthand [7]
+##    model_shorthand stage  unique_steps
+##    <chr>           <chr>         <int>
+##  1 Olmo 2 13b      stage1           75
+##  2 Olmo 2 13b      stage2           15
+##  3 Olmo 2 1b       stage1           61
+##  4 Olmo 2 1b       stage2           13
+##  5 Olmo 2 7b       stage1           73
+##  6 Olmo 2 7b       stage2           11
+##  7 Pythia 12b      <NA>             52
+##  8 Pythia 14m      <NA>             52
+##  9 Pythia 1b       <NA>             52
+## 10 Pythia 6.9b     <NA>             52
+```
+
+```r
+df_all_models_fb %>% 
+  group_by(model_shorthand,stage) %>% 
+  summarise(unique_tokens = n_distinct(tokens_seen_numeric_mod))
+```
+
+```
+## `summarise()` has grouped output by 'model_shorthand'. You can override using
+## the `.groups` argument.
+```
+
+```
+## # A tibble: 10 × 3
+## # Groups:   model_shorthand [7]
+##    model_shorthand stage  unique_tokens
+##    <chr>           <chr>          <int>
+##  1 Olmo 2 13b      stage1            75
+##  2 Olmo 2 13b      stage2            16
+##  3 Olmo 2 1b       stage1            61
+##  4 Olmo 2 1b       stage2            13
+##  5 Olmo 2 7b       stage1            71
+##  6 Olmo 2 7b       stage2            11
+##  7 Pythia 12b      <NA>              52
+##  8 Pythia 14m      <NA>              52
+##  9 Pythia 1b       <NA>              52
+## 10 Pythia 6.9b     <NA>              52
+```
+
+```r
+# Tracking down duplicate tokens_seen_numeric_mod for different steps
+# Find tokens_seen values that appear with multiple different steps
+duplicates <- df_all_models_fb %>%
+  group_by(model_shorthand, stage, tokens_seen_numeric_mod) %>%
+  summarise(
+    unique_steps = n_distinct(step),
+    steps = list(unique(step)),
+    .groups = "drop"
+  ) %>%
+  filter(unique_steps > 1)
+
+# Get the actual rows where this occurs
+problem_tokens <- duplicates$tokens_seen_numeric_mod
+
+df_all_models_fb %>%
+  filter(tokens_seen_numeric_mod %in% problem_tokens) %>%
+  arrange(tokens_seen_numeric_mod, step)
+```
+
+```
+## # A tibble: 1,344 × 25
+##    start_prob end_prob passage           start end   knowledge_cue first_mention
+##         <dbl>    <dbl> <chr>             <chr> <chr> <chr>         <chr>        
+##  1    0.00321   0.0475 David and Marta … gara… frid… Explicit      Start        
+##  2    0.00185   0.0154 David and Marta … gara… frid… Implicit      Start        
+##  3    0.00236   0.0439 David and Marta … gara… frid… Explicit      Start        
+##  4    0.00136   0.0147 David and Marta … gara… frid… Implicit      Start        
+##  5    0.00257   0.0535 David and Marta … gara… frid… Explicit      Start        
+##  6    0.00157   0.0139 David and Marta … gara… frid… Implicit      Start        
+##  7    0.00187   0.0495 David and Marta … gara… frid… Explicit      Start        
+##  8    0.00105   0.0141 David and Marta … gara… frid… Implicit      Start        
+##  9    0.00321   0.0497 David and Marta … gara… frid… Explicit      End          
+## 10    0.00177   0.0155 David and Marta … gara… frid… Implicit      End          
+## # ℹ 1,334 more rows
+## # ℹ 18 more variables: recent_mention <chr>, log_odds <dbl>, condition <chr>,
+## #   model_path <chr>, model_shorthand <chr>, stage <chr>, ingredient <chr>,
+## #   step <dbl>, tokens_seen <chr>, tokens_seen_numeric <dbl>, model_id <chr>,
+## #   tokens_seen_numeric_mod <dbl>, n_params_approx <dbl>, n_heads <dbl>,
+## #   n_layers <dbl>, total_train_tokens_approx <dbl>, model_stage <chr>,
+## #   model_family <chr>
+```
+
+```r
+tmp <- df_all_models_fb %>%
+  filter(model_shorthand == "Olmo 2 7b") %>%
+  filter(tokens_seen_numeric_mod %in% problem_tokens) %>% 
+  arrange(tokens_seen_numeric_mod, step)
+
+#For Olmo 2 7b --> see filenames for 
+#   ....stage1_step600_3B, 
+#.  ....stage1_step700_3B
+#.  ....stage1_step850_4B
+#.  ....stage1_step900_4B
+# The tokens seen is duplicated for each of these steps, which is why you get 
+# 73 unique steps, but 71 unique tokens seen for Olmo 2 7b, and this is just a 
+# property of how the tokens seen appear on the 7b HuggingFace revisions
+# this will mean that you should keep in mind which column name (`step` or 
+# `tokens_seen_numeric_mod`) you want to group by for your analysis -- there are
+# as many actually unique data points as there are number of `step` x number of conditions
 ```
 
 
 # FB Analysis
 
 ## Sensitivity to FB over time
-
-
 
 ## Accuracy metric
 
@@ -3333,17 +4927,17 @@ df_all_models_fb = df_all_models_fb %>%
     TRUE ~ FALSE  # all other cases are incorrect
   ))
 
-
 df_summ = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, stage) %>%
+           step, tokens_seen_numeric, model_family, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 ```
 
 ```
 ## `summarise()` has grouped output by 'model_path', 'model_shorthand', 'step',
-## 'tokens_seen_numeric'. You can override using the `.groups` argument.
+## 'tokens_seen_numeric', 'model_family'. You can override using the `.groups`
+## argument.
 ```
 
 ```r
@@ -3352,25 +4946,28 @@ df_summ %>%
 ```
 
 ```
-## Adding missing grouping variables: `model_path`, `step`, `tokens_seen_numeric`
+## Adding missing grouping variables: `model_path`, `step`, `tokens_seen_numeric`,
+## `model_family`
 ```
 
 ```
-## # A tibble: 301 × 5
-## # Groups:   model_path, model_shorthand, step, tokens_seen_numeric [278]
-##    model_path             step tokens_seen_numeric model_shorthand mean_accuracy
-##    <chr>                 <dbl>               <dbl> <chr>                   <dbl>
-##  1 EleutherAI/pythia-14m     0                  NA Pythia 14m              0.5  
-##  2 EleutherAI/pythia-14m     1                  NA Pythia 14m              0.5  
-##  3 EleutherAI/pythia-14m     2                  NA Pythia 14m              0.5  
-##  4 EleutherAI/pythia-14m     4                  NA Pythia 14m              0.5  
-##  5 EleutherAI/pythia-14m     8                  NA Pythia 14m              0.5  
-##  6 EleutherAI/pythia-14m    16                  NA Pythia 14m              0.5  
-##  7 EleutherAI/pythia-14m    32                  NA Pythia 14m              0.5  
-##  8 EleutherAI/pythia-14m    64                  NA Pythia 14m              0.5  
-##  9 EleutherAI/pythia-14m   128                  NA Pythia 14m              0.490
-## 10 EleutherAI/pythia-14m   256                  NA Pythia 14m              0.5  
-## # ℹ 291 more rows
+## # A tibble: 457 × 6
+## # Groups:   model_path, model_shorthand, step, tokens_seen_numeric,
+## #   model_family [434]
+##    model_path             step tokens_seen_numeric model_family model_shorthand
+##    <chr>                 <dbl>               <dbl> <chr>        <chr>          
+##  1 EleutherAI/pythia-12b     0                   0 Pythia       Pythia 12b     
+##  2 EleutherAI/pythia-12b     1             2097152 Pythia       Pythia 12b     
+##  3 EleutherAI/pythia-12b     2             4194304 Pythia       Pythia 12b     
+##  4 EleutherAI/pythia-12b     4             8388608 Pythia       Pythia 12b     
+##  5 EleutherAI/pythia-12b     8            16777216 Pythia       Pythia 12b     
+##  6 EleutherAI/pythia-12b    16            33554432 Pythia       Pythia 12b     
+##  7 EleutherAI/pythia-12b    32            67108864 Pythia       Pythia 12b     
+##  8 EleutherAI/pythia-12b    64           134217728 Pythia       Pythia 12b     
+##  9 EleutherAI/pythia-12b   128           268435456 Pythia       Pythia 12b     
+## 10 EleutherAI/pythia-12b   256           536870912 Pythia       Pythia 12b     
+## # ℹ 447 more rows
+## # ℹ 1 more variable: mean_accuracy <dbl>
 ```
 
 ```r
@@ -3378,7 +4975,7 @@ mean(df_all_models_fb$correct)
 ```
 
 ```
-## [1] 0.544104
+## [1] 0.5298847
 ```
 
 ```r
@@ -3399,6 +4996,86 @@ df_summ %>%
 ## 4 Olmo 2 13b              0.693   3000 stage2
 ## 5 Olmo 2 13b              0.693 419000 stage1
 ```
+
+```r
+# Get the final step for each model and extract final accuracy
+df_summ = df_all_models_fb %>%
+  group_by(model_path, model_shorthand,
+           step, tokens_seen_numeric, 
+           model_family, stage, n_params_approx) %>%
+  summarise(mean_accuracy = mean(correct)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+```
+
+```
+## `summarise()` has grouped output by 'model_path', 'model_shorthand', 'step',
+## 'tokens_seen_numeric', 'model_family', 'stage'. You can override using the
+## `.groups` argument.
+```
+
+```r
+final_accuracy <- df_summ %>%
+  group_by(model_shorthand, model_family) %>%
+  filter(step == max(step)) %>%  # Get the final step for each model
+  ungroup()
+
+final_accuracy <- df_summ %>%
+  filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
+  group_by(model_shorthand) %>%
+  slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
+  ungroup()
+
+# Plot accuracy at final step by model parameter size
+ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_text(aes(label = model_shorthand), vjust = -0.8, hjust = 0.5, size = 3) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +  # Log scale for params
+  labs(
+    title = "False Belief Task Accuracy at Final Step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.6),
+        plot.subtitle = element_text(hjust = 0.6))
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
+# PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
+ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
+  geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
+  geom_point(alpha = 0.3, size = 1, color = "gray") +
+  geom_point(data = final_accuracy, size = 4, 
+             aes(color = model_family), 
+             alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "False Belief Task Accuracy: Progression and Final Step",
+    subtitle = "Red points highlight accuracy at final pretraining step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal()
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
 
 ```r
 df_summ %>%
@@ -3422,26 +5099,14 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~stage)
 ```
 
-```
-## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.
-```
-
-```
-## Warning: Removed 1 row containing missing values (`geom_line()`).
-```
-
-![](fb_analysis_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](fb_analysis_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
 
 ```r
 df_summ %>%
@@ -3450,13 +5115,10 @@ df_summ %>%
              color = model_shorthand)) +
   #geom_point(size = 3,
     #         alpha = .7) +
-  geom_line(size = 1) +
-  geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
-             size = 1.2, alpha = .8) + 
-  geom_hline(yintercept = .5, linetype = "dotted",
+  geom_line(size = 1, alpha=0.7) +
+  geom_hline(yintercept = .5, linetype = "dashed",
              size = 1.2, alpha = .5) +
-  scale_x_log10() +
+  scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(x = "Tokens Seen",
@@ -3464,35 +5126,59 @@ df_summ %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+                                                  begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
   facet_wrap(~stage)
 ```
 
-```
-## Warning: Removed 52 rows containing missing values (`geom_line()`).
-```
-
-![](fb_analysis_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
+![](fb_analysis_files/figure-html/unnamed-chunk-3-4.png)<!-- -->
 
 ```r
-### How do model properties predict the probability of a correct response?
-mod_full = glmer(data = df_all_models_fb,
-                 correct ~ condition + knowledge_cue +
-                   log10(tokens_seen_numeric_mod) * stage +
+# PAPER FIGURE: Plot of Olmo stage1 and Pythias
+df_summ %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_line(size = 1.5, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  #scale_y_continuous(limits = c(0.25, 0.75)) +
+  labs(x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+                                                  begin = 0.8, end = 0.1)) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal() + 
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-3-5.png)<!-- -->
+
+```r
+# Filter for only stage1 olmo data and pythia models (e.g. exclude olmo stage2)
+olmo_and_pythia <- df_all_models_fb %>%
+  filter(stage == "stage1" | is.na(stage)) 
+  
+### PAPER LMER: How do model properties predict the probability of a correct response?
+mod_full = glmer(data = olmo_and_pythia,
+                 correct ~ condition + knowledge_cue + 
+                   log10(tokens_seen_numeric_mod) +
                    (1 | start) +
                    (1 | model_shorthand),
                  family = binomial())
-```
-
-```
-## Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :
-## Model failed to converge with max|grad| = 0.00488333 (tol = 0.002, component 1)
-```
-
-```r
 summary(mod_full)
 ```
 
@@ -3501,50 +5187,37 @@ summary(mod_full)
 ##   Approximation) [glmerMod]
 ##  Family: binomial  ( logit )
 ## Formula: 
-## correct ~ condition + knowledge_cue + log10(tokens_seen_numeric_mod) *  
-##     stage + (1 | start) + (1 | model_shorthand)
-##    Data: df_all_models_fb
+## correct ~ condition + knowledge_cue + log10(tokens_seen_numeric_mod) +  
+##     (1 | start) + (1 | model_shorthand)
+##    Data: olmo_and_pythia
 ## 
 ##      AIC      BIC   logLik deviance df.resid 
-##  78301.7  78373.6 -39142.8  78285.7    58936 
+## 108729.2 108784.9 -54358.6 108717.2    80058 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -2.1183 -0.9847  0.6503  0.8662  1.9710 
+## -1.5053 -0.9692  0.7153  0.9369  1.4325 
 ## 
 ## Random effects:
 ##  Groups          Name        Variance Std.Dev.
-##  start           (Intercept) 0.02616  0.1617  
-##  model_shorthand (Intercept) 0.02483  0.1576  
-## Number of obs: 58944, groups:  start, 10; model_shorthand, 3
+##  start           (Intercept) 0.011809 0.10867 
+##  model_shorthand (Intercept) 0.009687 0.09842 
+## Number of obs: 80064, groups:  start, 10; model_shorthand, 7
 ## 
 ## Fixed effects:
-##                                             Estimate Std. Error z value
-## (Intercept)                                -0.893685   0.137842  -6.483
-## conditionTrue Belief                        0.686651   0.017000  40.391
-## knowledge_cueImplicit                      -0.169182   0.016973  -9.968
-## log10(tokens_seen_numeric_mod)              0.064453   0.007719   8.350
-## stagestage2                                -0.067692   0.394929  -0.171
-## log10(tokens_seen_numeric_mod):stagestage2  0.038637   0.037761   1.023
-##                                            Pr(>|z|)    
-## (Intercept)                                8.97e-11 ***
-## conditionTrue Belief                        < 2e-16 ***
-## knowledge_cueImplicit                       < 2e-16 ***
-## log10(tokens_seen_numeric_mod)              < 2e-16 ***
-## stagestage2                                   0.864    
-## log10(tokens_seen_numeric_mod):stagestage2    0.306    
+##                                 Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)                    -0.354592   0.069160  -5.127 2.94e-07 ***
+## conditionTrue Belief            0.586821   0.014349  40.896  < 2e-16 ***
+## knowledge_cueImplicit          -0.134477   0.014345  -9.374  < 2e-16 ***
+## log10(tokens_seen_numeric_mod)  0.015500   0.004282   3.620 0.000294 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Correlation of Fixed Effects:
-##             (Intr) cndtTB knwl_I lg10(___) stgst2
-## condtnTrBlf -0.067                               
-## knwldg_cImp -0.059 -0.014                        
-## lg10(tk___) -0.643  0.012 -0.003                 
-## stagestage2 -0.145  0.000  0.000  0.219          
-## lg10(___):2  0.130  0.001  0.000 -0.199    -0.999
-## optimizer (Nelder_Mead) convergence code: 0 (OK)
-## Model failed to converge with max|grad| = 0.00488333 (tol = 0.002, component 1)
+##             (Intr) cndtTB knwl_I
+## condtnTrBlf -0.104              
+## knwldg_cImp -0.102 -0.010       
+## lg10(tk___) -0.656  0.004 -0.001
 ```
 
 ```r
@@ -3567,7 +5240,7 @@ df_coef %>%
   theme_minimal(base_size = 12)
 ```
 
-![](fb_analysis_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
+![](fb_analysis_files/figure-html/unnamed-chunk-3-6.png)<!-- -->
 
 ```r
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
@@ -3613,18 +5286,20 @@ library(mgcv)
 library(dplyr)
 library(purrr)
 
-# Aggregate to get accuracy per checkpoint (helps GAM fit)
-df_summary <- df_all_models_fb %>%
-  filter(stage == "stage1") %>%
+# Aggregate to get accuracy per checkpoint (helps GAM fit) for just Olmo stage1 & pythia
+df_summary_fb <- olmo_and_pythia %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
   group_by(model_shorthand, 
-           # condition, 
-           # knowledge_cue,
+           condition, 
+           knowledge_cue,
+           step,
            tokens_seen_numeric_mod) %>%
   summarise(acc = mean(correct), .groups = "drop") %>%
   mutate(log_tokens = log10(tokens_seen_numeric_mod))
 
+
 # Fit a GAM for each model separately
-fits <- df_summary %>%
+fits <- df_summary_fb %>%
   group_split(model_shorthand) %>%
   set_names(map_chr(., ~ unique(.$model_shorthand))) %>%
   map(~ gam(acc ~ s(tokens_seen_numeric_mod, k = 10),
@@ -3709,24 +5384,120 @@ fits <- df_summary %>%
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
 
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
 ```
 
 ```r
 df_pred <- map2_df(fits, names(fits), function(mod, name) {
-  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary$tokens_seen_numeric_mod),
-                                        max(df_summary$tokens_seen_numeric_mod),
+  newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
+                                        max(df_summary_fb$tokens_seen_numeric_mod),
                                         length.out = 200))
   newdat$acc_hat <- predict(mod, newdat, type = "response")
   newdat$model_shorthand <- name
   newdat
 })
 
-ggplot(df_summary, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
+# PAPER FIGURE: plot of GAM fits for each model
+ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_shorthand)) +
   geom_point(alpha = 0.3) +
   geom_line(data = df_pred, aes(y = acc_hat), size = 1.2) +
-  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
-  scale_x_log10() +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "Development of False Belief Task Performance",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy"
+  ) +
   theme_minimal()
 ```
 
@@ -3741,6 +5512,42 @@ ggplot(df_summary, aes(x = tokens_seen_numeric_mod, y = acc, color = model_short
 
 
 **TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
+
+
+df_tmp = df_tmp %>%
+  # filter(stage == "stage1") %>%
+  mutate(model_id = paste(stage, "step", "-", step)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
+
+# sort df columns by model name and step value
+df_tmp <- df_tmp %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
+# merge the metadata with the fb task df
+df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
+
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge stepwise tokens data for Pythia models
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+df_all_models_fb = df_all_models_fb %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
+  ))
+
 
 
 ```r
@@ -6416,6 +8223,699 @@ csv_list <- csv_files %>%
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl  (5): is_correct, stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
+## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## Rows: 768 Columns: 13
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: ","
@@ -6461,231 +8961,6 @@ csv_list <- csv_files %>%
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
-## lgl (3): item_id, condition, is_correct
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## Rows: 768 Columns: 17
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
-## dbl (6): item, question_id, prob_correct, prob_distractor, log_odds, step
-## lgl (6): item_id, condition, is_correct, stage, ingredient, tokens_seen
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## Rows: 768 Columns: 13
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: ","
@@ -6953,165 +9228,1177 @@ csv_list <- csv_files %>%
 ## chr (5): question, correct_answer, distractor_answer, model_path, model_shor...
 ## dbl (5): item, question_id, prob_correct, prob_distractor, log_odds
 ## lgl (3): item_id, condition, is_correct
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl  (5): is_correct, stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (5): item, question_id, prob_correct, prob_distractor, log_odds
+## lgl  (5): is_correct, stage, ingredient, step, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 768 Columns: 22
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (12): item_id, condition, knowledge_cue, first_mention, recent_mention, ...
+## dbl  (6): item, question_id, prob_correct, prob_distractor, log_odds, step
+## lgl  (4): is_correct, stage, ingredient, tokens_seen
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
-df_olmo13_attn_check <- bind_rows(csv_list)
-nrow(df_olmo13_attn_check)
+df_attn_check <- bind_rows(csv_list)
+nrow(df_attn_check)
 ```
 
 ```
-## [1] 273408
+## [1] 393216
 ```
 
 ```r
-table(df_olmo13_attn_check$model_path)
+table(df_attn_check$model_path)
 ```
 
 ```
 ## 
 ##  allenai/OLMo-2-0425-1B allenai/OLMo-2-1124-13B  allenai/OLMo-2-1124-7B 
 ##                   67584                   90624                   69120 
-##   EleutherAI/pythia-14m 
-##                   46080
+##   EleutherAI/pythia-12b   EleutherAI/pythia-14m    EleutherAI/pythia-1b 
+##                   39936                   46080                   39936 
+##  EleutherAI/pythia-6.9b 
+##                   39936
 ```
 
 ```r
-df_olmo13_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_olmo13_attn_check$tokens_seen)) * 1e9
+df_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_attn_check$tokens_seen)) * 1e9
 
-df_olmo13_attn_check = df_olmo13_attn_check %>%
-  # filter(stage == "stage1") %>%
+df_attn_check = df_attn_check %>%
   mutate(model_id = paste(stage, "step", "-", step)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_attn_check$step[is.na(df_attn_check$step)] <- 143000 #hard-coded the final step 
 
-length(unique(df_olmo13_attn_check$model_id))
+# sort df columns by model name and step value
+df_attn_check <- df_attn_check %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
 ```
 
 ```
-## [1] 207
+## Rows: 7 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (2): model_shorthand, model_stage
+## dbl (4): n_params_approx, n_heads, n_layers, total_train_tokens_approx
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 ```r
-table(df_olmo13_attn_check$model_path)
+# merge the metadata with the fb task df
+df_attn_check <- df_attn_check %>% left_join(metadata, by = "model_shorthand")
+
+
+# Change the model shorthand naming convention to match that in the df_attn_check 
+# dataframe!
+tokens_seen_pythia <- tokens_seen_pythia %>%
+  mutate(model_shorthand = str_replace(model_shorthand, "b", "B"))
+
+# merge stepwise tokens data for Pythia models
+df_attn_check <- df_attn_check %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+length(unique(df_attn_check$model_id))
+```
+
+```
+## [1] 222
+```
+
+```r
+table(df_attn_check$model_path)
 ```
 
 ```
 ## 
 ##  allenai/OLMo-2-0425-1B allenai/OLMo-2-1124-13B  allenai/OLMo-2-1124-7B 
 ##                   67584                   90624                   69120 
-##   EleutherAI/pythia-14m 
-##                   46080
+##   EleutherAI/pythia-12b   EleutherAI/pythia-14m    EleutherAI/pythia-1b 
+##                   39936                   46080                   39936 
+##  EleutherAI/pythia-6.9b 
+##                   39936
 ```
 
 ```r
-table(df_olmo13_attn_check$model_shorthand)
+table(df_attn_check$model_shorthand)
 ```
 
 ```
 ## 
-## OLMO 2 13B  OLMO 2 1B  OLMO 2 7B Pythia 14m 
-##      90624      67584      69120      46080
+##  OLMO 2 13B   OLMO 2 1B   OLMO 2 7B  Pythia 12B  Pythia 14m   Pythia 1B 
+##       90624       67584       69120       39936       46080       39936 
+## Pythia 6.9B 
+##       39936
 ```
 
 ```r
-table(df_olmo13_attn_check$tokens_seen_numeric)
+table(df_attn_check$tokens_seen_numeric)
 ```
 
 ```
 ## 
-##         0     1e+09     3e+09     4e+09     5e+09     7e+09     9e+09     1e+10 
-##      1536      1536      3840      1536      5376      2304      6912      1536 
-##   1.1e+10   1.3e+10   1.7e+10   1.9e+10   2.1e+10   2.6e+10     3e+10   3.4e+10 
-##      2304      5376      8448      2304      3840      6912      3072      4608 
-##   3.6e+10   3.8e+10   4.2e+10   4.7e+10   4.9e+10     5e+10   5.1e+10   5.5e+10 
-##      2304      3072      3072      2304      3072      2304      6144       768 
-##   5.9e+10   6.3e+10   6.8e+10   7.2e+10   7.6e+10     8e+10   8.4e+10   8.9e+10 
-##      2304      1536      2304       768       768       768      3072       768 
-##   9.3e+10     1e+11  1.01e+11  1.05e+11   1.1e+11  1.22e+11  1.26e+11  1.35e+11 
-##      2304      1536      2304       768      1536       768      1536      2304 
-##  1.39e+11  1.47e+11  1.51e+11   1.6e+11  1.64e+11  1.68e+11  1.81e+11  1.85e+11 
-##       768       768      1536       768       768      1536       768       768 
-##  1.89e+11  2.02e+11   2.1e+11  2.19e+11  2.23e+11  2.31e+11  2.44e+11  2.52e+11 
-##       768      2304       768       768       768       768      1536       768 
-##  2.61e+11  2.69e+11  2.73e+11  2.86e+11  2.94e+11  3.11e+11  3.15e+11  3.23e+11 
-##       768       768       768       768      1536       768       768       768 
-##  3.44e+11  3.53e+11  3.57e+11   3.7e+11  3.78e+11  3.86e+11  3.99e+11  4.03e+11 
-##       768       768       768       768       768       768       768       768 
-##  4.28e+11  4.41e+11  4.45e+11   4.7e+11  4.83e+11  4.87e+11  5.12e+11  5.25e+11 
-##       768       768       768       768       768       768       768       768 
-##  5.29e+11  5.46e+11  5.63e+11  5.71e+11  6.09e+11  6.13e+11  6.21e+11  6.51e+11 
-##       768       768       768       768       768       768       768       768 
-##  6.72e+11   6.8e+11  6.93e+11  7.39e+11  7.55e+11  7.97e+11  8.06e+11  8.52e+11 
-##       768       768       768      1536       768      1536       768       768 
-##   8.6e+11  8.81e+11  8.87e+11  9.23e+11  9.32e+11  9.61e+11  9.82e+11 1.007e+12 
-##       768       768       768       768       768       768       768       768 
-## 1.028e+12 1.049e+12  1.07e+12 1.083e+12 1.141e+12 1.146e+12 1.154e+12 1.238e+12 
-##       768       768       768       768       768       768       768       768 
-##  1.25e+12 1.267e+12 1.322e+12 1.368e+12 1.401e+12 1.427e+12 1.494e+12 1.531e+12 
-##       768       768       768       768       768       768       768       768 
-## 1.552e+12 1.628e+12 1.636e+12 1.712e+12 1.762e+12 1.775e+12 1.888e+12 1.938e+12 
-##       768       768       768       768       768       768      1536       768 
-## 2.014e+12 2.072e+12 2.114e+12 2.161e+12 2.274e+12 2.307e+12 2.475e+12   2.5e+12 
-##       768       768       768       768       768      1536       768       768 
-## 2.517e+12 2.664e+12  2.71e+12 2.752e+12 2.832e+12 2.962e+12 3.008e+12 3.041e+12 
-##       768       768       768       768       768       768       768       768 
-## 3.239e+12 3.251e+12 3.276e+12 3.482e+12 3.515e+12 3.574e+12 3.733e+12 3.851e+12 
-##       768       768       768       768       768       768       768       768 
-## 3.896e+12 3.985e+12 4.001e+12 4.186e+12 4.581e+12     5e+12 5.001e+12 
-##       768       768       768       768       768       768       768
+##            0      2097152      4194304      8388608     16777216     33554432 
+##         4608         2304         2304         2304         2304         2304 
+##     67108864    134217728    268435456    536870912        1e+09   1073741824 
+##         2304         3072         2304         2304         1536         3072 
+##   2097152000        3e+09        4e+09   4194304000        5e+09   6291456000 
+##         2304         3840         1536         3072         5376         2304 
+##        7e+09   8388608000        9e+09        1e+10  10485760000      1.1e+10 
+##         2304         3072         6912         1536         3072         2304 
+##  12582912000      1.3e+10  14680064000  16777216000      1.7e+10      1.9e+10 
+##         2304         5376         3072         3072         8448         2304 
+##  20971520000      2.1e+10  23068672000  25165824000      2.6e+10  29360128000 
+##         3072         3840         3072         2304         6912         3072 
+##        3e+10  31457280000      3.4e+10  35651584000      3.6e+10      3.8e+10 
+##         3072         3072         4608         2304         2304         3072 
+##  39845888000      4.2e+10  44040192000      4.7e+10  48234496000      4.9e+10 
+##         3072         3072         3072         2304         3072         3072 
+##        5e+10      5.1e+10  52428800000      5.5e+10  56623104000      5.9e+10 
+##         2304         6144         3072          768         3072         2304 
+##  62914560000      6.3e+10      6.8e+10  69206016000      7.2e+10  73400320000 
+##         3072         1536         2304         3072          768         2304 
+##      7.6e+10  79691776000        8e+10      8.4e+10  88080384000      8.9e+10 
+##          768         3072          768         3072         3072          768 
+##      9.3e+10  94371840000        1e+11     1.01e+11 102760448000     1.05e+11 
+##         2304         3072         1536         2304         3072          768 
+##      1.1e+11 111149056000 119537664000     1.22e+11     1.26e+11 127926272000 
+##         1536         3072         3072          768         1536         3072 
+##     1.35e+11 138412032000     1.39e+11     1.47e+11 148897792000     1.51e+11 
+##         2304         2304          768          768         3072         1536 
+## 159383552000      1.6e+11     1.64e+11     1.68e+11 171966464000     1.81e+11 
+##         3072          768          768         1536         3072          768 
+## 184549376000     1.85e+11     1.89e+11 199229440000     2.02e+11      2.1e+11 
+##         3072          768          768         3072         2304          768 
+## 211812352000     2.19e+11     2.23e+11 228589568000     2.31e+11     2.44e+11 
+##         3072          768          768         3072          768         1536 
+## 245366784000     2.52e+11     2.61e+11  2.62144e+11     2.69e+11     2.73e+11 
+##         3072          768          768         3072          768          768 
+## 281018368000     2.86e+11     2.94e+11 299892736000     3.11e+11     3.15e+11 
+##         3072          768         1536        20736          768          768 
+##     3.23e+11     3.44e+11     3.53e+11     3.57e+11      3.7e+11     3.78e+11 
+##          768          768          768          768          768          768 
+##     3.86e+11     3.99e+11     4.03e+11     4.28e+11     4.41e+11     4.45e+11 
+##          768          768          768          768          768          768 
+##      4.7e+11     4.83e+11     4.87e+11     5.12e+11     5.25e+11     5.29e+11 
+##          768          768          768          768          768          768 
+##     5.46e+11     5.63e+11     5.71e+11     6.09e+11     6.13e+11     6.21e+11 
+##          768          768          768          768          768          768 
+##     6.51e+11     6.72e+11      6.8e+11     6.93e+11     7.39e+11     7.55e+11 
+##          768          768          768          768         1536          768 
+##     7.97e+11     8.06e+11     8.52e+11      8.6e+11     8.81e+11     8.87e+11 
+##         1536          768          768          768          768          768 
+##     9.23e+11     9.32e+11     9.61e+11     9.82e+11    1.007e+12    1.028e+12 
+##          768          768          768          768          768          768 
+##    1.049e+12     1.07e+12    1.083e+12    1.141e+12    1.146e+12    1.154e+12 
+##          768          768          768          768          768          768 
+##    1.238e+12     1.25e+12    1.267e+12    1.322e+12    1.368e+12    1.401e+12 
+##          768          768          768          768          768          768 
+##    1.427e+12    1.494e+12    1.531e+12    1.552e+12    1.628e+12    1.636e+12 
+##          768          768          768          768          768          768 
+##    1.712e+12    1.762e+12    1.775e+12    1.888e+12    1.938e+12    2.014e+12 
+##          768          768          768         1536          768          768 
+##    2.072e+12    2.114e+12    2.161e+12    2.274e+12    2.307e+12    2.475e+12 
+##          768          768          768          768         1536          768 
+##      2.5e+12    2.517e+12    2.664e+12     2.71e+12    2.752e+12    2.832e+12 
+##          768          768          768          768          768          768 
+##    2.962e+12    3.008e+12    3.041e+12    3.239e+12    3.251e+12    3.276e+12 
+##          768          768          768          768          768          768 
+##    3.482e+12    3.515e+12    3.574e+12    3.733e+12    3.851e+12    3.896e+12 
+##          768          768          768          768          768          768 
+##    3.985e+12    4.001e+12    4.186e+12    4.581e+12        5e+12    5.001e+12 
+##          768          768          768          768          768          768
 ```
 
 ```r
-table(df_olmo13_attn_check$step)
+table(df_attn_check$step)
 ```
 
 ```
 ## 
-##       0      64     150     300     512     600     700     850     900    1000 
-##    2304     768     768     768     768     768     768     768     768    8448 
-##    1100    2000    2150    3000    4000    5000    6000    7000    8000    9000 
-##     768    9984     768    9216    8448    7680    6144    6144    5376    6144 
-##   10000   11000   11931   12000   13000   14000   15000   16000   17000   18000 
-##    4608    5376    4608    3840    1536     768    2304    1536    3072     768 
-##   19000   20000   21000   22000   23000   23100   23852   24000   25000   26000 
-##    2304    1536    1536     768    3072     768    2304    2304     768    1536 
-##   27000   29000   30000   31000   32000   33000   34000   36000   37000   38000 
-##     768    1536    1536     768     768     768     768     768     768     768 
-##   39000   40000   41000   42000   43000   44000   45000   48000   49000   50000 
-##     768     768     768     768     768     768     768    1536     768     768 
-##   53000   57000   58000   60000   61000   63000   64000   66200   68000   70000 
-##    2304     768    1536     768     768     768     768     768     768    1536 
+##       0       1       2       4       8      16      32      64     128     150 
+##    4608    2304    2304    2304    2304    2304    2304    3072    2304     768 
+##     256     300     512     600     700     850     900    1000    1100    2000 
+##    2304     768    3072     768     768     768     768   10752     768   12288 
+##    2150    3000    4000    5000    6000    7000    8000    9000   10000   11000 
+##     768   11520   10752    9984    8448    8448    7680    6144    6912    7680 
+##   11931   12000   13000   14000   15000   16000   17000   18000   19000   20000 
+##    4608    6144    1536    3072    4608    1536    5376     768    4608    1536 
+##   21000   22000   23000   23100   23852   24000   25000   26000   27000   29000 
+##    3840     768    5376     768    2304    2304    3072    1536    3072    1536 
+##   30000   31000   32000   33000   34000   35000   36000   37000   38000   39000 
+##    3840     768     768    3072     768    2304     768     768    3072     768 
+##   40000   41000   42000   43000   44000   45000   48000   49000   50000   53000 
+##     768     768    3072     768     768    3072    1536    3072     768    4608 
+##   57000   58000   60000   61000   63000   64000   66000   66200   68000   70000 
+##    3072    1536     768    3072     768     768    2304     768     768    1536 
 ##   71000   74000   76000   77000   80000   81000   82000   84000   88000   90000 
-##     768     768     768     768     768     768     768     768    1536     768 
+##    3072     768    3072     768     768     768    3072     768    3840     768 
 ##   92000   95000   1e+05  101000  101500  102000  105700  109000  110000  111000 
-##     768    1536     768     768     768     768     768     768     768     768 
+##     768    3840     768    3072     768     768     768    3072     768     768 
 ##  112000  117000  120000  122000  122500  125000  129000  130000  134000  136000 
-##     768    1536     768     768     768     768     768     768    1536     768 
-##  140000  146000  150000  151000  160000  167000  170000  176000  180000  185000 
+##     768    3840     768     768     768    3072     768     768    3840     768 
+##  140000  143000  146000  150000  151000  160000  167000  170000  176000  180000 
+##     768   39168     768     768     768     768     768     768     768     768 
+##  185000  190000  192000  204000  210000  225000  229000  230000  247000  250000 
+##     768     768     768     768    1536     768     768     768     768    1536 
+##  260000  271000  273000  290000  298000  310000  323000  326000  330000  353000 
+##     768     768     768     768    1536     768     768     768     768     768 
+##  356000  360000  380000  386000  388000  410000  419000  423000  440000  459000 
 ##     768     768     768     768     768     768     768     768     768     768 
-##  190000  192000  204000  210000  225000  229000  230000  247000  250000  260000 
-##     768     768     768    1536     768     768     768     768    1536     768 
-##  271000  273000  290000  298000  310000  323000  326000  330000  353000  356000 
-##     768     768     768    1536     768     768     768     768     768     768 
-##  360000  380000  386000  388000  410000  419000  423000  440000  459000  462000 
+##  462000  480000  499000  504000  510000  546000  550000  590000  596000  596057 
+##     768     768     768     768     768     768    1536     768     768     768 
+##   6e+05  630000  656000  680000  717000  730000  780000  781000  840000  852000 
 ##     768     768     768     768     768     768     768     768     768     768 
-##  480000  499000  504000  510000  546000  550000  590000  596000  596057   6e+05 
-##     768     768     768     768     768    1536     768     768     768     768 
-##  630000  656000  680000  717000  730000  780000  781000  840000  852000   9e+05 
+##   9e+05  928646  960000 1030000 1100000 1180000 1270000 1350000 1450000 1550000 
 ##     768     768     768     768     768     768     768     768     768     768 
-##  928646  960000 1030000 1100000 1180000 1270000 1350000 1450000 1550000 1660000 
-##     768     768     768     768     768     768     768     768     768     768 
-## 1780000 1900000 1907359 
-##     768     768     768
+## 1660000 1780000 1900000 1907359 
+##     768     768     768     768
 ```
 
 
 ```r
-df_olmo13_attn_check = df_olmo13_attn_check %>%
+df_attn_check = df_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
     log_odds <= 0 ~ FALSE
@@ -7124,18 +10411,15 @@ df_olmo13_attn_check = df_olmo13_attn_check %>%
   ))
 
 ## Accuracy of item start location
-
-
-df_summ = df_olmo13_attn_check %>%
+df_summ = df_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
-           step, tokens_seen_numeric, stage) %>%
-  summarise(mean_accuracy = mean(correct)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+           step, tokens_seen_numeric_mod, stage) %>%
+  summarise(mean_accuracy = mean(correct)) 
 ```
 
 ```
 ## `summarise()` has grouped output by 'model_path', 'model_shorthand',
-## 'question_id', 'step', 'tokens_seen_numeric'. You can override using the
+## 'question_id', 'step', 'tokens_seen_numeric_mod'. You can override using the
 ## `.groups` argument.
 ```
 
@@ -7149,13 +10433,13 @@ df_summ %>%
 
 ```
 ## # A tibble: 5 × 3
-##   model_path                step mean_accuracy
-##   <chr>                    <dbl>         <dbl>
-## 1 allenai/OLMo-2-0425-1B  900000             1
-## 2 allenai/OLMo-2-1124-13B  13000             1
-## 3 allenai/OLMo-2-1124-13B  31000             1
-## 4 allenai/OLMo-2-1124-13B 323000             1
-## 5 allenai/OLMo-2-1124-13B 459000             1
+##   model_path               step mean_accuracy
+##   <chr>                   <dbl>         <dbl>
+## 1 EleutherAI/pythia-6.9b  71000             1
+## 2 EleutherAI/pythia-6.9b  82000             1
+## 3 EleutherAI/pythia-6.9b 109000             1
+## 4 EleutherAI/pythia-6.9b 117000             1
+## 5 EleutherAI/pythia-6.9b 134000             1
 ```
 
 ```r
@@ -7167,11 +10451,14 @@ df_summ = df_summ %>%
     question_id == 4 ~ "Second person was {Y}"
   ))
 
+# PAPER FIGURE - attention check results per question
 df_summ %>%
-  filter(stage == "stage1") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
+  #geom_line(size = 1,
+  #           alpha = .5)+
   geom_point(size = 3,
              alpha = .7) +
   geom_hline(yintercept = .5, linetype = "dotted",
@@ -7179,7 +10466,41 @@ df_summ %>%
   scale_x_log10() +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Tokens Seen",
+  labs(title = "Development of Situation Model", 
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") +
+  facet_wrap(~reorder(q_label, question_id))
+```
+
+```
+## Warning: Removed 4 rows containing missing values (`geom_point()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+```r
+# PAPER FIGURE: plot same for the Pythias as well
+df_summ %>%
+  filter(grepl("Pythia", model_shorthand)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_point(size = 3,
+             alpha = .7) +
+  geom_hline(yintercept = .5, linetype = "dotted",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       x = "Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
@@ -7191,15 +10512,15 @@ df_summ %>%
   facet_wrap(~reorder(q_label, question_id))
 ```
 
-![](fb_analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](fb_analysis_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
 ```r
 ### Final step
-df_model_max = df_olmo13_attn_check %>%
+df_model_max = df_attn_check %>%
   group_by(model_shorthand) %>%
   summarise(max_step = max(step, na.rm = TRUE))
 
-df_olmo13_attn_check %>% 
+df_attn_check %>% 
   inner_join(df_model_max) %>%
   filter(step == max_step) %>%
   ggplot(aes(x = log_odds,
@@ -7209,7 +10530,7 @@ df_olmo13_attn_check %>%
                        color=NA, 
                        scale=.85, 
                        # size=1, 
-                       alpha = .8,
+                       alpha = .6,
                        stat="density") +
   labs(x = "Log Odds (Start vs. End)",
        y = "",
@@ -7224,7 +10545,7 @@ df_olmo13_attn_check %>%
         legend.text = element_text(size = rel(1.2)),
         legend.title = element_text(size = rel(1.2)),
         strip.text.x = element_text(size = rel(1.2))) +
-    scale_fill_manual(values = viridisLite::viridis(4, option = "mako", 
+    scale_fill_manual(values = viridisLite::viridis(7, option = "mako", 
                                                     begin = 0.8, end = 0.15)) 
 ```
 
@@ -7240,140 +10561,36 @@ df_olmo13_attn_check %>%
 ## generated.
 ```
 
-![](fb_analysis_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
-
-```r
-df_olmo13_attn_check %>% 
-  inner_join(df_model_max) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, question_id) %>%
-  summarise(mean_accuracy = mean(correct),
-            step = mean(step))
-```
-
-```
-## Joining with `by = join_by(model_shorthand)`
-## `summarise()` has grouped output by 'model_shorthand'. You can override using
-## the `.groups` argument.
-```
-
-```
-## # A tibble: 16 × 4
-## # Groups:   model_shorthand [4]
-##    model_shorthand question_id mean_accuracy    step
-##    <chr>                 <dbl>         <dbl>   <dbl>
-##  1 OLMO 2 13B                1         0.839  596057
-##  2 OLMO 2 13B                2         0.729  596057
-##  3 OLMO 2 13B                3         0.198  596057
-##  4 OLMO 2 13B                4         1      596057
-##  5 OLMO 2 1B                 1         0.760 1907359
-##  6 OLMO 2 1B                 2         0.781 1907359
-##  7 OLMO 2 1B                 3         0.229 1907359
-##  8 OLMO 2 1B                 4         0.854 1907359
-##  9 OLMO 2 7B                 1         0.969  928646
-## 10 OLMO 2 7B                 2         0.771  928646
-## 11 OLMO 2 7B                 3         0.25   928646
-## 12 OLMO 2 7B                 4         0.938  928646
-## 13 Pythia 14m                1         0.417  134000
-## 14 Pythia 14m                2         0.573  134000
-## 15 Pythia 14m                3         0.531  134000
-## 16 Pythia 14m                4         0.417  134000
-```
-
-```r
-df_items = df_olmo13_attn_check %>% 
-  inner_join(df_model_max) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, item, question_id, q_label,
-           correct_answer, distractor_answer) %>%
-  summarise(mean_accuracy = mean(correct))
-```
-
-```
-## Joining with `by = join_by(model_shorthand)`
-## `summarise()` has grouped output by 'model_shorthand', 'item', 'question_id',
-## 'q_label', 'correct_answer'. You can override using the `.groups` argument.
-```
-
-```r
-df_items %>%
-  filter(model_shorthand == "OLMO 2 13B") %>%
-  ggplot(aes(x = factor(item),
-             y = mean_accuracy)) +
-  geom_bar(stat = "identity") +
-  facet_wrap(~q_label) +
-  labs(x = "Scenario",
-       y = "Accuracy") +
-  theme_minimal()
-```
-
 ![](fb_analysis_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
 
-
 ```r
-df_model_max_fb = df_all_models_fb %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(stage == "stage1") %>%
-  group_by(model_shorthand) %>%
-  summarise(max_step = max(step, na.rm = TRUE))
+#df_olmo13_attn_check %>% 
+#  inner_join(df_model_max) %>%
+#  filter(step == max_step) %>%
+#  group_by(model_shorthand, question_id) %>%
+#  summarise(mean_accuracy = mean(correct),
+#            step = mean(step))
 
-df_items_fb_true = df_all_models_fb %>% 
-  filter(model_shorthand == "Olmo 2 13b") %>% 
-  filter(stage == "stage1") %>%
-  filter(condition == "True Belief") %>%
-  inner_join(df_model_max_fb) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, passage, condition,
-           start) %>%
-  summarise(mean_accuracy = mean(correct))
+
+
+#df_items = df_olmo13_attn_check %>% 
+ # inner_join(df_model_max) %>%
+ # filter(step == max_step) %>%
+ # group_by(model_shorthand, item, question_id, q_label,
+ #          correct_answer, distractor_answer) %>%
+ # summarise(mean_accuracy = mean(correct))
+
+
+#df_items %>%
+#  filter(model_shorthand == "OLMO 2 13B") %>%
+#  ggplot(aes(x = factor(item),
+ #            y = mean_accuracy)) +
+ ## geom_bar(stat = "identity") +
+#  facet_wrap(~q_label) +
+#  labs(x = "Scenario",
+ #      y = "Accuracy") +
+ # theme_minimal()
 ```
 
-```
-## Joining with `by = join_by(model_shorthand)`
-## `summarise()` has grouped output by 'model_shorthand', 'passage', 'condition'.
-## You can override using the `.groups` argument.
-```
-
-```r
-df_items_fb_false = df_all_models_fb %>% 
-  filter(model_shorthand == "Olmo 2 13b") %>% 
-  filter(stage == "stage1") %>%
-  filter(condition == "False Belief") %>%
-  inner_join(df_model_max_fb) %>%
-  filter(step == max_step) %>%
-  group_by(model_shorthand, passage, condition,
-           end) %>%
-  summarise(mean_accuracy = mean(correct))
-```
-
-```
-## Joining with `by = join_by(model_shorthand)`
-## `summarise()` has grouped output by 'model_shorthand', 'passage', 'condition'.
-## You can override using the `.groups` argument.
-```
-
-```r
-df_items_fb_false %>%
-  ggplot(aes(x = factor(passage),
-             y = mean_accuracy)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Scenario",
-       y = "Accuracy") +
-  theme_minimal()
-```
-
-![](fb_analysis_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
-
-```r
-df_items_fb_true %>%
-  ggplot(aes(x = factor(passage),
-             y = mean_accuracy)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Scenario",
-       y = "Accuracy") +
-  theme_minimal()
-```
-
-![](fb_analysis_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
 
 
