@@ -832,12 +832,45 @@ fb_and_all_attn <- bind_rows(
   fb_and_attn_q4 %>% filter(task_type == "situation model 4")
 )
 
-fb_and_all_attn %>%
-  group_by(model_shorthand,step,tokens_seen_numeric,tokens_seen_numeric_mod, task_type)%>%
-  mutate(overall_accuracy = mean(mean_accuracy))
   
+situation_model_avg <- fb_and_all_attn %>%
+  filter(task_type != "false belief task") %>%
+  group_by(model_family, model_shorthand, step, tokens_seen_numeric, tokens_seen_numeric_mod) %>%
+  summarise(mean_accuracy = mean(mean_accuracy, na.rm = TRUE),
+            .groups = "drop") %>%
+  mutate(task_type = "situation model")
 
+# Now combine this new df with the false belief task df
+fb_and_all_attn <- bind_rows(
+  fb_and_attn_q1 %>% filter(task_type == "false belief"),
+  situation_model_avg
+)
 
+# Convert to factor with desired order
+fb_and_all_attn <- fb_and_all_attn %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+## PAPER FIGURE: FB & OVERALL SITUATION MODEL
+fb_and_all_attn %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) + 
+   geom_line(size = 1,
+             alpha = .5) + 
+  scale_x_log10() + 
+  scale_y_continuous(limits = c(0, 1)) + 
+  labs(title = "Development of Situation Model",
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
 
 ```
 
