@@ -392,7 +392,7 @@ def behavior_loss_fn(outputs, batch):
     margin_loss = -(correct_log_prob - incorrect_log_prob)
     
     return margin_loss.mean()
-    
+
 def compute_fisher_for_attention_params(model, dataloader, behavior_loss_fn):
     """
     Compute diagonal Fisher information for Q/K matrices
@@ -457,5 +457,82 @@ def rank_attention_heads_by_fisher(fisher_dict):
     
     return ranked
 
+## Create baseline for FIM that is predicated on just next-token prediction, but 
+## matches some length/content properties of the Situation Modeling and False Belief task stims.
+
+def create_controlled_baseline(tokenizer, n_examples=192):
+    """
+    Create baseline with matched length/structure but simple semantics
+    """
+    
+    # Templates with similar structure but no complex reasoning
+    templates = [
+        "The {noun1} was on the {location1}. Then someone moved the {noun1} to the {location2}. After that, another person put the {noun1} on the {location3}. Finally, the {noun1} was placed in the {location4}. The {noun1} is currently in the",
+        
+        "In the morning, the {noun} was {adjective1}. During the afternoon, it became {adjective2}. By evening, it turned {adjective3}. At night, it remained {adjective4}. During the afternoon, it was",
+        
+        "First, {name1} went to the {place1}. Next, {name2} traveled to the {place2}. Then, {name3} visited the {place3}. After that, {name4} arrived at the {place4}. {name2} went to the",
+        
+        "The {color1} {object} was next to the {color2} {object}. The {color3} {object} was beside the {color4} {object}. The {color5} {object} was near the {color6} {object}. The {color2} {object} was next to the",
+    ]
+    
+    # Vocabulary pools
+    nouns = ['book', 'pen', 'cup', 'phone', 'key', 'ball', 'hat', 'shoe', 'bag', 'watch']
+    locations = ['table', 'shelf', 'desk', 'counter', 'floor', 'chair', 'drawer', 'box']
+    adjectives = ['red', 'blue', 'large', 'small', 'warm', 'cold', 'bright', 'dark']
+    names = ['Sean', 'Anna', 'Marta', 'Dave', 'Morgan', 'Casey', 'Riley', 'Quinn']
+    places = ['park', 'store', 'office', 'school', 'library', 'gym', 'cafe', 'station']
+    colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'black', 'white']
+    objects = ['box', 'ball', 'book', 'cup', 'pen', 'bag']
+    
+    baseline_examples = []
+    
+    for _ in range(n_examples):
+        template = np.random.choice(templates)
+        
+        # Fill template
+        filled = template.format(
+            noun1=np.random.choice(nouns),
+            noun=np.random.choice(nouns),
+            location1=np.random.choice(locations),
+            location2=np.random.choice(locations),
+            location3=np.random.choice(locations),
+            location4=np.random.choice(locations),
+            adjective1=np.random.choice(adjectives),
+            adjective2=np.random.choice(adjectives),
+            adjective3=np.random.choice(adjectives),
+            adjective4=np.random.choice(adjectives),
+            name1=np.random.choice(names),
+            name2=np.random.choice(names),
+            name3=np.random.choice(names),
+            name4=np.random.choice(names),
+            place1=np.random.choice(places),
+            place2=np.random.choice(places),
+            place3=np.random.choice(places),
+            place4=np.random.choice(places),
+            color1=np.random.choice(colors),
+            color2=np.random.choice(colors),
+            color3=np.random.choice(colors),
+            color4=np.random.choice(colors),
+            color5=np.random.choice(colors),
+            color6=np.random.choice(colors),
+            object=np.random.choice(objects)
+        )
+        
+        # Split into prompt and answer
+        parts = filled.rsplit(' ', 1)
+        prompt = parts[0]
+        correct_answer = ' ' + parts[1]
+        
+        # Random distractor
+        incorrect_answer = ' ' + np.random.choice(locations + adjectives + places + colors)
+        
+        baseline_examples.append({
+            'prompt': prompt,
+            'correct_answer': correct_answer,
+            'incorrect_answer': incorrect_answer
+        })
+    
+    return baseline_examples
 
 
