@@ -5,6 +5,7 @@ import random
 import torch
 from torch.nn.functional import softmax
 from transformers import GPTNeoXForCausalLM, AutoTokenizer
+from torch.func import functional_call, grad
 
 
 
@@ -364,6 +365,97 @@ def modify_attention_weights(mpath, model, checkpoint, modification, layer_idx, 
 
     
     return model, q_start_idx, k_start_idx, head_size, hidden_size
+
+
+### FISHER INFORMATION METRIC FOR PARAMETER IDENTIFICATION
+
+def behavior_loss_fn(outputs, batch):
+    """
+    Contrastive loss: correct answer (box) vs wrong answer (basket)
+    
+    This more directly targets the belief-tracking mechanism
+    """
+    logits = outputs.logits[:, batch['answer_position'], :]
+    
+    # Token IDs
+    correct_token = batch['correct_token_id']  # "box" 
+    incorrect_token = batch['incorrect_token_id']  # "basket"
+    
+    # Get log probabilities
+    log_probs = F.log_softmax(logits, dim=-1)
+    
+    correct_log_prob = log_probs[:, correct_token]
+    incorrect_log_prob = log_probs[:, incorrect_token]
+    
+    # Loss: maximize gap between correct and incorrect
+    # Negative because we want to maximize correct - incorrect
+    margin_loss = -(correct_log_prob - incorrect_log_prob)
+    
+    return margin_loss.mean()
+    
+def compute_fisher_for_attention_params(model, dataloader, behavior_loss_fn):
+    """
+    Compute diagonal Fisher information for Q/K matrices
+    """
+    fisher_dict = {}
+    
+    # Target specific attention parameters
+    attention_params = {
+        name: param for name, param in model.named_parameters()
+        if 'q_proj' in name or 'k_proj' in name
+    }
+    
+    for name in attention_params:
+        fisher_dict[name] = torch.zeros_like(attention_params[name])
+    
+    model.eval()
+    n_samples = 0
+    
+    for batch in dataloader:
+        # Forward pass
+        outputs = model(**batch)
+        loss = behavior_loss_fn(outputs, batch)
+        
+        # Compute gradients for this sample
+        grads = torch.autograd.grad(loss, attention_params.values(), 
+                                     retain_graph=False)
+        
+        # Accumulate squared gradients (diagonal FIM approximation)
+        for (name, param), grad in zip(attention_params.items(), grads):
+            fisher_dict[name] += grad.pow(2)
+        
+        n_samples += batch['input_ids'].size(0)
+    
+    # Average over samples
+    for name in fisher_dict:
+        fisher_dict[name] /= n_samples
+    
+    return fisher_dict
+
+def rank_attention_heads_by_fisher(fisher_dict):
+    """
+    Rank attention heads by their Fisher information
+    """
+    head_importance = {}
+    
+    for name, fisher_values in fisher_dict.items():
+        # Parse layer and head from parameter name
+        # e.g., "model.layers.5.self_attn.q_proj.weight"
+        if 'layers' in name:
+            layer_num = int(name.split('.layers.')[1].split('.')[0])
+            matrix_type = 'q' if 'q_proj' in name else 'k'
+            
+            # Sum Fisher info as importance score
+            importance = fisher_values.sum().item()
+            
+            key = f"layer_{layer_num}_{matrix_type}"
+            head_importance[key] = importance
+    
+    # Sort by importance
+    ranked = sorted(head_importance.items(), 
+                   key=lambda x: x[1], reverse=True)
+    
+    return ranked
 
 
 
