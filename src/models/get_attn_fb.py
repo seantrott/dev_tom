@@ -82,7 +82,7 @@ def main(model_path, revision = None, suffix=None):
 
 			# Extract attention FROM the last token
 			attentions = outputs.attentions # Tuple of tensors, one per layer
-			# Shape: (batch_size, num_heads, sequence_length, sequence_length)
+			# Shape: (batch_size, num_heads, seq_len (token `from`), seq_len (token `to`))
 
 			# For a specific layer (e.g., layer 30)
 			layer_idx = 30
@@ -92,10 +92,10 @@ def main(model_path, revision = None, suffix=None):
 
 			# Or get for ALL layers at once
 			all_layers_last_token = torch.stack([
-			    attn[0, :, last_token_idx, :].mean(dim=0)  # Average across heads
+			    attn[0, :, last_token_idx, :]
 			    for attn in attentions
 			])
-			# Shape: (num_layers, seq_len)
+			# Shape: (num_layers, num_heads, seq_len)
 
 
 			# Compute entropy over attention scores for each layer/head
