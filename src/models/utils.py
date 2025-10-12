@@ -465,7 +465,7 @@ def create_controlled_baseline(tokenizer, n_examples=192):
     Create baseline with matched length/structure but simple semantics
     """
     
-    # Templates with similar structure but no complex reasoning
+    # Templates with similar structure but no complex reasoning about belief states required
     templates = [
         "The {noun1} was on the {location1}. Then someone moved the {noun1} to the {location2}. After that, another person put the {noun1} on the {location3}. Finally, the {noun1} was placed in the {location4}. The {noun1} is currently in the",
         
@@ -480,11 +480,11 @@ def create_controlled_baseline(tokenizer, n_examples=192):
     nouns = ['book', 'pen', 'cup', 'phone', 'key', 'ball', 'hat', 'shoe', 'bag', 'watch']
     locations = ['table', 'shelf', 'desk', 'counter', 'floor', 'chair', 'drawer', 'box']
     adjectives = ['red', 'blue', 'large', 'small', 'warm', 'cold', 'bright', 'dark']
-    names = ['Sean', 'Anna', 'Marta', 'Dave', 'Morgan', 'Casey', 'Riley', 'Quinn']
+    names = ['Sean', 'Anna', 'Marta', 'Dave', 'Laura', 'Ed', 'Sarah', 'John', 'Patrick', 'Lisa', 'Hannah', 'Cameron', 'Mary', 'Paula','Tim','Ross','Karen']
     places = ['park', 'store', 'office', 'school', 'library', 'gym', 'cafe', 'station']
     colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'black', 'white']
     objects = ['box', 'ball', 'book', 'cup', 'pen', 'bag']
-    
+
     baseline_examples = []
     
     for _ in range(n_examples):
