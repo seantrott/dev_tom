@@ -31,6 +31,31 @@ MODELS = {
 
 # TODO: specify the checkpoints you'll compute attention for
 
+def get_attentions(model, tokenizer, passage):
+	"""Run model, return attention scores from final token to all other tokens 
+	in the passage; and return token ids and actual tokens attended to"""
+
+	# Tokenize the passage
+	inputs = tokenizer(passage, return_tensors="pt").to(model.device)
+
+	# Get the sequence length
+	seq_len = inputs['input_ids'].shape[1]
+	last_token_idx = seq_len - 1
+
+	# Run model
+    with torch.no_grad():
+        output = model(**inputs, output_attentions=True, output_hidden_states=True)
+        attentions = output.attentions # Shape: [layer_idx][(batch, head, token_id_from, token_id_to)]
+
+    # Get attentions from final token to all other tokens in the passage, 
+    # for all layers in one go
+	all_layers_last_token = torch.stack([
+	    attn[0, :, last_token_idx, :]
+	    for attn in attentions
+	])
+	# Shape: (num_layers, num_heads, seq_len)
+
+	return 
 
 def main(model_path, revision = None, suffix=None):
 
@@ -55,8 +80,6 @@ def main(model_path, revision = None, suffix=None):
         use_auth_token=True
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-
 
     ### Load data
     df_fb = pd.read_csv("../../data/raw/fb.csv")
@@ -69,16 +92,12 @@ def main(model_path, revision = None, suffix=None):
             start_location = " " + row['start']
             end_location =  " " +row['end']
 
-            # Tokenize the passage
-			inputs = tokenizer(passage, return_tensors="pt").to(model.device)
 
 	    	# Get attention scores
 			with torch.no_grad():
 			    outputs = model(**inputs, output_attentions=True)
 
-			# # Get the sequence length
-			seq_len = inputs['input_ids'].shape[1]
-			last_token_idx = seq_len - 1
+			
 
 			# Extract attention FROM the last token
 			attentions = outputs.attentions # Tuple of tensors, one per layer
@@ -90,15 +109,10 @@ def main(model_path, revision = None, suffix=None):
 			# Shape: (num_heads, seq_len)
 			# This shows what each head in the last token attends to
 
-			# Or get for ALL layers at once
-			all_layers_last_token = torch.stack([
-			    attn[0, :, last_token_idx, :]
-			    for attn in attentions
-			])
-			# Shape: (num_layers, num_heads, seq_len)
-
+			
 
 			# Compute entropy over attention scores for each layer/head
+
 
 			# Select layer/head with minimum entropy AND maximum attention
 			# Save its score
