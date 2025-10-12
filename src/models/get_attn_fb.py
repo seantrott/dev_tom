@@ -55,7 +55,7 @@ def get_attentions(model, tokenizer, passage):
 	])
 	# Shape: (num_layers, num_heads, seq_len)
 
-	return 
+	return all_layers_last_token
 
 def main(model_path, revision = None, suffix=None):
 
@@ -92,27 +92,12 @@ def main(model_path, revision = None, suffix=None):
             start_location = " " + row['start']
             end_location =  " " +row['end']
 
-
-	    	# Get attention scores
-			with torch.no_grad():
-			    outputs = model(**inputs, output_attentions=True)
-
 			
-
-			# Extract attention FROM the last token
-			attentions = outputs.attentions # Tuple of tensors, one per layer
-			# Shape: (batch_size, num_heads, seq_len (token `from`), seq_len (token `to`))
-
-			# For a specific layer (e.g., layer 30)
-			layer_idx = 30
-			last_token_attention = attentions[layer_idx][0, :, last_token_idx, :]
-			# Shape: (num_heads, seq_len)
-			# This shows what each head in the last token attends to
-
-			
+			# Get attention scores from final token to other tokens in passage
+			all_layers_last_token = get_attentions(model, tokenizer, passage)
 
 			# Compute entropy over attention scores for each layer/head
-
+			
 
 			# Select layer/head with minimum entropy AND maximum attention
 			# Save its score
