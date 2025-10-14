@@ -15,16 +15,16 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
 
-from del_models import clear_huggingface_cache
+#from del_models import clear_huggingface_cache
 
 # Specify the models to characterize 
 MODELS = {
     ### OLMo
-    #"EleutherAI/pythia-14m": "Pythia 14m",
+    "EleutherAI/pythia-14m": "Pythia 14m",
     #"EleutherAI/pythia-1b": "Pythia 1B",
     #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
     #"EleutherAI/pythia-12b": "Pythia 12B",
-    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
     }
@@ -97,7 +97,7 @@ def main(model_path, revision = None, suffix=None):
 			all_layers_last_token = get_attentions(model, tokenizer, passage)
 
 			# Compute entropy over attention scores for each layer/head
-			
+
 
 			# Select layer/head with minimum entropy AND maximum attention
 			# Save its score
