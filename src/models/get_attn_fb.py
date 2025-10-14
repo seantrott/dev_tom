@@ -17,60 +17,49 @@ from huggingface_hub import list_repo_refs
 
 #from del_models import clear_huggingface_cache
 
-# Specify the models to characterize 
-MODELS = {
-    ### OLMo
-    "EleutherAI/pythia-14m": "Pythia 14m",
-    #"EleutherAI/pythia-1b": "Pythia 1B",
-    #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
-    #"EleutherAI/pythia-12b": "Pythia 12B",
-    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+# Specify the models, and target checkpoints, to characterize 
+MODELS = [
+    {
+        "model_path": "EleutherAI/pythia-14m",
+        "name": "Pythia 14M",
+        "revisions": ["main"]
+    },
+    {
+        "model_path": "allenai/OLMo-2-1124-13B",
+        "name": "OLMO 2 13B",
+        "revisions": ["stage1-step43000-tokens181B"]
     }
-
-# TODO: specify the checkpoints you'll compute attention for
+]
 
 def get_attentions(model, tokenizer, passage):
 	"""Run model, return attention scores from final token to all other tokens 
 	in the passage; and return token ids and actual tokens attended to"""
+	
+    # Tokenize the passage
 
-	# Tokenize the passage
 	inputs = tokenizer(passage, return_tensors="pt").to(model.device)
-
-	# Get the sequence length
+	
+    # Get the sequence length
 	seq_len = inputs['input_ids'].shape[1]
 	last_token_idx = seq_len - 1
-
-	# Run model
+	
+    # Run model
     with torch.no_grad():
-        output = model(**inputs, output_attentions=True, output_hidden_states=True)
-        attentions = output.attentions # Shape: [layer_idx][(batch, head, token_id_from, token_id_to)]
+        output = model(**inputs, output_attentions=True, output_hidden_states=False)
+    
+    attentions = output.attentions # Shape: [layer_idx][(batch, head, token_id_from, token_id_to)]
 
     # Get attentions from final token to all other tokens in the passage, 
     # for all layers in one go
 	all_layers_last_token = torch.stack([
-	    attn[0, :, last_token_idx, :]
-	    for attn in attentions
+        attn[0, :, last_token_idx, :]
+        for attn in attentions
 	])
 	# Shape: (num_layers, num_heads, seq_len)
-
-	return all_layers_last_token
+	
+    return all_layers_last_token
 
 def main(model_path, revision = None, suffix=None):
-
-    # Set up save path, filename, etc.
-    savepath = f"../../data/processed/fb_attention_scores/"
-    if not os.path.exists(savepath): 
-        os.makedirs(savepath)
-
-    if "/" in model_path:
-        filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
-    else:
-        filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
-
-    print(filename)
-    print(savepath)
 
     ### Load model
     model = AutoModelForCausalLM.from_pretrained(
@@ -78,7 +67,11 @@ def main(model_path, revision = None, suffix=None):
         revision=revision,
         device_map="auto",
         use_auth_token=True
-    )
+        )
+
+    # Set output_attentions on the config after loading
+    model.config.output_attentions = True
+    model.eval()
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
 
     ### Load data
@@ -153,5 +146,35 @@ def main(model_path, revision = None, suffix=None):
     df_results.to_csv(os.path.join(savepath,filename), index=False)
 
 
-    	
+if __name__ == "__main__":
 
+
+    # Loop through models and revisions
+    for model in MODELS:
+        #test code: 
+        model = MODELS[0]
+
+        model_path = model["model_path"]
+        for revision in model["revisions"]:
+            print(f"Processing {model['name']} (revision: {revision})")
+            print(f"  Path: {model['model_path']}")
+
+            suffix = revision.replace("/", "_") # to tag output files uniquely
+            
+            # Set up save path, filename, etc.
+            savepath = f"../../data/processed/fb_attention_scores/"
+            if not os.path.exists(savepath): 
+                os.makedirs(savepath)
+
+            if "/" in model_path:
+                filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
+            else:
+                filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
+
+            print(filename)
+            print(savepath)
+
+            main(model_path, revision, suffix)
+            
+            # Your Hugging Face loading code here
+            # model_instance = load_model(model["path"], revision=revision)
