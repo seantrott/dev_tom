@@ -157,7 +157,7 @@ def main(model_path, revision = None, suffix=None):
 
 
     ### Load data
-    df_fb = pd.read_csv("../../data/raw/fb.csv")
+    df_fb = pd.read_csv("data/raw/fb.csv")
 
     results = []
     ### Run model
