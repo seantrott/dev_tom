@@ -173,6 +173,7 @@ def main(model_path, revision = None, suffix=None, name=None):
                         'max_attn_idx': max_attn_idx,
                         'max_attn_token': max_attn_token,
                         'max_attn_token_id': max_attn_token_id,
+                        "attention_scores": attention_scores
                     })
 
             pbar.update(1)
