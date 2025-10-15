@@ -32,18 +32,18 @@ MODELS = [
     }
 ]
 
-def get_attentions(model, tokenizer, passage):
-	"""Run model, return attention scores from final token to all other tokens 
-	in the passage; and return token ids and actual tokens attended to"""
-	
-    # Tokenize the passage
 
-	inputs = tokenizer(passage, return_tensors="pt").to(model.device)
-	
+def get_attentions(model, tokenizer, passage):
+    """Run model, return attention scores from final token to all other tokens 
+    in the passage; and return token ids and actual tokens attended to"""
+    
+    # Tokenize the passage
+    inputs = tokenizer(passage, return_tensors="pt").to(model.device)
+    
     # Get the sequence length
-	seq_len = inputs['input_ids'].shape[1]
-	last_token_idx = seq_len - 1
-	
+    seq_len = inputs['input_ids'].shape[1]
+    last_token_idx = seq_len - 1
+    
     # Run model
     with torch.no_grad():
         output = model(**inputs, output_attentions=True, output_hidden_states=False)
@@ -56,10 +56,13 @@ def get_attentions(model, tokenizer, passage):
         attn[0, :, last_token_idx, :]
         for attn in attentions
     ])
-	# Shape: (num_layers, num_heads, seq_len)
-	
-    return all_layerheads_last_token
-
+    # Shape: (num_layers, num_heads, seq_len)
+    
+    # Get token ids and tokens for reference
+    token_ids = inputs['input_ids'][0].cpu().numpy()
+    tokens = [tokenizer.decode([tid]) for tid in token_ids]
+    
+    return all_layerheads_last_token, token_ids, tokens
 
 def compute_attention_entropy(attention_scores):
     """
@@ -123,14 +126,13 @@ def main(model_path, revision = None, suffix=None):
             start_location = " " + row['start']
             end_location =  " " +row['end']
 
-			
-			# Get attention scores from final token to other tokens in passage
-			all_layerheads_last_token = get_attentions(model, tokenizer, passage)
+            # Get attention scores from final token to other tokens in passage
+            all_layerheads_last_token = get_attentions(model, tokenizer, passage)
 
             nlayers = all_layerheads_last_token.shape[0]
-            nheads all_layerheads_last_token[1]
+            nheads = all_layerheads_last_token[1]
 
-			# Compute entropy over attention scores for each layer/head
+            # Compute entropy over attention scores for each layer/head
             # Iterate over layers
             for layer in range(all_layerheads_last_token.shape[0]):
 
@@ -138,26 +140,28 @@ def main(model_path, revision = None, suffix=None):
                 entropy_all_heads = compute_attention_entropy(all_heads_scores)
                 max_attn_all_heads, token_idx = get_max_attention_score_and_token_idx(attention_scores)
 
-			# Save min, max, mean attention scores, and entropy over attention scores for 
-            # each layer's list of heads -- save head data as list to avoid creating so many 
-            # rows that will have to store duplicate passages and all that other information
+                # Save max and entropy over attention scores for 
+                # each layer's list of heads -- save head data as list to avoid creating so many 
+                # rows that will have to store duplicate passages and all that other information
 
-			# Save the token id that receives max attention score from this layer/head, from final token
+                # Save the token id that receives max attention score from this layer/head, from final token
 
-            results.append({
-                'start_prob': start_prob,
-                'end_prob': end_prob,
-                'passage': row['passage'],
-                'start': row['start'],
-                'end': row['end'],
-                'knowledge_cue': row['knowledge_cue'],
-                'first_mention': row['first_mention'],
-                'recent_mention': row['recent_mention'],
-                'log_odds': np.log2(start_prob / end_prob),
-                'condition': row['condition']
-            })
+                results.append({
+                    'passage': row['passage'],
+                    'start': row['start'],
+                    'end': row['end'],
+                    "layer": layer,
+                    "headlist": np.arange(nheads),
+                    "entropy_by_headlist": entropy_all_heads,
+                    "max_attn_by_headlist": max_attn_all_heads,
+                    "max_attn_tokenid_by_headlist": token_idx,
+                    'knowledge_cue': row['knowledge_cue'],
+                    'first_mention': row['first_mention'],
+                    'recent_mention': row['recent_mention'],
+                    'condition': row['condition']
+                })
 
-            pbar.update(1)
+                pbar.update(1)
 
     ### Create DataFRame
     df_results = pd.DataFrame(results)
