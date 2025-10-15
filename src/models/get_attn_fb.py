@@ -11,6 +11,7 @@ import os
 import random
 import re
 
+from scipy.stats import entropy
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
@@ -51,13 +52,50 @@ def get_attentions(model, tokenizer, passage):
 
     # Get attentions from final token to all other tokens in the passage, 
     # for all layers in one go
-	all_layers_last_token = torch.stack([
+    all_layerheads_last_token = torch.stack([
         attn[0, :, last_token_idx, :]
         for attn in attentions
-	])
+    ])
 	# Shape: (num_layers, num_heads, seq_len)
 	
-    return all_layers_last_token
+    return all_layerheads_last_token
+
+
+def compute_attention_entropy(attention_scores):
+    """
+    Compute entropy over attention scores from the final token to all tokens.
+    
+    Args:
+        attention_scores: np.ndarray of shape (seq_len,) or (batch_size, seq_len)
+                         Attention weights from final token position to all tokens.
+                         Should be normalized (sum to 1).
+    
+    Returns:
+        float or np.ndarray: Entropy value(s). Higher entropy means more dispersed
+                           attention, lower entropy means more focused attention.
+    """
+    if attention_scores.ndim == 1:
+        # Single sequence: compute entropy directly
+        return entropy(attention_scores)
+    elif attention_scores.ndim == 2:
+        # Batch of sequences: compute entropy for each
+        return np.array([entropy(scores) for scores in attention_scores])
+    else:
+        raise ValueError("attention_scores must be 1D or 2D")
+
+def get_max_attention_score_and_token_idx(attention_scores): 
+
+    if attention_scores.ndim == 1:
+        # Single sequence: compute entropy directly
+        return torch.max(attention_scores).values
+    elif attention_scores.ndim == 2:
+        # Batch of sequences: compute entropy for each
+        max_scores = torch.max(attention_scores,1).values
+        max_idx = torch.max(attention_scores,1).indices
+        return 
+    else:
+        raise ValueError("attention_scores must be 1D or 2D")
+
 
 def main(model_path, revision = None, suffix=None):
 
@@ -66,7 +104,7 @@ def main(model_path, revision = None, suffix=None):
         model_path,
         revision=revision,
         device_map="auto",
-        use_auth_token=True
+        attn_implementation="eager"
         )
 
     # Set output_attentions on the config after loading
@@ -87,21 +125,23 @@ def main(model_path, revision = None, suffix=None):
 
 			
 			# Get attention scores from final token to other tokens in passage
-			all_layers_last_token = get_attentions(model, tokenizer, passage)
+			all_layerheads_last_token = get_attentions(model, tokenizer, passage)
 
 			# Compute entropy over attention scores for each layer/head
+            # Iterate over layers
+            for layer in range(all_layerheads_last_token.shape[0]):
 
+                all_heads_scores = all_layerheads_last_token[layer]
+                entropy_all_heads = compute_attention_entropy(all_heads_scores)
+                max_attn_all_heads, token_idx = get_max_attention_score_and_token_idx(attention_scores)
 
-			# Select layer/head with minimum entropy AND maximum attention
-			# Save its score
+			# Save min, max, mean attention scores, and entropy over attention scores for 
+            # each layer/head
+
+            # Save the token id that receives the max attention score for this layer/head
 			# Save the token id that receives max attention score from this layer/head, from final token
 
 
-            start_prob = next_seq_prob(model, tokenizer, passage, start_location)
-            end_prob = next_seq_prob(model, tokenizer, passage, end_location)
-
-            if start_prob == 0 or end_prob == 0:
-                continue
 
             results.append({
                 'start_prob': start_prob,
@@ -116,8 +156,6 @@ def main(model_path, revision = None, suffix=None):
                 'condition': row['condition']
             })
 
-
-            
             pbar.update(1)
 
     ### Create DataFRame

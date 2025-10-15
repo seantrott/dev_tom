@@ -1,8 +1,23 @@
-accelerate
-huggingface_hub
-matplotlib
+# Core scientific computing (install first)
 numpy
+scipy
+
+# Data manipulation
 pandas<2.3
-transformers
+
+# PyTorch (before packages that depend on it)
 torch
+torchvision
+torchaudio
+
+# Visualization (depends on numpy)
+matplotlib
+seaborn
+
+# Hugging Face ecosystem (depends on torch, numpy)
+huggingface_hub
+transformers
+accelerate
+
+# Utilities
 tqdm
