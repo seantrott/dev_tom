@@ -194,8 +194,6 @@ if __name__ == "__main__":
 
     # Loop through models and revisions
     for model_dict in MODELS:
-        #test code: 
-        model_dict = MODELS[0]
 
         model_path = model_dict["model_path"]
         for revision in model_dict["revisions"]:
@@ -214,8 +212,11 @@ if __name__ == "__main__":
             else:
                 filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
 
-            print(filename)
-            print(savepath)
+            # Skip this checkpoint's analysis if you've already run it before
+            print("Checking if we've already run this analysis...")
+            if os.path.exists(os.path.join(savepath,filename)):
+                print("Already run this model for this checkpoint.")
+                continue
 
             # Run it!!
             main(model_path, revision, suffix)
