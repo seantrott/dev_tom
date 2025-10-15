@@ -156,9 +156,6 @@ def main(model_path, revision = None, suffix=None, name=None):
                     max_attn_token = tokens[max_attn_idx]
                     max_attn_token_id = token_ids[max_attn_idx]
 
-                    print(layer_idx)
-                    print(head_idx)
-                    print(max_attn_token)
 
                     # Append one row per layer/head
                     results.append({
@@ -236,7 +233,7 @@ if __name__ == "__main__":
             print(filename)
             print(savepath)
 
-            main(model_path, revision, suffix, name)
+            main(model_path, revision, suffix, model_shorthand)
             
             # Your Hugging Face loading code here
             # model_instance = load_model(model["path"], revision=revision)
