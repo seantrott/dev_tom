@@ -127,7 +127,7 @@ def main(model_path, revision = None, suffix=None):
             end_location =  " " +row['end']
 
             # Get attention scores from final token to other tokens in passage
-            all_layerheads_last_token = get_attentions(model, tokenizer, passage)
+            all_layerheads_last_token, _, _ = get_attentions(model, tokenizer, passage)
 
             nlayers = all_layerheads_last_token.shape[0]
             nheads = all_layerheads_last_token[1]
