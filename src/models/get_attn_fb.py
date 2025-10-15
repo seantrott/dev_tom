@@ -221,7 +221,7 @@ if __name__ == "__main__":
             suffix = revision.replace("/", "_") # to tag output files uniquely
             
             # Set up save path, filename, etc.
-            savepath = f"../../data/processed/fb_attention_scores/"
+            savepath = f"data/processed/fb_attention_scores/"
             if not os.path.exists(savepath): 
                 os.makedirs(savepath)
 
