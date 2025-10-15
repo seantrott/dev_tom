@@ -165,8 +165,8 @@ def main(model_path, revision = None, suffix=None):
 
     ### Create DataFRame
     df_results = pd.DataFrame(results)
-    df_results['model_path'] = model["model_path"]
-    df_results['model_shorthand'] = model["name"]
+    df_results['model_path'] = model_dict["model_path"]
+    df_results['model_shorthand'] = model_dict["name"]
 
     if revision:
         parts = revision.split("-")  # e.g., ['stage2', 'ingredient4', 'step102500', 'tokens860B']
@@ -193,14 +193,14 @@ if __name__ == "__main__":
 
 
     # Loop through models and revisions
-    for model in MODELS:
+    for model_dict in MODELS:
         #test code: 
-        model = MODELS[0]
+        model_dict = MODELS[0]
 
-        model_path = model["model_path"]
-        for revision in model["revisions"]:
-            print(f"Processing {model['name']} (revision: {revision})")
-            print(f"  Path: {model['model_path']}")
+        model_path = model_dict["model_path"]
+        for revision in model_dict["revisions"]:
+            print(f"Processing {model_dict['name']} (revision: {revision})")
+            print(f"  Path: {model_dict['model_path']}")
 
             suffix = revision.replace("/", "_") # to tag output files uniquely
             
