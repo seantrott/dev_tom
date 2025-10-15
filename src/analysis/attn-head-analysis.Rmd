@@ -59,6 +59,10 @@ library(tidyverse)
 library(jsonlite)
 
 # Function to plot attention density over tokens
+library(tidyverse)
+library(jsonlite)
+
+# Function to plot attention density over tokens
 plot_attention_density <- function(df, row_idx = 1) {
   # Extract data for the specified row
   layer <- df$layer[row_idx]
@@ -66,13 +70,17 @@ plot_attention_density <- function(df, row_idx = 1) {
   
   # Parse the attention_scores string into a numeric vector
   scores_str <- df$attention_scores[row_idx]
-  # Remove newlines and parse as JSON
+  # Remove newlines and convert spaces to commas for JSON parsing
+  scores_str <- gsub("\n", "", scores_str)
   scores_str <- gsub(" ", ", ", scores_str)
   scores <- fromJSON(scores_str)
   
-  # Parse the tokenized_passage string into a vector of token IDs
+  # Parse the tokenized_passage string into a vector of tokens
   token_str <- df$tokenized_passage[row_idx]
-  tokens <- fromJSON(token_str)
+  # Remove the brackets and split by comma+space, then clean quotes
+  token_str <- gsub("^\\[|\\]$", "", token_str)  # Remove outer brackets
+  tokens <- strsplit(token_str, ", ")[[1]]  # Split by comma+space
+  tokens <- gsub("^'|'$", "", tokens)  # Remove surrounding quotes
   
   # Create a dataframe for plotting
   plot_df <- data.frame(
@@ -91,24 +99,22 @@ plot_attention_density <- function(df, row_idx = 1) {
       midpoint = median(plot_df$attention),
       name = "Attention\nScore"
     ) +
-    geom_text(aes(label = token), 
-              size = 3, 
-              angle = 45, 
-              hjust = 0,
-              vjust = 0.5) +
+    scale_x_continuous(
+      breaks = plot_df$position,
+      labels = plot_df$token
+    ) +
     labs(
       title = paste("Attention Scores - Layer", layer, "Head", head),
-      x = "Token Position",
+      x = "Tokens",
       y = ""
     ) +
     theme_minimal() +
     theme(
       axis.text.y = element_blank(),
       axis.ticks.y = element_blank(),
-      panel.grid = element_blank(),
-      plot.margin = margin(t = 40, r = 10, b = 10, l = 10)
-    ) +
-    coord_cartesian(clip = "off")
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      panel.grid = element_blank()
+    )
   
   return(p)
 }
