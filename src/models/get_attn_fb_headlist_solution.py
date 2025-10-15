@@ -138,7 +138,7 @@ def main(model_path, revision = None, suffix=None):
 
                 all_heads_scores = all_layerheads_last_token[layer]
                 entropy_all_heads = compute_attention_entropy(all_heads_scores)
-                max_attn_all_heads, token_idx = get_max_attention_score_and_token_idx(attention_scores)
+                max_attn_all_heads, token_idx = get_max_attention_score_and_token_idx(all_heads_scores)
 
                 # Save max and entropy over attention scores for 
                 # each layer's list of heads -- save head data as list to avoid creating so many 
