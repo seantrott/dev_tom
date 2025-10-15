@@ -14,6 +14,17 @@ tokenizer = AutoTokenizer.from_pretrained("allenai/OLMo-2-1124-13B")
 # Generate dataset of baseline stims to find masks for
 utils.create_controlled_baseline(tokenizer, n_examples=192)
 
+# Format the situation model examples like the baseline stims,
+# with one list of dicts per attention check question
+
+# Load 
+
+# Format the false belief task examples like the baseline stims
+
+# Load fb stims
+fb_stims = pd.read_csv("../../data/raw/fb.csv")
+
+
 def prepare_belief_tracking_batch(examples, tokenizer):
     """
     Prepare your belief-tracking examples
