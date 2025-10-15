@@ -180,7 +180,7 @@ def main(model_path, revision = None, suffix=None, name=None):
     ### Create DataFrame
     df_results = pd.DataFrame(results)
     df_results['model_path'] = model_path
-    df_results['model_shorthand'] = name
+    df_results['model_shorthand'] = model_shorthand
 
 
     if revision:
@@ -208,15 +208,13 @@ if __name__ == "__main__":
 
 
     # Loop through models and revisions
-    for model in MODELS:
-        #test code: 
-        model = MODELS[0]
+    for model_dict in MODELS:
 
-        model_path = model["model_path"]
-        model_shorthand = model['name']
-        for revision in model["revisions"]:
-            print(f"Processing {model['name']} (revision: {revision})")
-            print(f"  Path: {model['model_path']}")
+        model_path = model_dict["model_path"]
+        model_shorthand = model_dict['name']
+        for revision in model_dict["revisions"]:
+            print(f"Processing {model_dict['name']} (revision: {revision})")
+            print(f"  Path: {model_dict['model_path']}")
 
             suffix = revision.replace("/", "_") # to tag output files uniquely
             
@@ -230,8 +228,11 @@ if __name__ == "__main__":
             else:
                 filename = f"fb-attentionscores-{model_path.split('/')[-1]}-{suffix}.csv"
 
-            print(filename)
-            print(savepath)
+            # Skip this checkpoint's analysis if you've already run it before
+            print("Checking if we've already run this analysis...")
+            if os.path.exists(os.path.join(savepath,filename)):
+                print("Already run this model for this checkpoint.")
+                continue
 
             main(model_path, revision, suffix, model_shorthand)
             
