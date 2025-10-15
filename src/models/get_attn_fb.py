@@ -32,17 +32,17 @@ MODELS = [
 ]
 
 def get_attentions(model, tokenizer, passage):
-	"""Run model, return attention scores from final token to all other tokens 
-	in the passage; and return token ids and actual tokens attended to"""
-	
+    """Run model, return attention scores from final token to all other tokens 
+    in the passage; and return token ids and actual tokens attended to"""
+    
     # Tokenize the passage
 
-	inputs = tokenizer(passage, return_tensors="pt").to(model.device)
-	
+    inputs = tokenizer(passage, return_tensors="pt").to(model.device)
+    
     # Get the sequence length
-	seq_len = inputs['input_ids'].shape[1]
-	last_token_idx = seq_len - 1
-	
+    seq_len = inputs['input_ids'].shape[1]
+    last_token_idx = seq_len - 1
+    
     # Run model
     with torch.no_grad():
         output = model(**inputs, output_attentions=True, output_hidden_states=False)
@@ -51,12 +51,12 @@ def get_attentions(model, tokenizer, passage):
 
     # Get attentions from final token to all other tokens in the passage, 
     # for all layers in one go
-	all_layers_last_token = torch.stack([
+    all_layers_last_token = torch.stack([
         attn[0, :, last_token_idx, :]
         for attn in attentions
-	])
-	# Shape: (num_layers, num_heads, seq_len)
-	
+    ])
+    # Shape: (num_layers, num_heads, seq_len)
+    
     return all_layers_last_token
 
 def main(model_path, revision = None, suffix=None):
@@ -65,8 +65,7 @@ def main(model_path, revision = None, suffix=None):
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         revision=revision,
-        device_map="auto",
-        use_auth_token=True
+        device_map="auto"
         )
 
     # Set output_attentions on the config after loading
@@ -75,7 +74,8 @@ def main(model_path, revision = None, suffix=None):
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
 
     ### Load data
-    df_fb = pd.read_csv("../../data/raw/fb.csv")
+    ### Should be run from main
+    df_fb = pd.read_csv("data/raw/fb.csv")
 
     results = []
     ### Run model
@@ -85,16 +85,16 @@ def main(model_path, revision = None, suffix=None):
             start_location = " " + row['start']
             end_location =  " " +row['end']
 
-			
-			# Get attention scores from final token to other tokens in passage
-			all_layers_last_token = get_attentions(model, tokenizer, passage)
+            
+            # Get attention scores from final token to other tokens in passage
+            all_layers_last_token = get_attentions(model, tokenizer, passage)
 
-			# Compute entropy over attention scores for each layer/head
+            # Compute entropy over attention scores for each layer/head
 
 
-			# Select layer/head with minimum entropy AND maximum attention
-			# Save its score
-			# Save the token id that receives max attention score from this layer/head, from final token
+            # Select layer/head with minimum entropy AND maximum attention
+            # Save its score
+            # Save the token id that receives max attention score from this layer/head, from final token
 
 
             start_prob = next_seq_prob(model, tokenizer, passage, start_location)
@@ -153,9 +153,11 @@ if __name__ == "__main__":
     for model in MODELS:
         #test code: 
         model = MODELS[0]
+        print(model)
 
         model_path = model["model_path"]
         for revision in model["revisions"]:
+            print(revision)
             print(f"Processing {model['name']} (revision: {revision})")
             print(f"  Path: {model['model_path']}")
 
