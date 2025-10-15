@@ -127,8 +127,9 @@ def main(model_path, revision = None, suffix=None):
 			# Get attention scores from final token to other tokens in passage
 			all_layerheads_last_token = get_attentions(model, tokenizer, passage)
 
-            nlayers = ...
-            nheads ...
+            nlayers = all_layerheads_last_token.shape[0]
+            nheads all_layerheads_last_token[1]
+
 			# Compute entropy over attention scores for each layer/head
             # Iterate over layers
             for layer in range(all_layerheads_last_token.shape[0]):
@@ -138,9 +139,9 @@ def main(model_path, revision = None, suffix=None):
                 max_attn_all_heads, token_idx = get_max_attention_score_and_token_idx(attention_scores)
 
 			# Save min, max, mean attention scores, and entropy over attention scores for 
-            # each layer/head
+            # each layer's list of heads -- save head data as list to avoid creating so many 
+            # rows that will have to store duplicate passages and all that other information
 
-            # Save the token id that receives the max attention score for this layer/head
 			# Save the token id that receives max attention score from this layer/head, from final token
 
             results.append({
@@ -212,7 +213,7 @@ if __name__ == "__main__":
             print(filename)
             print(savepath)
 
+            # Run it!!
             main(model_path, revision, suffix)
             
-            # Your Hugging Face loading code here
-            # model_instance = load_model(model["path"], revision=revision)
+            
