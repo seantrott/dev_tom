@@ -649,6 +649,7 @@ subtitle_text_1 <- df_summ_attn %>%
   unique()
 
 # PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
+# PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
 fb_and_attn_q1 %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
@@ -670,6 +671,29 @@ fb_and_attn_q1 %>%
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
+
+
+fb_and_attn_q1 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(
+       subtitle = subtitle_text_1,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
 
 
 ## ====== ====== ====== ====== ====== 
@@ -719,6 +743,28 @@ fb_and_attn_q2 %>%
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 2 and false belief by tokens seen
+fb_and_attn_q2 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(subtitle = subtitle_text_2,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
 
 
 ## ====== ====== ====== ====== ====== 
@@ -770,6 +816,27 @@ fb_and_attn_q3 %>%
   facet_wrap(~model_shorthand)
 
  
+
+fb_and_attn_q3 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(subtitle = subtitle_text_3,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+ 
 ## ====== ====== ====== ====== ====== 
 ## ====== FB + ATTN CHECK 4 ======
 ## ====== ====== ====== ====== ======
@@ -805,8 +872,7 @@ fb_and_attn_q4 %>%
              alpha = .5) +
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(title = "Development of Situation Model",
-       subtitle = subtitle_text_4,
+  labs(subtitle = subtitle_text_4,
        x = "Tokens Seen",
        y = "Accuracy",
        color = "",
@@ -818,6 +884,27 @@ fb_and_attn_q4 %>%
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
 
+
+fb_and_attn_q4 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_4,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
 
 ## ====== ====== ====== ====== ====== 
 ## ====== FB + ALL ATTN CHECKS ======
@@ -875,4 +962,239 @@ fb_and_all_attn %>%
 ```
 
 
+## Time series modeling
 
+Ideas:
+
+- Cross-correlation analysis (ccf) 
+- Granger causality
+- Changepoint / onset analysis
+
+
+CCF: Here, we quantify the correlation between each AC and FB at various "lags". 
+
+```{r}
+
+### Multiple obs. per step/token seen ,so group across?
+df_summ_fb_tokens = df_summ_fb %>%
+  filter(stage == "stage1") %>%
+  group_by(model_shorthand, tokens_seen_numeric_mod, step) %>%
+  summarise(fb_accuracy = mean(mean_accuracy))
+
+### Multiple obs. per step/token seen ,so group across?
+df_all = df_summ_attn %>%
+  mutate(model_shorthand = str_to_title(model_shorthand)) %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  transmute(ac_accuracy = mean_accuracy) %>%
+  group_by(model_shorthand, tokens_seen_numeric_mod, step, question_id) %>%
+  summarise(ac_accuracy = mean(ac_accuracy)) %>%
+  # filter(question_id == 1) %>%
+  inner_join(df_summ_fb_tokens) %>%
+  arrange(tokens_seen_numeric_mod)
+
+
+### New plot
+plot_data <- df_all %>%
+  dplyr::select(model_shorthand, tokens_seen_numeric_mod, step, question_id, 
+         ac_accuracy, fb_accuracy) %>%
+  pivot_longer(cols = c(ac_accuracy, fb_accuracy),
+               names_to = "task_type",
+               values_to = "accuracy") %>%
+  mutate(task_type = case_when(
+    task_type == "ac_accuracy" ~ "Situation Model",
+    task_type == "fb_accuracy" ~ "False Belief"
+  )) %>%
+  mutate(q_label = case_when(
+    question_id == 1 ~ "Item was first in {START}",
+    question_id == 2 ~ "At end of story, item in {END}",
+    question_id == 3 ~ "Original person was {X}",
+    question_id == 4 ~ "Second person was {Y}"
+  ))
+
+
+# Create the plot
+# Create the plot
+plot_data %>%
+  filter(question_id <= 2) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+
+
+
+plot_data %>%
+  filter(question_id > 2) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+
+
+
+plot_data %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id),, ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+
+
+
+
+model_data_wide <- df_all %>%
+  pivot_wider(
+    names_from = question_id,
+    values_from = c(ac_accuracy),  # or just the columns you want
+    names_prefix = "q"  # optional: adds "q" prefix to column names
+  )
+
+
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q1, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+
+
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q2, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q3, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+
+
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q4, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+```
+
+
+
+Granger causality:
+
+```{r}
+library(lmtest)
+library(vars)
+
+# Prepare time series
+ts_data <- model_data_wide %>%
+  dplyr::select(tokens_seen_numeric_mod, q1, q2, q3, q4, fb_accuracy) %>%
+  drop_na()
+
+# Prepare data as multivariate time series
+ts_data_clean <- model_data_wide %>%
+  ungroup() %>%
+  dplyr::select(q1, fb_accuracy) %>%
+  drop_na()
+
+# Test different lag orders
+VARselect(ts_data_clean, lag.max = 10, type = "const")
+
+# Test if situation model "Granger-causes" false belief
+grangertest(fb_accuracy ~ q1, 
+            order = 1,  # number of lags
+            data = ts_data)
+
+grangertest(fb_accuracy ~ q2, 
+            order = 3,  # number of lags
+            data = ts_data)
+
+```

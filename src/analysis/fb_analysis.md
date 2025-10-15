@@ -20,10 +20,10 @@ output:
 
 
 
-# Load LLM data
+# Load LLM False Belief Data
 
 
-```r
+``` r
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
 # setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
 
@@ -4574,7 +4574,7 @@ csv_list <- csv_files %>%
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-```r
+``` r
 df_tmp <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
 nrow(df_tmp)
@@ -4584,7 +4584,7 @@ nrow(df_tmp)
 ## [1] 98880
 ```
 
-```r
+``` r
 # Create a column with numeric versions of the tokens seen for that step, using 
 # the Olmo file naming convention
 df_tmp$tokens_seen_numeric <- as.numeric(sub("B", "", df_tmp$tokens_seen)) * 1e9
@@ -4618,7 +4618,7 @@ metadata <- read_csv("../../data/raw/metadata_models.csv")
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-```r
+``` r
 # merge the metadata with the fb task df
 df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
 
@@ -4637,7 +4637,7 @@ tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-```r
+``` r
 # merge stepwise tokens data for Pythia models
 df_all_models_fb <- df_all_models_fb %>%
   left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
@@ -4661,7 +4661,7 @@ length(unique(df_tmp$model_id))
 ## [1] 246
 ```
 
-```r
+``` r
 table(df_tmp$model_path)
 ```
 
@@ -4675,7 +4675,7 @@ table(df_tmp$model_path)
 ##                    9984
 ```
 
-```r
+``` r
 table(df_tmp$model_shorthand)
 ```
 
@@ -4687,7 +4687,7 @@ table(df_tmp$model_shorthand)
 ##        9984
 ```
 
-```r
+``` r
 table(df_tmp$tokens_seen_numeric)
 ```
 
@@ -4741,7 +4741,7 @@ table(df_tmp$tokens_seen_numeric)
 ##       192       192       192       192       192       192       192
 ```
 
-```r
+``` r
 table(df_tmp$step)
 ```
 
@@ -4791,7 +4791,7 @@ table(df_tmp$step)
 ##     192     192     192     192     192
 ```
 
-```r
+``` r
 # How many unique checkpoints per model, per stage (in the case of stages)?
 df_all_models_fb %>% 
   group_by(model_shorthand,stage) %>% 
@@ -4820,7 +4820,7 @@ df_all_models_fb %>%
 ## 10 Pythia 6.9b     <NA>             52
 ```
 
-```r
+``` r
 df_all_models_fb %>% 
   group_by(model_shorthand,stage) %>% 
   summarise(unique_tokens = n_distinct(tokens_seen_numeric_mod))
@@ -4848,7 +4848,7 @@ df_all_models_fb %>%
 ## 10 Pythia 6.9b     <NA>              52
 ```
 
-```r
+``` r
 # Tracking down duplicate tokens_seen_numeric_mod for different steps
 # Find tokens_seen values that appear with multiple different steps
 duplicates <- df_all_models_fb %>%
@@ -4891,7 +4891,7 @@ df_all_models_fb %>%
 ## #   model_family <chr>
 ```
 
-```r
+``` r
 tmp <- df_all_models_fb %>%
   filter(model_shorthand == "Olmo 2 7b") %>%
   filter(tokens_seen_numeric_mod %in% problem_tokens) %>% 
@@ -4919,7 +4919,7 @@ tmp <- df_all_models_fb %>%
 
 
 
-```r
+``` r
 df_all_models_fb = df_all_models_fb %>%
   mutate(correct = case_when(
     condition == "False Belief" & log_odds > 0 ~ TRUE,
@@ -4927,7 +4927,7 @@ df_all_models_fb = df_all_models_fb %>%
     TRUE ~ FALSE  # all other cases are incorrect
   ))
 
-df_summ = df_all_models_fb %>%
+df_summ_fb = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, model_family, stage) %>%
   summarise(mean_accuracy = mean(correct)) %>%
@@ -4940,8 +4940,8 @@ df_summ = df_all_models_fb %>%
 ## argument.
 ```
 
-```r
-df_summ %>%
+``` r
+df_summ_fb %>%
   select(model_shorthand, mean_accuracy)
 ```
 
@@ -4970,7 +4970,7 @@ df_summ %>%
 ## # ℹ 1 more variable: mean_accuracy <dbl>
 ```
 
-```r
+``` r
 mean(df_all_models_fb$correct)
 ```
 
@@ -4978,8 +4978,8 @@ mean(df_all_models_fb$correct)
 ## [1] 0.5298847
 ```
 
-```r
-df_summ %>%
+``` r
+df_summ_fb %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
   select(model_shorthand, mean_accuracy, step, stage) %>%
@@ -4997,9 +4997,9 @@ df_summ %>%
 ## 5 Olmo 2 13b              0.693 419000 stage1
 ```
 
-```r
+``` r
 # Get the final step for each model and extract final accuracy
-df_summ = df_all_models_fb %>%
+df_summ_fb = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
            step, tokens_seen_numeric, 
            model_family, stage, n_params_approx) %>%
@@ -5013,13 +5013,13 @@ df_summ = df_all_models_fb %>%
 ## `.groups` argument.
 ```
 
-```r
-final_accuracy <- df_summ %>%
+``` r
+final_accuracy <- df_summ_fb %>%
   group_by(model_shorthand, model_family) %>%
   filter(step == max(step)) %>%  # Get the final step for each model
   ungroup()
 
-final_accuracy <- df_summ %>%
+final_accuracy <- df_summ_fb %>%
   filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
   group_by(model_shorthand) %>%
   slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
@@ -5052,9 +5052,9 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-```r
+``` r
 # PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
-ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
+ggplot(df_summ_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
   geom_point(data = final_accuracy, size = 4, 
@@ -5077,8 +5077,8 @@ ggplot(df_summ, aes(x = n_params_approx, y = mean_accuracy)) +
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
 
-```r
-df_summ %>%
+``` r
+df_summ_fb %>%
   mutate(step_modded = step + 1) %>%
   ggplot(aes(x = step_modded,
              y = mean_accuracy,
@@ -5108,8 +5108,8 @@ df_summ %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
 
-```r
-df_summ %>%
+``` r
+df_summ_fb %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -5135,9 +5135,9 @@ df_summ %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-4.png)<!-- -->
 
-```r
+``` r
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias
-df_summ %>%
+df_summ_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -5167,7 +5167,7 @@ df_summ %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-5.png)<!-- -->
 
-```r
+``` r
 # Filter for only stage1 olmo data and pythia models (e.g. exclude olmo stage2)
 olmo_and_pythia <- df_all_models_fb %>%
   filter(stage == "stage1" | is.na(stage)) 
@@ -5191,8 +5191,8 @@ summary(mod_full)
 ##     (1 | start) + (1 | model_shorthand)
 ##    Data: olmo_and_pythia
 ## 
-##      AIC      BIC   logLik deviance df.resid 
-## 108729.2 108784.9 -54358.6 108717.2    80058 
+##       AIC       BIC    logLik -2*log(L)  df.resid 
+##  108729.2  108784.9  -54358.6  108717.2     80058 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
@@ -5206,21 +5206,21 @@ summary(mod_full)
 ## 
 ## Fixed effects:
 ##                                 Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)                    -0.354592   0.069160  -5.127 2.94e-07 ***
-## conditionTrue Belief            0.586821   0.014349  40.896  < 2e-16 ***
-## knowledge_cueImplicit          -0.134477   0.014345  -9.374  < 2e-16 ***
-## log10(tokens_seen_numeric_mod)  0.015500   0.004282   3.620 0.000294 ***
+## (Intercept)                    -0.354589   0.069207  -5.124    3e-07 ***
+## conditionTrue Belief            0.586820   0.014350  40.894  < 2e-16 ***
+## knowledge_cueImplicit          -0.134477   0.014346  -9.374  < 2e-16 ***
+## log10(tokens_seen_numeric_mod)  0.015501   0.004283   3.619 0.000295 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) cndtTB knwl_I
-## condtnTrBlf -0.104              
+## condtnTrBlf -0.105              
 ## knwldg_cImp -0.102 -0.010       
-## lg10(tk___) -0.656  0.004 -0.001
+## lg10(tk___) -0.657  0.004 -0.001
 ```
 
-```r
+``` r
 ### Plot coefficients
 df_coef <- broom.mixed::tidy(mod_full, effects = "fixed") %>%
   mutate(term = forcats::fct_reorder(term, estimate))
@@ -5242,7 +5242,7 @@ df_coef %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-3-6.png)<!-- -->
 
-```r
+``` r
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
 ```
 
@@ -5253,7 +5253,7 @@ Here, we predict the probability of a correct response over tokens seen, focusin
 ### Using GAM
 
 
-```r
+``` r
 library(mgcv)
 ```
 
@@ -5279,10 +5279,10 @@ library(mgcv)
 ```
 
 ```
-## This is mgcv 1.8-42. For overview type 'help("mgcv-package")'.
+## This is mgcv 1.9-1. For overview type 'help("mgcv-package")'.
 ```
 
-```r
+``` r
 library(dplyr)
 library(purrr)
 
@@ -5308,175 +5308,92 @@ fits <- df_summary_fb %>%
 
 ```
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-
 ## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
 ```
 
-```r
+``` r
 df_pred <- map2_df(fits, names(fits), function(mod, name) {
   newdat <- data.frame(tokens_seen_numeric_mod = seq(min(df_summary_fb$tokens_seen_numeric_mod),
                                         max(df_summary_fb$tokens_seen_numeric_mod),
@@ -5503,7 +5420,7 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
-```r
+``` r
 ### TODO: Identify inflection points
 ```
 
@@ -5514,43 +5431,8 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 **TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
 
 
-df_tmp = df_tmp %>%
-  # filter(stage == "stage1") %>%
-  mutate(model_id = paste(stage, "step", "-", step)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
-## must change this to the actual value of the final step, 143000
-df_tmp$step[is.na(df_tmp$step)] <- 143000 #hard-coded the final step 
-
-# sort df columns by model name and step value
-df_tmp <- df_tmp %>%
-  arrange(model_shorthand, step)  # arrange in ascending order
-
-metadata <- read_csv("../../data/raw/metadata_models.csv")
-# merge the metadata with the fb task df
-df_all_models_fb <- df_tmp %>% left_join(metadata, by = "model_shorthand")
-
-tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
-# merge stepwise tokens data for Pythia models
-df_all_models_fb <- df_all_models_fb %>%
-  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
-
-
-df_all_models_fb = df_all_models_fb %>%
-  mutate(model_family = case_when(
-    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
-                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
-    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
-  ))
-
-
-
-```r
+``` r
 directory_path <- "../../data/processed/attn-checks-local/"
 
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
@@ -10169,7 +10051,7 @@ csv_list <- csv_files %>%
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-```r
+``` r
 df_attn_check <- bind_rows(csv_list)
 nrow(df_attn_check)
 ```
@@ -10178,7 +10060,7 @@ nrow(df_attn_check)
 ## [1] 393216
 ```
 
-```r
+``` r
 table(df_attn_check$model_path)
 ```
 
@@ -10192,7 +10074,7 @@ table(df_attn_check$model_path)
 ##                   39936
 ```
 
-```r
+``` r
 df_attn_check$tokens_seen_numeric <- as.numeric(sub("B", "", df_attn_check$tokens_seen)) * 1e9
 
 df_attn_check = df_attn_check %>%
@@ -10221,7 +10103,7 @@ metadata <- read_csv("../../data/raw/metadata_models.csv")
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
-```r
+``` r
 # merge the metadata with the fb task df
 df_attn_check <- df_attn_check %>% left_join(metadata, by = "model_shorthand")
 
@@ -10246,7 +10128,7 @@ length(unique(df_attn_check$model_id))
 ## [1] 222
 ```
 
-```r
+``` r
 table(df_attn_check$model_path)
 ```
 
@@ -10260,7 +10142,7 @@ table(df_attn_check$model_path)
 ##                   39936
 ```
 
-```r
+``` r
 table(df_attn_check$model_shorthand)
 ```
 
@@ -10272,7 +10154,7 @@ table(df_attn_check$model_shorthand)
 ##       39936
 ```
 
-```r
+``` r
 table(df_attn_check$tokens_seen_numeric)
 ```
 
@@ -10350,7 +10232,7 @@ table(df_attn_check$tokens_seen_numeric)
 ##          768          768          768          768          768          768
 ```
 
-```r
+``` r
 table(df_attn_check$step)
 ```
 
@@ -10397,7 +10279,7 @@ table(df_attn_check$step)
 ```
 
 
-```r
+``` r
 df_attn_check = df_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
@@ -10411,7 +10293,7 @@ df_attn_check = df_attn_check %>%
   ))
 
 ## Accuracy of item start location
-df_summ = df_attn_check %>%
+df_summ_attn = df_attn_check %>%
   group_by(model_path, model_shorthand, question_id,
            step, tokens_seen_numeric_mod, stage) %>%
   summarise(mean_accuracy = mean(correct)) 
@@ -10423,8 +10305,8 @@ df_summ = df_attn_check %>%
 ## `.groups` argument.
 ```
 
-```r
-df_summ %>%
+``` r
+df_summ_attn %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
   select(model_path, step, mean_accuracy) %>%
@@ -10442,8 +10324,8 @@ df_summ %>%
 ## 5 EleutherAI/pythia-6.9b 134000             1
 ```
 
-```r
-df_summ = df_summ %>%
+``` r
+df_summ_attn = df_summ_attn %>%
   mutate(q_label = case_when(
     question_id == 1 ~ "Item was first in {START}",
     question_id == 2 ~ "At end of story, item in {END}",
@@ -10452,7 +10334,7 @@ df_summ = df_summ %>%
   ))
 
 # PAPER FIGURE - attention check results per question
-df_summ %>%
+df_summ_attn %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -10480,14 +10362,15 @@ df_summ %>%
 ```
 
 ```
-## Warning: Removed 4 rows containing missing values (`geom_point()`).
+## Warning: Removed 4 rows containing missing values or values outside the scale range
+## (`geom_point()`).
 ```
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
-```r
+``` r
 # PAPER FIGURE: plot same for the Pythias as well
-df_summ %>%
+df_summ_attn %>%
   filter(grepl("Pythia", model_shorthand)) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
@@ -10514,7 +10397,7 @@ df_summ %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
 
-```r
+``` r
 ### Final step
 df_model_max = df_attn_check %>%
   group_by(model_shorthand) %>%
@@ -10563,7 +10446,7 @@ df_attn_check %>%
 
 ![](fb_analysis_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
 
-```r
+``` r
 #df_olmo13_attn_check %>% 
 #  inner_join(df_model_max) %>%
 #  filter(step == max_step) %>%
@@ -10593,4 +10476,879 @@ df_attn_check %>%
 ```
 
 
+``` r
+# Want to plot:
+# 1. overall Situation Model accuracy superimposed over False Belief Task accuracy
+# 2. individual situation model items accuracy over False Belief Task accuracy
 
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 1 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q1 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 1) %>%
+    mutate(task_type = "situation model 1")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Define your desired order
+model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b", 
+                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b")
+
+# Convert to factor with desired order
+fb_and_attn_q1 <- fb_and_attn_q1 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_1 <- df_summ_attn %>%
+  filter(question_id == 1) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
+# PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
+fb_and_attn_q1 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_1,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+fb_and_attn_q1 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(
+       subtitle = subtitle_text_1,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
+
+``` r
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 2 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q2 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 2) %>%
+    mutate(task_type = "situation model 2")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q2 <- fb_and_attn_q2 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_2 <- df_summ_attn %>%
+  filter(question_id == 2) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 2 and false belief by tokens seen
+fb_and_attn_q2 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_2,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
+
+``` r
+# PAPER APPENDIX FIG: Plot accuracy for attention check 2 and false belief by tokens seen
+fb_and_attn_q2 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(subtitle = subtitle_text_2,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-4.png)<!-- -->
+
+``` r
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 3 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q3 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 3) %>%
+    mutate(task_type = "situation model 3")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q3 <- fb_and_attn_q3 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_3 <- df_summ_attn %>%
+  filter(question_id == 3) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
+fb_and_attn_q3 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_3,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-5.png)<!-- -->
+
+``` r
+fb_and_attn_q3 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(subtitle = subtitle_text_3,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-6.png)<!-- -->
+
+``` r
+## ====== ====== ====== ====== ====== 
+## ====== FB + ATTN CHECK 4 ======
+## ====== ====== ====== ====== ======
+# Fully join false belief and filtered attention check dataframes, then pivot into tidy data
+# creating `task_type` column 
+fb_and_attn_q4 <- bind_rows(
+  df_summ_fb %>% mutate(task_type = "false belief"),
+  df_summ_attn %>%
+    filter(question_id == 4) %>%
+    mutate(task_type = "situation model 4")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "B$", "b")) %>%
+    mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
+
+# Convert to factor with desired order
+fb_and_attn_q4 <- fb_and_attn_q4 %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+# Filter for individual attention check questions
+# Extract the unique question label
+subtitle_text_4 <- df_summ_attn %>%
+  filter(question_id == 4) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  pull(q_label) %>%
+  unique()
+
+# PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
+fb_and_attn_q4 %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(subtitle = subtitle_text_4,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-7.png)<!-- -->
+
+``` r
+fb_and_attn_q4 %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) +
+  geom_line(size = 1,
+             alpha = .5) +
+  scale_x_log10() +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Development of Situation Model",
+       subtitle = subtitle_text_4,
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_minimal() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-8.png)<!-- -->
+
+``` r
+## ====== ====== ====== ====== ====== 
+## ====== FB + ALL ATTN CHECKS ======
+## ====== ====== ====== ====== ======
+
+# Concatenate the individual attention check dataframes, keeping only one instance
+# of the rows corresponding to false belief task accuracies
+fb_and_all_attn <- bind_rows(
+  fb_and_attn_q1,
+  fb_and_attn_q2 %>% filter(task_type == "situation model 2"),
+  fb_and_attn_q3 %>% filter(task_type == "situation model 3"),
+  fb_and_attn_q4 %>% filter(task_type == "situation model 4")
+)
+
+  
+situation_model_avg <- fb_and_all_attn %>%
+  filter(task_type != "false belief task") %>%
+  group_by(model_family, model_shorthand, step, tokens_seen_numeric, tokens_seen_numeric_mod) %>%
+  summarise(mean_accuracy = mean(mean_accuracy, na.rm = TRUE),
+            .groups = "drop") %>%
+  mutate(task_type = "situation model")
+
+# Now combine this new df with the false belief task df
+fb_and_all_attn <- bind_rows(
+  fb_and_attn_q1 %>% filter(task_type == "false belief"),
+  situation_model_avg
+)
+
+# Convert to factor with desired order
+fb_and_all_attn <- fb_and_all_attn %>%
+  mutate(model_shorthand = factor(model_shorthand, levels = model_order))
+
+## PAPER FIGURE: FB & OVERALL SITUATION MODEL
+fb_and_all_attn %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = task_type)) + 
+   geom_line(size = 1,
+             alpha = .5) + 
+  scale_x_log10() + 
+  scale_y_continuous(limits = c(0, 1)) + 
+  labs(title = "Development of Situation Model",
+       x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.7, end = 0.15)) +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") + 
+  facet_wrap(~model_shorthand)
+```
+
+```
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-7-9.png)<!-- -->
+
+
+## Time series modeling
+
+Ideas:
+
+- Cross-correlation analysis (ccf) 
+- Granger causality
+- Changepoint / onset analysis
+
+
+CCF: Here, we quantify the correlation between each AC and FB at various "lags". 
+
+
+``` r
+### Multiple obs. per step/token seen ,so group across?
+df_summ_fb_tokens = df_summ_fb %>%
+  filter(stage == "stage1") %>%
+  group_by(model_shorthand, tokens_seen_numeric_mod, step) %>%
+  summarise(fb_accuracy = mean(mean_accuracy))
+```
+
+```
+## `summarise()` has grouped output by 'model_shorthand',
+## 'tokens_seen_numeric_mod'. You can override using the `.groups` argument.
+```
+
+``` r
+### Multiple obs. per step/token seen ,so group across?
+df_all = df_summ_attn %>%
+  mutate(model_shorthand = str_to_title(model_shorthand)) %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  transmute(ac_accuracy = mean_accuracy) %>%
+  group_by(model_shorthand, tokens_seen_numeric_mod, step, question_id) %>%
+  summarise(ac_accuracy = mean(ac_accuracy)) %>%
+  # filter(question_id == 1) %>%
+  inner_join(df_summ_fb_tokens) %>%
+  arrange(tokens_seen_numeric_mod)
+```
+
+```
+## `summarise()` has grouped output by 'model_shorthand',
+## 'tokens_seen_numeric_mod', 'step'. You can override using the `.groups`
+## argument.
+## Joining with `by = join_by(model_shorthand, tokens_seen_numeric_mod, step)`
+```
+
+``` r
+### New plot
+plot_data <- df_all %>%
+  dplyr::select(model_shorthand, tokens_seen_numeric_mod, step, question_id, 
+         ac_accuracy, fb_accuracy) %>%
+  pivot_longer(cols = c(ac_accuracy, fb_accuracy),
+               names_to = "task_type",
+               values_to = "accuracy") %>%
+  mutate(task_type = case_when(
+    task_type == "ac_accuracy" ~ "Situation Model",
+    task_type == "fb_accuracy" ~ "False Belief"
+  )) %>%
+  mutate(q_label = case_when(
+    question_id == 1 ~ "Item was first in {START}",
+    question_id == 2 ~ "At end of story, item in {END}",
+    question_id == 3 ~ "Original person was {X}",
+    question_id == 4 ~ "Second person was {Y}"
+  ))
+
+
+# Create the plot
+# Create the plot
+plot_data %>%
+  filter(question_id <= 2) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+plot_data %>%
+  filter(question_id > 2) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-2.png)<!-- -->
+
+``` r
+plot_data %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+                      y = accuracy, 
+                      color = task_type)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 2, alpha = 0.6) +
+  facet_wrap(~ reorder(q_label, question_id),, ncol = 2) +
+  scale_x_log10() +
+  # scale_x_continuous(labels = scales::scientific,
+  #                   name = "Tokens Seen") +
+  scale_y_continuous(limits = c(0, 1),
+                     name = "Accuracy") +
+  scale_color_manual(values = c("Situation Model" = "#808080", 
+                                 "False Belief" = "#21908CFF")) +
+  labs(x = "Tokens Seen (Log10)",
+       color = "Task Type") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom",
+        strip.text = element_text(face = "bold", size = 12))
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-3.png)<!-- -->
+
+``` r
+model_data_wide <- df_all %>%
+  pivot_wider(
+    names_from = question_id,
+    values_from = c(ac_accuracy),  # or just the columns you want
+    names_prefix = "q"  # optional: adds "q" prefix to column names
+  )
+
+
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q1, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-4.png)<!-- -->
+
+``` r
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+```
+
+```
+## 
+## Autocorrelations of series 'X', by lag
+## 
+##   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1     0     1     2 
+## 0.243 0.358 0.314 0.336 0.409 0.253 0.356 0.332 0.308 0.392 0.382 0.267 0.249 
+##     3     4     5     6     7     8     9    10 
+## 0.236 0.272 0.212 0.229 0.184 0.206 0.223 0.173
+```
+
+``` r
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+```
+
+```
+## Maximum correlation: 0.409 at lag -6
+```
+
+``` r
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+```
+
+```
+## This means q1 leads FB by 6 time steps
+```
+
+``` r
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q2, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-5.png)<!-- -->
+
+``` r
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+```
+
+```
+## 
+## Autocorrelations of series 'X', by lag
+## 
+##   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1     0     1     2 
+## 0.165 0.166 0.225 0.192 0.171 0.228 0.264 0.312 0.188 0.286 0.269 0.261 0.300 
+##     3     4     5     6     7     8     9    10 
+## 0.161 0.146 0.145 0.107 0.128 0.132 0.171 0.145
+```
+
+``` r
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+```
+
+```
+## Maximum correlation: 0.312 at lag -3
+```
+
+``` r
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+```
+
+```
+## This means q1 leads FB by 3 time steps
+```
+
+``` r
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q3, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-6.png)<!-- -->
+
+``` r
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+```
+
+```
+## 
+## Autocorrelations of series 'X', by lag
+## 
+##    -10     -9     -8     -7     -6     -5     -4     -3     -2     -1      0 
+## -0.358 -0.358 -0.324 -0.366 -0.302 -0.257 -0.172 -0.094 -0.071 -0.115 -0.011 
+##      1      2      3      4      5      6      7      8      9     10 
+## -0.057  0.054 -0.019 -0.025 -0.028  0.039  0.022  0.060  0.077  0.131
+```
+
+``` r
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+```
+
+```
+## Maximum correlation: 0.131 at lag 10
+```
+
+``` r
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+```
+
+```
+## This means q1 leads FB by 10 time steps
+```
+
+``` r
+# Compute cross-correlation
+ccf_result <- ccf(
+  model_data_wide$q4, 
+  model_data_wide$fb_accuracy,
+  lag.max = 10,  # test up to 10 lags
+  plot = TRUE,
+  main = "Cross-Correlation: Situation Model → False Belief"
+)
+```
+
+![](fb_analysis_files/figure-html/unnamed-chunk-8-7.png)<!-- -->
+
+``` r
+# Positive lags indicate situation model leads FB
+print(ccf_result)
+```
+
+```
+## 
+## Autocorrelations of series 'X', by lag
+## 
+##   -10    -9    -8    -7    -6    -5    -4    -3    -2    -1     0     1     2 
+## 0.268 0.313 0.331 0.363 0.391 0.312 0.333 0.339 0.391 0.385 0.345 0.360 0.231 
+##     3     4     5     6     7     8     9    10 
+## 0.211 0.218 0.178 0.156 0.118 0.082 0.070 0.033
+```
+
+``` r
+max_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+max_corr <- max(ccf_result$acf)
+
+cat(sprintf("Maximum correlation: %.3f at lag %d\n", max_corr, max_lag))
+```
+
+```
+## Maximum correlation: 0.391 at lag -2
+```
+
+``` r
+cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
+```
+
+```
+## This means q1 leads FB by 2 time steps
+```
+
+
+
+Granger causality:
+
+
+``` r
+library(lmtest)
+library(vars)
+```
+
+```
+## Loading required package: MASS
+```
+
+```
+## 
+## Attaching package: 'MASS'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     select
+```
+
+```
+## Loading required package: strucchange
+```
+
+```
+## Loading required package: sandwich
+```
+
+```
+## 
+## Attaching package: 'strucchange'
+```
+
+```
+## The following object is masked from 'package:stringr':
+## 
+##     boundary
+```
+
+```
+## Loading required package: urca
+```
+
+``` r
+# Prepare time series
+ts_data <- model_data_wide %>%
+  dplyr::select(tokens_seen_numeric_mod, q1, q2, q3, q4, fb_accuracy) %>%
+  drop_na()
+```
+
+```
+## Adding missing grouping variables: `model_shorthand`, `step`
+```
+
+``` r
+# Prepare data as multivariate time series
+ts_data_clean <- model_data_wide %>%
+  ungroup() %>%
+  dplyr::select(q1, fb_accuracy) %>%
+  drop_na()
+
+# Test different lag orders
+VARselect(ts_data_clean, lag.max = 10, type = "const")
+```
+
+```
+## $selection
+## AIC(n)  HQ(n)  SC(n) FPE(n) 
+##      2      2      1      2 
+## 
+## $criteria
+##                    1             2             3             4             5
+## AIC(n) -1.187257e+01 -1.195305e+01 -1.191944e+01 -1.187883e+01 -1.176723e+01
+## HQ(n)  -1.178626e+01 -1.180919e+01 -1.171804e+01 -1.161989e+01 -1.145074e+01
+## SC(n)  -1.164743e+01 -1.157781e+01 -1.139411e+01 -1.120340e+01 -1.094170e+01
+## FPE(n)  6.981035e-06  6.447260e-06  6.681604e-06  6.984683e-06  7.855824e-06
+##                    6             7             8             9            10
+## AIC(n) -1.176307e+01 -1.170603e+01 -1.175598e+01 -1.165594e+01 -1.156684e+01
+## HQ(n)  -1.138904e+01 -1.127446e+01 -1.126686e+01 -1.110928e+01 -1.096264e+01
+## SC(n)  -1.078745e+01 -1.058031e+01 -1.048016e+01 -1.023003e+01 -9.990836e+00
+## FPE(n)  7.957285e-06  8.526535e-06  8.242960e-06  9.303372e-06  1.044611e-05
+```
+
+``` r
+# Test if situation model "Granger-causes" false belief
+grangertest(fb_accuracy ~ q1, 
+            order = 1,  # number of lags
+            data = ts_data)
+```
+
+```
+## Granger causality test
+## 
+## Model 1: fb_accuracy ~ Lags(fb_accuracy, 1:1) + Lags(q1, 1:1)
+## Model 2: fb_accuracy ~ Lags(fb_accuracy, 1:1)
+##   Res.Df Df      F Pr(>F)
+## 1     58                 
+## 2     59 -1 1.0287 0.3147
+```
+
+``` r
+grangertest(fb_accuracy ~ q2, 
+            order = 3,  # number of lags
+            data = ts_data)
+```
+
+```
+## Granger causality test
+## 
+## Model 1: fb_accuracy ~ Lags(fb_accuracy, 1:3) + Lags(q2, 1:3)
+## Model 2: fb_accuracy ~ Lags(fb_accuracy, 1:3)
+##   Res.Df Df      F Pr(>F)
+## 1     52                 
+## 2     55 -3 1.2843 0.2895
+```
