@@ -95,7 +95,7 @@ def get_max_attention_score_and_token_idx(attention_scores):
         # Batch of sequences: compute entropy for each
         max_scores = torch.max(attention_scores,1).values
         max_idx = torch.max(attention_scores,1).indices
-        return 
+        return max_scores, max_idx
     else:
         raise ValueError("attention_scores must be 1D or 2D")
 
