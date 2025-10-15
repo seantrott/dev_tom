@@ -128,6 +128,7 @@ def main(model_path, revision = None, suffix=None, name=None):
             passage = row['passage'].replace(" [MASK].", "").strip()
 
             tokenized_passage = tokenizer(passage)["input_ids"]
+            tokenized_passage = tokenizer.convert_ids_to_tokens(tokenized_passage)
 
             start_location = " " + row['start']
             end_location = " " + row['end']

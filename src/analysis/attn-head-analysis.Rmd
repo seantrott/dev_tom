@@ -56,19 +56,23 @@ nrow(df_tmp)
 
 ```{r}
 library(tidyverse)
-library(tokenizers)
+library(jsonlite)
 
 # Function to plot attention density over tokens
 plot_attention_density <- function(df, row_idx = 1) {
   # Extract data for the specified row
-  passage <- df$passage[row_idx]
   layer <- df$layer[row_idx]
   head <- df$head[row_idx]
-  scores <- unlist(df$attention_scores[row_idx])
   
-  # Tokenize the passage (using whitespace tokenization)
-  # Adjust tokenization method as needed for your data
-  tokens <- unlist(tokenizers::tokenize_words(passage))
+  # Parse the attention_scores string into a numeric vector
+  scores_str <- df$attention_scores[row_idx]
+  # Remove newlines and parse as JSON
+  scores_str <- gsub(" ", ", ", scores_str)
+  scores <- fromJSON(scores_str)
+  
+  # Parse the tokenized_passage string into a vector of token IDs
+  token_str <- df$tokenized_passage[row_idx]
+  tokens <- fromJSON(token_str)
   
   # Create a dataframe for plotting
   plot_df <- data.frame(
@@ -110,7 +114,7 @@ plot_attention_density <- function(df, row_idx = 1) {
 }
 
 # Example usage:
-# plot_attention_density(your_dataframe, row_idx = 1)
+# plot_attention_density(df_tmp, row_idx = 1)
 
 # To plot multiple rows (e.g., different layers/heads):
 plot_multiple_attention <- function(df, indices = 1:min(4, nrow(df))) {
