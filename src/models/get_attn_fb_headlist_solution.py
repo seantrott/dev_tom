@@ -130,7 +130,7 @@ def main(model_path, revision = None, suffix=None):
             all_layerheads_last_token, _, _ = get_attentions(model, tokenizer, passage)
 
             nlayers = all_layerheads_last_token.shape[0]
-            nheads = all_layerheads_last_token[1]
+            nheads = all_layerheads_last_token.shape[1]
 
             # Compute entropy over attention scores for each layer/head
             # Iterate over layers
