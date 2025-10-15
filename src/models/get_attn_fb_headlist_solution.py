@@ -165,8 +165,8 @@ def main(model_path, revision = None, suffix=None):
 
     ### Create DataFRame
     df_results = pd.DataFrame(results)
-    df_results['model_path'] = model_path
-    df_results['model_shorthand'] = MODELS[model_path]
+    df_results['model_path'] = model["model_path"]
+    df_results['model_shorthand'] = model["name"]
 
     if revision:
         parts = revision.split("-")  # e.g., ['stage2', 'ingredient4', 'step102500', 'tokens860B']
