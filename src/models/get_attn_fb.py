@@ -126,6 +126,9 @@ def main(model_path, revision = None, suffix=None, name=None):
     with tqdm(total=len(df_fb)) as pbar:
         for index, row in df_fb.iterrows():
             passage = row['passage'].replace(" [MASK].", "").strip()
+
+            tokenized_passage = tokenizer(passage)["input_ids"]
+
             start_location = " " + row['start']
             end_location = " " + row['end']
 
@@ -160,6 +163,7 @@ def main(model_path, revision = None, suffix=None, name=None):
                     # Append one row per layer/head
                     results.append({
                         'passage': row['passage'],
+                        "tokenized_passage": tokenized_passage,
                         'start': row['start'],
                         'end': row['end'],
                         'knowledge_cue': row['knowledge_cue'],
