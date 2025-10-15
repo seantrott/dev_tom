@@ -11,6 +11,7 @@ import os
 import random
 import re
 
+from scipy.stats import entropy
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
@@ -31,12 +32,13 @@ MODELS = [
     }
 ]
 
+
+
 def get_attentions(model, tokenizer, passage):
     """Run model, return attention scores from final token to all other tokens 
     in the passage; and return token ids and actual tokens attended to"""
     
     # Tokenize the passage
-
     inputs = tokenizer(passage, return_tensors="pt").to(model.device)
     
     # Get the sequence length
@@ -51,21 +53,63 @@ def get_attentions(model, tokenizer, passage):
 
     # Get attentions from final token to all other tokens in the passage, 
     # for all layers in one go
-    all_layers_last_token = torch.stack([
+    all_layerheads_last_token = torch.stack([
         attn[0, :, last_token_idx, :]
         for attn in attentions
     ])
     # Shape: (num_layers, num_heads, seq_len)
     
-    return all_layers_last_token
+    # Get token ids and tokens for reference
+    token_ids = inputs['input_ids'][0].cpu().numpy()
+    tokens = [tokenizer.decode([tid]) for tid in token_ids]
+    
+    return all_layerheads_last_token, token_ids, tokens
 
-def main(model_path, revision = None, suffix=None):
+
+def compute_attention_entropy(attention_scores):
+    """
+    Compute entropy over attention scores from the final token to all tokens.
+    
+    Args:
+        attention_scores: np.ndarray of shape (seq_len,) or (batch_size, seq_len)
+                         Attention weights from final token position to all tokens.
+                         Should be normalized (sum to 1).
+    
+    Returns:
+        float or np.ndarray: Entropy value(s). Higher entropy means more dispersed
+                           attention, lower entropy means more focused attention.
+    """
+    if attention_scores.ndim == 1:
+        # Single sequence: compute entropy directly
+        return entropy(attention_scores)
+    elif attention_scores.ndim == 2:
+        # Batch of sequences: compute entropy for each
+        return np.array([entropy(scores) for scores in attention_scores])
+    else:
+        raise ValueError("attention_scores must be 1D or 2D")
+
+def get_max_attention_score_and_token_idx(attention_scores): 
+
+    if attention_scores.ndim == 1:
+        # Single sequence: compute entropy directly
+        return torch.max(attention_scores).values
+    elif attention_scores.ndim == 2:
+        # Batch of sequences: compute entropy for each
+        max_scores = torch.max(attention_scores,1).values
+        max_idx = torch.max(attention_scores,1).indices
+        return 
+    else:
+        raise ValueError("attention_scores must be 1D or 2D")
+
+
+def main(model_path, revision = None, suffix=None, name=None):
 
     ### Load model
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         revision=revision,
-        device_map="auto"
+        device_map="auto",
+        attn_implementation="eager"
         )
 
     # Set output_attentions on the config after loading
@@ -74,7 +118,7 @@ def main(model_path, revision = None, suffix=None):
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
 
     ### Load data
-    ### Should be run from main
+    ### TODO: Note, run from root dir in dev_tom
     df_fb = pd.read_csv("data/raw/fb.csv")
 
     results = []
@@ -83,47 +127,64 @@ def main(model_path, revision = None, suffix=None):
         for index, row in df_fb.iterrows():
             passage = row['passage'].replace(" [MASK].", "").strip()
             start_location = " " + row['start']
-            end_location =  " " +row['end']
+            end_location = " " + row['end']
 
-            
             # Get attention scores from final token to other tokens in passage
-            all_layers_last_token = get_attentions(model, tokenizer, passage)
-
-            # Compute entropy over attention scores for each layer/head
-
-
-            # Select layer/head with minimum entropy AND maximum attention
-            # Save its score
-            # Save the token id that receives max attention score from this layer/head, from final token
-
-
-            start_prob = next_seq_prob(model, tokenizer, passage, start_location)
-            end_prob = next_seq_prob(model, tokenizer, passage, end_location)
-
-            if start_prob == 0 or end_prob == 0:
-                continue
-
-            results.append({
-                'start_prob': start_prob,
-                'end_prob': end_prob,
-                'passage': row['passage'],
-                'start': row['start'],
-                'end': row['end'],
-                'knowledge_cue': row['knowledge_cue'],
-                'first_mention': row['first_mention'],
-                'recent_mention': row['recent_mention'],
-                'log_odds': np.log2(start_prob / end_prob),
-                'condition': row['condition']
-            })
-
-
+            all_layerheads_last_token, token_ids, tokens = get_attentions(model, tokenizer, passage)
             
+            # Convert to numpy for easier computation
+            ### TODO: This might change on Lambda!
+            attn_array = all_layerheads_last_token.cpu().numpy()
+            num_layers, num_heads, seq_len = attn_array.shape
+
+            # Iterate over layers and heads
+            for layer_idx in range(num_layers):
+                for head_idx in range(num_heads):
+                    # Get attention distribution for this specific head
+                    attention_scores = attn_array[layer_idx, head_idx, :]  # Shape: (seq_len,)
+                    
+                    # Compute entropy over attention scores
+                    attn_entropy = entropy(attention_scores)
+                    
+                    # Get max attention value
+                    max_attn = np.max(attention_scores)
+                    
+                    # Get index of max attention
+                    max_attn_idx = np.argmax(attention_scores)
+                    
+                    # Get the token that received max attention
+                    max_attn_token = tokens[max_attn_idx]
+                    max_attn_token_id = token_ids[max_attn_idx]
+
+                    print(layer_idx)
+                    print(head_idx)
+                    print(max_attn_token)
+
+                    # Append one row per layer/head
+                    results.append({
+                        'passage': row['passage'],
+                        'start': row['start'],
+                        'end': row['end'],
+                        'knowledge_cue': row['knowledge_cue'],
+                        'first_mention': row['first_mention'],
+                        'recent_mention': row['recent_mention'],
+                        'condition': row['condition'],
+                        'layer': layer_idx,
+                        'head': head_idx,
+                        'entropy': attn_entropy,
+                        'max_attn': max_attn,
+                        'max_attn_idx': max_attn_idx,
+                        'max_attn_token': max_attn_token,
+                        'max_attn_token_id': max_attn_token_id,
+                    })
+
             pbar.update(1)
 
-    ### Create DataFRame
+    ### Create DataFrame
     df_results = pd.DataFrame(results)
     df_results['model_path'] = model_path
-    df_results['model_shorthand'] = MODELS[model_path]
+    df_results['model_shorthand'] = name
+
 
     if revision:
         parts = revision.split("-")  # e.g., ['stage2', 'ingredient4', 'step102500', 'tokens860B']
@@ -153,11 +214,10 @@ if __name__ == "__main__":
     for model in MODELS:
         #test code: 
         model = MODELS[0]
-        print(model)
 
         model_path = model["model_path"]
+        model_shorthand = model['name']
         for revision in model["revisions"]:
-            print(revision)
             print(f"Processing {model['name']} (revision: {revision})")
             print(f"  Path: {model['model_path']}")
 
@@ -176,7 +236,7 @@ if __name__ == "__main__":
             print(filename)
             print(savepath)
 
-            main(model_path, revision, suffix)
+            main(model_path, revision, suffix, name)
             
             # Your Hugging Face loading code here
             # model_instance = load_model(model["path"], revision=revision)
