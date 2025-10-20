@@ -20,11 +20,11 @@ from huggingface_hub import list_repo_refs
 
 # Specify the models, and target checkpoints, to characterize 
 MODELS = [
-    {
+    #{
     #    "model_path": "EleutherAI/pythia-14m",
     #    "name": "Pythia 14M",
     #    "revisions": ["main"]
-    },
+    #},
     {
         "model_path": "allenai/OLMo-2-1124-13B",
         "name": "OLMO 2 13B",
