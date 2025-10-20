@@ -21,15 +21,17 @@ from huggingface_hub import list_repo_refs
 # Specify the models, and target checkpoints, to characterize 
 MODELS = [
     {
-        "model_path": "EleutherAI/pythia-14m",
-        "name": "Pythia 14M",
-        "revisions": ["main"]
+    #    "model_path": "EleutherAI/pythia-14m",
+    #    "name": "Pythia 14M",
+    #    "revisions": ["main"]
     },
-    #{
-    #    "model_path": "allenai/OLMo-2-1124-13B",
-    #    "name": "OLMO 2 13B",
-    #    "revisions": ["stage1-step43000-tokens181B"]
-    #}
+    {
+        "model_path": "allenai/OLMo-2-1124-13B",
+        "name": "OLMO 2 13B",
+        "revisions": ["stage1-step0-tokens0B", #first step
+        "stage1-step74000-tokens621B", #step at median fb mean_accuracy
+        "stage1-step596057-tokens5001B"] #final step
+    }
 ]
 
 
