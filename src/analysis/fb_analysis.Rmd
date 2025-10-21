@@ -368,7 +368,7 @@ closest_row <- olmo_data[which.min(olmo_data$diff_from_median), ]
 tokens_at_median <- closest_row$tokens_seen_numeric_mod
 
 # Display results
-print(paste("Median accuracy:", median_accuracy))
+print(paste("Median accuracy:", median_accuracy_across_training))
 print(paste("Tokens seen at median accuracy:", tokens_at_median))
 print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
 
@@ -404,6 +404,91 @@ df_summ_fb %>%
 
 ```
 
+```{r}
+# Find the tokens seen for Olmo 2 7b as the ramp in accuracy is taking place
+
+# Filter for Olmo 2 13b data
+olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 7b", ]
+
+# Calculate the median accuracy for this model
+median_accuracy_across_training <- median(olmo_data$mean_accuracy)
+
+# ...and the 75th percentile accuracy
+pctile_75_across_training <- quantile(olmo_data$mean_accuracy, probs = 0.75)  # 75th percentile
+
+# ...and the max accuracy
+max_across_training <- max(olmo_data$mean_accuracy)
+
+# Find the row(s) where accuracy is closest to the median
+# Calculate absolute difference from median
+olmo_data$diff_from_median <- abs(olmo_data$mean_accuracy - median_accuracy_across_training)
+
+# ...also for 75th percentile
+olmo_data$diff_from_75th <- abs(olmo_data$mean_accuracy - pctile_75_across_training)
+
+# ...also for max accuracy
+olmo_data$diff_from_max <- abs(olmo_data$mean_accuracy - max_across_training)
+
+# Find the tokens_seen value where accuracy is closest to median
+closest_row <- olmo_data[which.min(olmo_data$diff_from_median), ]
+tokens_at_median <- closest_row$tokens_seen_numeric_mod
+
+# ...also for 75th percentile
+closest_row_75th <- olmo_data[which.min(olmo_data$diff_from_75th), ]
+tokens_at_75th <- closest_row_75th$tokens_seen_numeric_mod
+
+# ...also for max accuracy
+closest_row_max <- olmo_data[which.min(olmo_data$diff_from_max), ]
+tokens_at_max <- closest_row_max$tokens_seen_numeric_mod
+
+# Display results
+print(paste("Median accuracy:", median_accuracy_across_training))
+print(paste("Tokens seen at median accuracy:", tokens_at_median))
+print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
+
+# ...also for 75th percentile
+print(paste("75th percentile accuracy:", pctile_75_across_training))
+print(paste("Tokens seen at 75th percentile accuracy:", tokens_at_75th))
+print(paste("Actual accuracy at that point:", closest_row_75th$mean_accuracy))
+
+# ...also for max accuracy
+print(paste("max  accuracy:", max_across_training))
+print(paste("Tokens seen at max accuracy:", tokens_at_max))
+print(paste("Actual accuracy at that point:", closest_row_max$mean_accuracy))
+
+# visualize to see if you've found the intended checkpoints
+
+df_summ_fb %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_line(size = 1.5, alpha = 0.8) +
+  geom_vline(xintercept = closest_row$tokens_seen_numeric_mod, alpha = 0.8, linetype = "dashed") +
+  geom_vline(xintercept = closest_row_75th$tokens_seen_numeric_mod, alpha = 0.8, linetype = "dashed") + 
+  geom_vline(xintercept = closest_row_max$tokens_seen_numeric_mod, alpha = 0.8, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_x_log10(labels = scales::comma_format()) +
+  # geom_text_repel(aes(label=model_shorthand), size=3) +
+  #scale_y_continuous(limits = c(0.25, 0.75)) +
+  labs(x = "Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+                                                  begin = 0.8, end = 0.1)) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal() + 
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+```
 ## Phase shift modeling
 
 Here, we predict the probability of a correct response over tokens seen, focusing on stage 1.
@@ -1068,7 +1153,6 @@ plot_data <- df_all %>%
   ))
 
 
-# Create the plot
 # Create the plot
 plot_data %>%
   filter(question_id <= 2) %>%
