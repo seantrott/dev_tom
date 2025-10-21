@@ -55,8 +55,7 @@ nrow(df_tmp)
 ```
 
 ```{r}
-library(tidyverse)
-library(jsonlite)
+
 
 # Function to plot attention density over tokens
 library(tidyverse)
@@ -136,6 +135,91 @@ plot_multiple_attention <- function(df, indices = 1:min(4, nrow(df))) {
   }
 }
 
+pythia <- df_tmp %>%
+  filter(model_shorthand == "Pythia 14m")
+olmo_data_step0 <- df_tmp %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step == 0)
+
+
 # Example usage:
 # plot_multiple_attention(your_dataframe, indices = 1:3)
+```
+
+```{r}
+library(ggplot2)
+library(jsonlite)
+
+plot_attention_density <- function(data, row_idx) {
+  # Get the row
+  row_data <- data[row_idx, ]
+  
+  # Parse tokenized_passage - it's in Python list format
+  tokens_str <- row_data$tokenized_passage
+  tokens_str <- gsub("^\\[|\\]$", "", tokens_str)  # Remove outer brackets
+  
+  # Split by comma, but only when outside quotes
+  # Use a regex to match quoted strings
+  tokens <- regmatches(tokens_str, gregexpr("'[^']*'", tokens_str))[[1]]
+  tokens <- gsub("'", "", tokens)  # Remove the quotes
+  
+  # Clean tokens - remove 'Ġ' symbol (represents space in tokenizers)
+  tokens <- gsub("Ġ", "", tokens)
+  
+  # Parse attention_scores - convert directly to numeric
+  scores_str <- row_data$attention_scores
+  scores_str <- gsub("^\\[|\\]$", "", scores_str)  # Remove outer brackets
+  scores <- as.numeric(strsplit(trimws(scores_str), "\\s+")[[1]])
+  
+  # Debug: print lengths to verify they match
+  cat("Number of tokens:", length(tokens), "\n")
+  cat("Number of scores:", length(scores), "\n")
+  
+  # Handle length mismatch
+  min_len <- min(length(tokens), length(scores))
+  if (length(tokens) != length(scores)) {
+    warning(paste("Length mismatch! Tokens:", length(tokens), 
+                  "Scores:", length(scores), 
+                  "Using first", min_len, "elements"))
+    tokens <- tokens[1:min_len]
+    scores <- scores[1:min_len]
+  }
+  
+  # Create dataframe for plotting
+  plot_df <- data.frame(
+    token = tokens,
+    position = 1:length(tokens),
+    attention = scores
+  )
+  
+  # Extract model, layer, and head info
+  model_name <- row_data$model_shorthand
+  layer <- row_data$layer
+  head <- row_data$head
+  
+  # Create heatmap
+  p <- ggplot(plot_df, aes(x = position, y = 1, fill = attention)) +
+    geom_tile() +
+    scale_fill_gradient(low = "white", high = "red") +
+    scale_x_continuous(breaks = 1:length(tokens), labels = tokens) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      panel.grid = element_blank()
+    ) +
+    labs(
+      title = paste0(model_name, " - Layer ", layer, ", Head ", head),
+      x = "Tokens",
+      y = "",
+      fill = "Attention"
+    )
+  
+  return(p)
+}
+
+# Use it:
+plot_attention_density(olmo_data_step0, row_idx = 100)
+
 ```
