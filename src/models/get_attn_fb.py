@@ -25,18 +25,20 @@ MODELS = [
     #    "name": "Pythia 14M",
     #    "revisions": ["main"]
     #},
-    {
-        "model_path": "allenai/OLMo-2-1124-13B",
-        "name": "OLMO 2 13B",
-        "revisions": ["stage1-step0-tokens0B", #first step
-        "stage1-step74000-tokens621B", #step at median fb mean_accuracy
-        "stage1-step596057-tokens5001B"] #final step
-    },
+    #{
+    #    "model_path": "allenai/OLMo-2-1124-13B",
+    #    "name": "OLMO 2 13B",
+    #    "revisions": ["stage1-step0-tokens0B", #first step
+    #    "stage1-step74000-tokens621B", #step at median fb mean_accuracy
+    #    "stage1-step596057-tokens5001B"] #final step
+    #},
     {
         "model_path": "allenai/OLMo-2-1124-7B",
         "name": "OLMO 2 7B",
         "revisions": ["stage1-step0-tokens0B", #first step
-        "stage1-step74000-tokens621B", #step at median fb mean_accuracy
+        "stage1-step2150-tokens10B", #step at median fb mean_accuracy
+        "stage1-step550000-tokens2307B", #step at 75th percentile accuracy
+        "stage1-step146000-tokens613B", #step at max accuracy
         "stage1-step596057-tokens5001B"] #final step
 
     }
