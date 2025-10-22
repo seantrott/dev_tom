@@ -231,62 +231,24 @@ plot_attention_density(olmo_data_stepmax, row_idx = 401)
 
 ```{r}
 library(dplyr)
-
-
-#============================================
-#      TEST FOR DIFFERENTIAL ATTENTION
-#============================================
-# Calculate difference in attention to correct vs. incorrect location
-df_analysis <- df_with_location_attention %>%
-  mutate(
-    correct_location_attention = ifelse(condition == "true_belief", 
-                                        attention_to_end, 
-                                        attention_to_start),
-    incorrect_location_attention = ifelse(condition == "true_belief",
-                                          attention_to_start,
-                                          attention_to_end),
-    attention_difference = correct_location_attention - incorrect_location_attention
-  )
-
-# Statistical test per head
-head_condition_effects <- df_analysis %>%
-  group_by(model_shorthand, step, layer, head) %>%
-  summarize(
-    mean_diff_true_belief = mean(attention_difference[condition == "true_belief"]),
-    mean_diff_false_belief = mean(attention_difference[condition == "false_belief"]),
-    # T-test comparing attention difference across conditions
-    p_value = t.test(attention_difference ~ condition)$p.value,
-    .groups = 'drop'
-  )
-
-#============================================
-#             VISUALIZE RESULTS
-#============================================
-library(ggplot2)
-
-# Heatmap of attention patterns
-ggplot(df_analysis, aes(x = condition, y = interaction(layer, head), 
-                        fill = attention_difference)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", mid = "white", high = "red", 
-                       midpoint = 0) +
-  labs(title = "Attention Difference: Correct - Incorrect Location",
-       fill = "Attention\nDifference") +
-  theme_minimal()
-
-
-library(dplyr)
 library(tidyr)
 library(purrr)
+
+# Function to clean Ġ symbols from tokens
+clean_tokens <- function(tokens) {
+  gsub("Ġ", "", tokens)
+}
 
 #================================================================================
 #             DEFINE FUNCTION TO FIND TARGET TOKEN POSITIONS
 #================================================================================
 # Function to find token positions for a location string in a tokenized passage
 find_token_positions <- function(tokenized_passage, location_string) {
-  # Split location into tokens (you may need to adjust tokenization to match your model)
-  location_tokens <- strsplit(tolower(location_string), "\\s+")[[1]]
-  passage_tokens <- tolower(tokenized_passage)
+  # Clean the Ġ symbols from the passage tokens
+  passage_tokens <- clean_tokens(tolower(tokenized_passage))
+  
+  # Split location into tokens and clean/lowercase
+  location_tokens <- strsplit(tolower(trimws(location_string)), "\\s+")[[1]]
   
   # Find all positions where the location appears
   positions <- list()
@@ -337,7 +299,7 @@ head_entropy <- df_with_location_attention %>%
   summarize(mean_entropy = mean(entropy, na.rm = TRUE),
             .groups = 'drop')
 
-low_entropy_threshold <- quantile(head_entropy$mean_entropy, 0.50)
+low_entropy_threshold <- quantile(head_entropy$mean_entropy, 0.25)
 low_entropy_heads <- head_entropy %>%
   filter(mean_entropy < low_entropy_threshold)
 
@@ -403,5 +365,21 @@ significant_heads <- head_condition_effects %>%
   )
 
 print(significant_heads)
+
+#============================================
+#             VISUALIZE RESULTS
+#============================================
+library(ggplot2)
+
+# Heatmap of attention patterns
+ggplot(df_analysis, aes(x = condition, y = interaction(layer, head), 
+                        fill = attention_difference)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", 
+                       midpoint = 0) +
+  labs(title = "Attention Difference: Correct - Incorrect Location",
+       fill = "Attention\nDifference") +
+  theme_minimal()
+
 
 ```
