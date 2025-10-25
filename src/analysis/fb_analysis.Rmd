@@ -150,6 +150,8 @@ tmp <- df_all_models_fb %>%
 
 ## Sensitivity to FB over time
 
+(To do: run LRT at each time step for each model.)
+
 ## Accuracy metric
 
 
@@ -403,6 +405,85 @@ df_summ_fb %>%
         legend.position="bottom") 
 
 ```
+
+
+## By-item changes
+
+```{r}
+
+df_summ_fb_item = df_all_models_fb %>%
+  mutate(start_end = paste(start, "-", end)) %>%
+  group_by(start_end, model_path, model_shorthand,
+           step, tokens_seen_numeric, model_family, stage) %>%
+  summarise(mean_accuracy = mean(correct)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+
+# Pivot to wide format
+df_wide <- df_summ_fb_item %>%
+  filter(tokens_seen_numeric_mod > 1000,
+         model_shorthand == "Olmo 2 13b",
+         stage == "stage1" | is.na(stage)) %>%
+  select(tokens_seen_numeric_mod, start_end, mean_accuracy) %>%
+  pivot_wider(names_from = start_end, values_from = mean_accuracy)
+
+# Calculate correlations
+cor_matrix <- df_wide %>%
+  ungroup() %>%
+  select(-model_path, -model_shorthand,
+         -step, -tokens_seen_numeric, -model_family, -tokens_seen_numeric_mod) %>%
+  cor(use = "pairwise.complete.obs")
+
+# Visualize
+library(ggcorrplot)
+ggcorrplot(cor_matrix, title = "Item Trajectory Correlations")
+
+# Get upper triangle (excluding diagonal)
+upper_tri <- cor_matrix[upper.tri(cor_matrix)]
+mean_cor <- mean(upper_tri)
+summary(upper_tri)
+hist(upper_tri)
+print(paste("Average correlation:", round(mean_cor, 3)))
+
+
+### Averaging across items with error bar
+df_summ_item_avg = df_summ_fb_item %>%
+  filter(tokens_seen_numeric_mod > 1000,
+         model_shorthand == "Olmo 2 13b",
+         stage == "stage1" | is.na(stage)) %>%
+  group_by(tokens_seen_numeric_mod) %>%
+  summarise(
+    mean_acc = mean(mean_accuracy),
+    sd_acc = sd(mean_accuracy),
+    se_acc = sd_acc / sqrt(n())
+  )
+
+### Showing all item trajectories
+df_summ_fb_item %>%
+  filter(tokens_seen_numeric_mod > 1000,
+         model_shorthand == "Olmo 2 13b",
+         stage == "stage1" | is.na(stage)) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, y = mean_accuracy)) +
+  geom_line(size = .8, alpha = .8, color = "steelblue") +
+  geom_hline(yintercept = .5, linetype = "dashed", alpha = 0.5) +
+  geom_ribbon(data = df_summ_item_avg,
+              aes(x = tokens_seen_numeric_mod, 
+                  ymin = mean_acc - se_acc, 
+                  ymax = mean_acc + se_acc),
+              inherit.aes = FALSE,  # <- Add this line
+              alpha = 0.3, fill = "red") +
+  geom_line(data = df_summ_item_avg, aes(x= tokens_seen_numeric_mod, 
+                                         y = mean_acc),
+            size = 1.5,
+            alpha = .5, color = "red") +
+  scale_x_log10() + # labels = scales::comma_format()) +
+  facet_wrap(~start_end, ncol = 4) +
+  labs(x = "Tokens Seen", y = "Accuracy") +
+  theme_minimal() +
+  theme(text = element_text(size = 10))
+```
+
 
 ## Phase shift modeling
 
