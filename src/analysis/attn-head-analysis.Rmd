@@ -72,6 +72,7 @@ plot_attention_density <- function(df, row_idx = 1) {
   # Remove newlines and convert spaces to commas for JSON parsing
   scores_str <- gsub("\n", "", scores_str)
   scores_str <- gsub(" ", ", ", scores_str)
+  scores_str <- gsub(", ,", ",", scores_str) # rm extra commas
   scores <- fromJSON(scores_str)
   
   # Parse the tokenized_passage string into a vector of tokens
@@ -239,6 +240,10 @@ clean_tokens <- function(tokens) {
   gsub("Ġ", "", tokens)
 }
 
+clean_tokens <- function(tokens) {
+  gsub("ġ", "", tokens)
+}
+
 #================================================================================
 #             DEFINE FUNCTION TO FIND TARGET TOKEN POSITIONS
 #================================================================================
@@ -279,15 +284,13 @@ df_with_location_attention <- df %>%
     # Find positions of start and end locations
     start_positions = list(find_token_positions(tokenized_passage, start)),
     end_positions = list(find_token_positions(tokenized_passage, end)),
-    
     # Sum or mean attention over all matching positions
     attention_to_start = ifelse(length(start_positions) > 0,
                                 mean(attention_scores[start_positions]),
                                 NA_real_),
     attention_to_end = ifelse(length(end_positions) > 0,
                               mean(attention_scores[end_positions]),
-                              NA_real_)
-  ) %>%
+                              NA_real_)) %>%
   ungroup()
 
 # Now proceed with the analysis
