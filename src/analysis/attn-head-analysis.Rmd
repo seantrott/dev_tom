@@ -52,6 +52,17 @@ df_tmp <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
 nrow(df_tmp)
 
+# generate a separate of unique passages from this df
+library(dplyr)
+unique_passages_df <- df %>%
+  distinct(passage, .keep_all = TRUE) %>%
+  select(passage, condition, knowledge_cue, tokenized_passage, start, end, first_mention)  # Keep only these columns
+
+# save it for later inspection, to find and annotate ROIs
+library(readr)
+write_csv(unique_passages_df, "unique_passages.csv")
+
+
 ```
 
 ```{r}
