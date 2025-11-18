@@ -56,11 +56,11 @@ nrow(df_tmp)
 library(dplyr)
 unique_passages_df <- df %>%
   distinct(passage, .keep_all = TRUE) %>%
-  select(passage, condition, knowledge_cue, tokenized_passage, start, end, first_mention)  # Keep only these columns
+  select(passage, condition, knowledge_cue, tokenized_passage, start, end, first_mention, recent_mention)  # Keep only these columns
 
 # save it for later inspection, to find and annotate ROIs
 library(readr)
-write_csv(unique_passages_df, "unique_passages.csv")
+write_csv(unique_passages_df, "../../data/raw/fb_unique_passages.csv")
 
 
 ```
