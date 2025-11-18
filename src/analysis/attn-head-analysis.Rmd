@@ -62,7 +62,7 @@ library(tidyverse)
 library(jsonlite)
 
 # Function to plot attention density over tokens
-plot_attention_density <- function(df, row_idx = 1) {
+plot_attention_density <- function(df, row_idx = 5) {
   # Extract data for the specified row
   layer <- df$layer[row_idx]
   head <- df$head[row_idx]
@@ -73,6 +73,7 @@ plot_attention_density <- function(df, row_idx = 1) {
   scores_str <- gsub("\n", "", scores_str)
   scores_str <- gsub(" ", ", ", scores_str)
   scores_str <- gsub(", ,", ",", scores_str) # rm extra commas
+  scores_str <- gsub(", ,", ",", scores_str)
   scores <- fromJSON(scores_str)
   
   # Parse the tokenized_passage string into a vector of tokens
@@ -148,7 +149,7 @@ olmo_data_stepmax <- df_tmp %>%
 
 
 # Example usage:
-# plot_multiple_attention(df, indices = 1:3)
+# plot_multiple_attention(df, indices = 1:5)
 
 ```
 
