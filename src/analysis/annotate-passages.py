@@ -260,7 +260,7 @@ if __name__ == "__main__":
     annotated_df = annotator.run()
     
     # Save results
-    annotator.save('/../../data/raw/fb_annotated_passages.csv')
+    annotator.save('../../data/raw/fb_annotated_passages.csv')
     
     # Or get the dataframe
     final_df = annotator.get_dataframe()
