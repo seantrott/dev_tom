@@ -1,5 +1,7 @@
+import os 
 import pandas as pd
 import sys
+import ast
 
 class InteractiveAnnotator:
     def __init__(self, df):
@@ -9,11 +11,34 @@ class InteractiveAnnotator:
         self.df = df.copy()
         self.roi_types = ['setup', 'exit', 'manipulation', 'return', 'query']
         
+        # Convert tokenized_passage from string to list if needed
+        self._parse_tokenized_passages()
+        
         # Add columns for each ROI type if they don't exist
         for roi in self.roi_types:
             col_name = f'{roi}_indices'
             if col_name not in self.df.columns:
                 self.df[col_name] = None
+    
+    def _parse_tokenized_passages(self):
+        """Convert tokenized_passage column from string to list if it's stored as a string."""
+        for idx in range(len(self.df)):
+            tokens = self.df.at[idx, 'tokenized_passage']
+            
+            # Check if it's a string representation of a list
+            if isinstance(tokens, str):
+                try:
+                    # Use ast.literal_eval to safely parse the string
+                    parsed_tokens = ast.literal_eval(tokens)
+                    self.df.at[idx, 'tokenized_passage'] = parsed_tokens
+                    print(f"Parsed tokenized_passage for row {idx}")
+                except (ValueError, SyntaxError) as e:
+                    print(f"Warning: Could not parse tokenized_passage for row {idx}: {e}")
+            elif isinstance(tokens, list):
+                # Already a list, no action needed
+                pass
+            else:
+                print(f"Warning: Unexpected type for tokenized_passage in row {idx}: {type(tokens)}")
     
     def display_tokens(self, tokens):
         """Display tokens with their indices in a readable format."""
@@ -175,20 +200,32 @@ class InteractiveAnnotator:
         print("- For each ROI type, enter the token range as 'start-end' (e.g., '0-33')")
         print("- Type 'skip' to skip an ROI for now")
         print("- Type 'none' if the ROI is not present in the passage")
+        print("- Type 'back' to go back to the previous ROI or passage")
         print("- Indices are inclusive (both start and end tokens are included)")
         print("\n")
         
-        for idx in range(start_idx, len(self.df)):
+        idx = start_idx
+        while idx < len(self.df):
             self.annotate_passage(idx)
             
             if idx < len(self.df) - 1:
-                continue_input = input("\nContinue to next passage? (y/n/q to quit): ").strip().lower()
+                continue_input = input("\nContinue to next passage? (y/n/b=back/q=quit): ").strip().lower()
                 if continue_input == 'q':
                     print("Annotation session ended.")
                     break
                 elif continue_input == 'n':
-                    print("Pausing. You can resume later by calling run(start_idx={})".format(idx + 1))
+                    print(f"Pausing. Resume later by calling run(start_idx={idx + 1})")
                     break
+                elif continue_input == 'b' or continue_input == 'back':
+                    if idx > 0:
+                        idx -= 1
+                        print(f"\nGoing back to passage {idx + 1}")
+                    else:
+                        print("Already at first passage")
+                else:
+                    idx += 1
+            else:
+                idx += 1
         
         return self.df
     
@@ -205,16 +242,16 @@ class InteractiveAnnotator:
 # Example usage
 if __name__ == "__main__":
     # Sample data
-    sample_data = {
-        'passage': [
-            "David and Marta go out to get some wine for the party. When they get home, David stores the wine in the garage and grabs a drink from the fridge. Then, David goes out to get some snacks. While David is gone, Marta decides the wine would be best cooled, so she moves the wine out of the garage and into the fridge. David returns home and wants to put out the wine. David thinks the wine is in the [MASK]."
-        ],
-        'tokenized_passage': [
-            ['David', 'Ġand', 'ĠMart', 'a', 'Ġgo', 'Ġout', 'Ġto', 'Ġget', 'Ġsome', 'Ġwine', 'Ġfor', 'Ġthe', 'Ġparty', '.', 'ĠWhen', 'Ġthey', 'Ġget', 'Ġhome', ',', 'ĠDavid', 'Ġstores', 'Ġthe', 'Ġwine', 'Ġin', 'Ġthe', 'Ġgarage', 'Ġand', 'Ġgrabs', 'Ġa', 'Ġdrink', 'Ġfrom', 'Ġthe', 'Ġfridge', '.', 'ĠThen', ',', 'ĠDavid', 'Ġgoes', 'Ġout', 'Ġto', 'Ġget', 'Ġsome', 'Ġsnacks', '.', 'ĠWhile', 'ĠDavid', 'Ġis', 'Ġgone', ',', 'ĠMart', 'a', 'Ġdecides', 'Ġthe', 'Ġwine', 'Ġwould', 'Ġbe', 'Ġbest', 'Ġcooled', ',', 'Ġso', 'Ġshe', 'Ġmoves', 'Ġthe', 'Ġwine', 'Ġout', 'Ġof', 'Ġthe', 'Ġgarage', 'Ġand', 'Ġinto', 'Ġthe', 'Ġfridge', '.', 'ĠDavid', 'Ġreturns', 'Ġhome', 'Ġand', 'Ġwants', 'Ġto', 'Ġput', 'Ġout', 'Ġthe', 'Ġwine', '.', 'ĠDavid', 'Ġthinks', 'Ġthe', 'Ġwine', 'Ġis', 'Ġin', 'Ġthe']
-        ]
-    }
+    #sample_data = {
+     #   'passage': [
+     #       "David and Marta go out to get some wine for the party. When they get home, David stores the wine in the garage and grabs a drink from the fridge. Then, David goes out to get some snacks. While David is gone, Marta decides the wine would be best cooled, so she moves the wine out of the garage and into the fridge. David returns home and wants to put out the wine. David thinks the wine is in the [MASK]."
+     #   ],
+     #   'tokenized_passage': [
+      #      ['David', 'Ġand', 'ĠMart', 'a', 'Ġgo', 'Ġout', 'Ġto', 'Ġget', 'Ġsome', 'Ġwine', 'Ġfor', 'Ġthe', 'Ġparty', '.', 'ĠWhen', 'Ġthey', 'Ġget', 'Ġhome', ',', 'ĠDavid', 'Ġstores', 'Ġthe', 'Ġwine', 'Ġin', 'Ġthe', 'Ġgarage', 'Ġand', 'Ġgrabs', 'Ġa', 'Ġdrink', 'Ġfrom', 'Ġthe', 'Ġfridge', '.', 'ĠThen', ',', 'ĠDavid', 'Ġgoes', 'Ġout', 'Ġto', 'Ġget', 'Ġsome', 'Ġsnacks', '.', 'ĠWhile', 'ĠDavid', 'Ġis', 'Ġgone', ',', 'ĠMart', 'a', 'Ġdecides', 'Ġthe', 'Ġwine', 'Ġwould', 'Ġbe', 'Ġbest', 'Ġcooled', ',', 'Ġso', 'Ġshe', 'Ġmoves', 'Ġthe', 'Ġwine', 'Ġout', 'Ġof', 'Ġthe', 'Ġgarage', 'Ġand', 'Ġinto', 'Ġthe', 'Ġfridge', '.', 'ĠDavid', 'Ġreturns', 'Ġhome', 'Ġand', 'Ġwants', 'Ġto', 'Ġput', 'Ġout', 'Ġthe', 'Ġwine', '.', 'ĠDavid', 'Ġthinks', 'Ġthe', 'Ġwine', 'Ġis', 'Ġin', 'Ġthe']
+      #  ]
+   # }
     
-    df = pd.DataFrame(sample_data)
+    df = pd.read_csv(os.path.join("../../data/raw/","fb_unique_passages.csv"))
     
     # Create annotator and run
     annotator = InteractiveAnnotator(df)
@@ -229,3 +266,5 @@ if __name__ == "__main__":
     final_df = annotator.get_dataframe()
     print("\nFinal DataFrame structure:")
     print(final_df.columns.tolist())
+
+
