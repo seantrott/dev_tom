@@ -53,15 +53,13 @@ df_tmp <- bind_rows(csv_list) %>%
 nrow(df_tmp)
 
 # generate a separate of unique passages from this df
-library(dplyr)
-unique_passages_df <- df %>%
+unique_passages_df <- df_tmp %>%
   distinct(passage, .keep_all = TRUE) %>%
   select(passage, condition, knowledge_cue, tokenized_passage, start, end, first_mention, recent_mention)  # Keep only these columns
 
 # save it for later inspection, to find and annotate ROIs
-library(readr)
-write_csv(unique_passages_df, "../../data/raw/fb_unique_passages.csv")
-
+# library(readr)
+# write_csv(unique_passages_df, "../../data/raw/fb_unique_passages.csv")
 
 ```
 
@@ -82,9 +80,9 @@ plot_attention_density <- function(df, row_idx = 5) {
   scores_str <- df$attention_scores[row_idx]
   # Remove newlines and convert spaces to commas for JSON parsing
   scores_str <- gsub("\n", "", scores_str)
-  scores_str <- gsub(" ", ", ", scores_str)
+  scores_str <- gsub(" ", ", ", scores_str) # rm extra spaces
   scores_str <- gsub(", ,", ",", scores_str) # rm extra commas
-  scores_str <- gsub(", ,", ",", scores_str)
+  scores_str <- gsub(", ,", ",", scores_str) # rm extra commas again
   scores <- fromJSON(scores_str)
   
   # Parse the tokenized_passage string into a vector of tokens
@@ -132,7 +130,7 @@ plot_attention_density <- function(df, row_idx = 5) {
 }
 
 # Example usage:
-# plot_attention_density(olmo_data_stepmax, row_idx = 100)
+# plot_attention_density(df_tmp, row_idx = 1000)
 
 # To plot multiple rows (e.g., different layers/heads):
 plot_multiple_attention <- function(df, indices = 1:min(4, nrow(df))) {
@@ -160,7 +158,12 @@ olmo_data_stepmax <- df_tmp %>%
 
 
 # Example usage:
-# plot_multiple_attention(df, indices = 1:5)
+# plot_multiple_attention(df, indices = 1000:1005)
+
+```
+
+# TODO: aggregate attention scores by region of interest across passages
+```{r}
 
 ```
 
