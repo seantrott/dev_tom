@@ -164,6 +164,19 @@ olmo_data_stepmax <- df_tmp %>%
 
 # TODO: aggregate attention scores by region of interest across passages
 ```{r}
+# grab the table containing passages annotated by ROI
+
+file_path <- "../../data/raw/fb_annotated_passages.csv"
+df_annot <- read.csv(file_path)
+
+# try to merge the dataframes, to add ROI annotations to the big df
+df_merged <- df_tmp %>%
+  left_join(df_annot %>% select(tokenized_passage,
+                               setup_indices,
+                               exit_indices,
+                               manipulation_indices,
+                               return_indices,
+                               query_indices), by = "tokenized_passage")
 
 ```
 
