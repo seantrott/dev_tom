@@ -12,6 +12,7 @@ import os
 import numpy as np
 import pandas as pd
 from pprint import pprint
+from tqdm import tqdm
 
 
 # Define a function that cleans up the attention scores (which for some reason are interpreted as strings rather than numpy arrays or lists)
@@ -87,6 +88,25 @@ df["attention_scores"] = df["attention_scores"].apply(parse_attention_string)
 
 df_merged = df.merge(df_annot[["tokenized_passage"] + roi_colnames], on="tokenized_passage", how="left")
 
-df_test = df_merged.iloc[:10]
-for roi in roi_colnames:
-	df_test[f"attn_avg_{roi}"] = df_test.apply(lambda row: mean_attn_roi(row["attention_scores"],row[roi]),axis=1)
+for roi in tqdm(roi_colnames):
+	df_merged[f"attn_avg_{roi}"] = df_merged.apply(lambda row: mean_attn_roi(row["attention_scores"],row[roi]),axis=1)
+
+#### OOOHHH pythia is tokenized differently, so the indices would be totally different! Remove for now
+df_target_models = df_merged[~(df_merged["model_shorthand"] == "Pythia 14M")]
+for (i,row) in tqdm(df_target_models.iterrows(), total=len(df_target_models)): 
+	for roi in roi_colnames:
+		row[f"attn_avg_{roi}"] = mean_attn_roi(row["attention_scores"],row[roi])
+
+		# TODO: set up these in a new dataframe
+
+
+
+
+
+
+
+
+
+
+
+
