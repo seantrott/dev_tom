@@ -106,10 +106,7 @@ model_names = set(df_target_models["model_shorthand"].values)
 for m in model_names: 
 	subdf = df_target_models[df_target_models["model_shorthand"] == m]
 	mpath = subdf["model_path"].iloc[0].split("/")[1]
-	stage = str(subdf["stage"].iloc[0])
-	step = str(int(subdf["step"].iloc[0]))
-	tokens = subdf["tokens_seen"].iloc[0]
-	filename = "fb-mean-attn-roi-" + mpath + "-" + stage + "-step" +  step + "-tokens" + tokens + ".csv"
+	filename = "fb-mean-attn-roi-" + mpath
 	# Save the dataframe
 	subdf.to_csv(os.path.join(savepathname,filename))
 
