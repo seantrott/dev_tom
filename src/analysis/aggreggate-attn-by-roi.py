@@ -6,6 +6,9 @@
 # MODEL_SHORTHAND | STEP | LAYER | HEAD | PASSAGE | TOKENIZED_PASSAGE | AVG_ATTN_SETUP | AVG_ATTN_EXIT | ...
 # AVG_ATTN_MANIPULATION | AVG_ATTN_RETURN | AVG_ATTN_QUERY
 
+# Note: this script will only work for Olmo for now, because I annotated the passage Rois according 
+# to Olmo's tokenization, and not any other model's, so the roi spans only work for Olmo rows in the df 
+
 import ast
 import os 
 
@@ -88,16 +91,15 @@ df["attention_scores"] = df["attention_scores"].apply(parse_attention_string)
 
 df_merged = df.merge(df_annot[["tokenized_passage"] + roi_colnames], on="tokenized_passage", how="left")
 
-for roi in tqdm(roi_colnames):
-	df_merged[f"attn_avg_{roi}"] = df_merged.apply(lambda row: mean_attn_roi(row["attention_scores"],row[roi]),axis=1)
-
 #### OOOHHH pythia is tokenized differently, so the indices would be totally different! Remove for now
 df_target_models = df_merged[~(df_merged["model_shorthand"] == "Pythia 14M")]
-for (i,row) in tqdm(df_target_models.iterrows(), total=len(df_target_models)): 
-	for roi in roi_colnames:
-		row[f"attn_avg_{roi}"] = mean_attn_roi(row["attention_scores"],row[roi])
+for roi in tqdm(roi_colnames):
+	df_target_models[f"attn_avg_{roi}"] = df_target_models.apply(lambda row: mean_attn_roi(row["attention_scores"],row[roi]),axis=1)
 
-		# TODO: set up these in a new dataframe
+
+# Save dataframe with average attn per roi per passage to .csv file
+df_target_models.to_csv("../../data/processed/mean_attn_for_passage_rois.csv")
+
 
 
 
