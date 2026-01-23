@@ -96,9 +96,24 @@ df_target_models = df_merged[~(df_merged["model_shorthand"] == "Pythia 14M")]
 for roi in tqdm(roi_colnames):
 	df_target_models[f"attn_avg_{roi}"] = df_target_models.apply(lambda row: mean_attn_roi(row["attention_scores"],row[roi]),axis=1)
 
+# Create folder to save, if doesn't already exist
+savepathname = "../../data/processed/mean_attn_rois/"
+if not os.path.exists(savepathname):
+	os.mkdir(savepathname)
 
-# Save dataframe with average attn per roi per passage to .csv file
-df_target_models.to_csv("../../data/processed/mean_attn_for_passage_rois.csv")
+# Split the dataframe by model_shorthand, to see if you can save it more effectively
+model_names = set(df_target_models["model_shorthand"].values)
+for m in model_names: 
+	subdf = df_target_models[df_target_models["model_shorthand"] == m]
+	mpath = subdf["model_path"].iloc[0].split("/")[1]
+	stage = str(subdf["stage"].iloc[0])
+	step = str(int(subdf["step"].iloc[0]))
+	tokens = subdf["tokens_seen"].iloc[0]
+	filename = "fb-mean-attn-roi-" + mpath + "-" + stage + "-step" +  step + "-tokens" + tokens + ".csv"
+	# Save the dataframe
+	subdf.to_csv(os.path.join(savepathname,filename))
+
+
 
 
 
