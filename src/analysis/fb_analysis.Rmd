@@ -232,6 +232,31 @@ ggplot(df_summ_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   ) +
   theme_minimal()
 
+## PAPER FIGURE: filter out the Pythia-14M, since it doesn't add much? 
+final_accuracy_exclude14m <- final_accuracy %>%
+  filter(model_shorthand != "Pythia 14m")
+df_summ_fb %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  ggplot(aes(x = n_params_approx, y = mean_accuracy)) + 
+  geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
+  geom_point(alpha = 0.3, size = 1, color = "gray") +
+  geom_point(data = final_accuracy_exclude14m, size = 4, 
+             aes(color = model_family), 
+             alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  geom_text_repel(data = final_accuracy_exclude14m, aes(label = model_shorthand), size = 3) +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "False Belief Task Accuracy: Progression and Final Step",
+    subtitle = "Colored points highlight accuracy at final pretraining step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal()
+
 
 df_summ_fb %>%
   mutate(step_modded = step + 1) %>%
