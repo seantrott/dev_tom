@@ -19,38 +19,43 @@ from itertools import product
 from tqdm import tqdm
 
 
-def info_score(roi_score_mat,p_roi): 
-	"""
-		Compute information scores for a given attention head.
+def info_score(roi_score_mat, p_roi_mat):
+    """
+    Compute Fenton information scores for a given attention head.
 
-		Args: 
-			roi_score_mat: matrix with 
-				rows: passages, 
-				cols: regions of interest; 
-				vals: max attention score
-			p_roi_mat: matrix with
-				rows: passages,
-				cols: regions of interest;
-				vals: probability of roi "occupancy"--should be a function of 
-				the number of tokens that make up a given ROI span, as they are not equally sized
+    Args: 
+        roi_score_mat: matrix with 
+            rows: passages, 
+            cols: regions of interest; 
+            vals: max attention score
+        p_roi_mat: matrix with
+            rows: passages,
+            cols: regions of interest;
+            vals: probability of roi "occupancy" -- fraction of tokens 
+            the ROI span occupies in the passage
 
-		Returns: 
-			information score
+    Returns: 
+        Mean information score across passages (in bits)
 
-		Notes: 
-			For a truly max attention in a single ROI (e.g. 1 in setup and 0s elsewhere), with 
-			probabilities of occupancy dictated by the index spans of the ROIs, the max information
-			score would be a 4.84.
-
-	"""
-	for (attn_scores, p_occupancies) in zip(roi_score_mat,p_roi_mat):
-		F_mean = np.mean(attn_scores)
-		info = 0
-		for F_i,p_i in zip(attn_scores,p_occupancies):
-			if F_i == 0:
-				F_i = F_i + 0.00000001 ## add super small quantity to avoid bad logs
-			info += p_i*(F_i/F_mean) * np.log2(F_i/F_mean)
-	return info
+    Notes: 
+        F_bar is the occupancy-weighted mean attention score (analogous 
+        to mean firing rate in the Fenton place cell formulation).
+        A head with perfect selectivity for a single small ROI would 
+        yield a high positive score; a head with uniform attention 
+        yields a score near 0.
+    """
+    info_scores = []
+    for attn_scores, p_occupancies in zip(roi_score_mat, p_roi_mat):
+        F_bar = np.sum(p_occupancies * attn_scores)  # occupancy-weighted mean
+        if F_bar == 0:
+            continue  # skip degenerate passages
+        info = 0
+		for F_i, p_i in zip(attn_scores, p_occupancies):
+		    if F_i <= 0:
+		        continue  # zero attention contributes nothing
+		    info += p_i * (F_i / F_bar) * np.log2(F_i / F_bar)
+        info_scores.append(info)
+    return np.mean(info_scores) if info_scores else np.nan
 
 
 # def shuffle_distribution_test(k_shuffles=1000):
@@ -74,7 +79,7 @@ layer_heads = list(product(unique_layers,unique_heads))
 
 n_passages = len(set(df["passage"].tolist()))
 n_rois = 5
-df_info = pd.DataFrame # initialize the df where you'll collect your info scores
+info_results = [] # initialize the var where you'll collect your info scores
 for layer, head in tqdm(layer_heads):
 	sublayerhead = df[(df["layer"] == layer) & (df["head"] == head)].reset_index()
 	p_roi = np.zeros((n_passages,n_rois))
@@ -101,16 +106,28 @@ for layer, head in tqdm(layer_heads):
 		max_attns[i,:] = np.hstack((max_setup, max_exit, max_manipulation, max_return, max_query))
 	## Now that you have the matrices of max attentions and probabilities of roi occupancy, 
 	## compute the information score
-	info = info_score(roi_score_mat,p_roi)
-	df_info["model_shorthand"] = row["model_shorthand"]
-	df_info["step"] = row["step"]
-	df_info["tokens_seen"] = row["tokens_seen"]
-	df_info["layer"] = layer
-	df_info["head"] = head
-	df_info["info_score"] = info
+	info = info_score(max_attns,p_roi)
+	
+	info_results.append({
+		"model_shorthand": row["model_shorthand"],
+		"step": row["step"], # constant for everything in sublayerhead dataframe
+		"tokens_seen": row["tokens_seen"],
+		"layer": layer,
+		"head": head,
+		"info_score": info})
 
-## temp visualizations, head by head
-g = sns.distplot(data=df_info,x="info_score",kind="kde",fill=True)
+df_info = pd.DataFrame(info_results)
+
+# ## temp visualizations, head by head
+g = sns.displot(data=df_info,
+	x="info_score",
+	hue="layer",
+	kind = "kde",
+	cut=0,
+	fill=True)
+g = sns.histplot(data=df_info,
+	x="info_score",
+	hue="layer")
 # g = sns.displot(data=sublayerhead,
 # 	x="attn_max_manipulation_indices",
 # 	hue="knowledge_cue",
