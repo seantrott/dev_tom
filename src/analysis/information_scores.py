@@ -18,39 +18,6 @@ import matplotlib.pyplot as plt
 from itertools import product
 from tqdm import tqdm
 
-# Define a function that cleans up the attention scores (which for some reason are interpreted as strings rather than numpy arrays or lists)
-def parse_attention_string(s):
-    """
-    Convert a stringified numpy array to a 1D numpy array.
-    """
-    if isinstance(s, np.ndarray):
-        return s
-    if isinstance(s, list):
-        return np.asarray(s)
-    return np.fromstring(s.strip("[]"), sep=" ")
-
-# Define a function to clean up the roi tuple entries (which also look like strings)
-import ast
-import numpy as np
-
-def parse_roi_span_string(x):
-    """
-    Parse an ROI span stored as a string into a (start, end) tuple.
-
-    Returns:
-        (start, end) tuple, or None if missing / invalid
-    """
-    if x is None or (isinstance(x, float) and np.isnan(x)):
-        return None
-    # Already parsed
-    if isinstance(x, tuple):
-        return x
-    if isinstance(x, str):
-        parsed = ast.literal_eval(x)
-        if isinstance(parsed, tuple) and len(parsed) == 2:
-            return parsed
-    return None
-
 
 def info_score(roi_score_mat,p_roi): 
 
@@ -71,17 +38,22 @@ def info_score(roi_score_mat,p_roi):
 		Returns: 
 			information score
 
-	"""
+		Notes: 
+			For a truly max attention in a single ROI (e.g. 1 in setup and 0s elsewhere), with 
+			probabilities of occupancy dictated by the index spans of the ROIs, the max information
+			score would be a 4.84.
 
+	"""
 	for (attn_scores, p_occupancies) in zip(roi_score_mat,p_roi_mat):
-		
-		F_by_conditions = np.mean(roi_score_mat, 0)
-		F_mean = np.mean(row)
+		F_mean = np.mean(attn_scores)
 		info = 0
 		for F_i,p_i in zip(attn_scores,p_occupancies):
+			if F_i == 0:
+				F_i = F_i + 0.00000001 ## add super small quantity to avoid bad logs
 			info += p_i*(F_i/F_mean) * np.log2(F_i/F_mean)
 
 	return info
+
 
 def shuffle_distribution_test(k_shuffles=1000):
 
@@ -97,9 +69,9 @@ olmo_files = [f for f in files if "OLMo" in f] # filter for Olmo in case other m
 
 df = pd.read_csv(os.path.join(datapath,olmo_files[0]))
 
-unique_model_step_layer_heads = df.groupby(["model_shorthand","step","layer","head"]).count()
-unique_layers = set(unique_model_step_layer_heads["layer"].tolist())
-unique_heads = set(unique_model_step_layer_heads["head"].tolist())
+unique_steps = set(df["step"].tolist())
+unique_layers = set(df["layer"].tolist())
+unique_heads = set(df["head"].tolist())
 layer_heads = list(product(unique_layers,unique_heads))
 
 n_passages = len(set(df["passage"].tolist()))
@@ -133,7 +105,20 @@ for layer, head in layer_heads:
 		max_query = row["attn_max_query_indices"]
 		## Add these as a new row in a matrix of passages x attention scores
 		max_attns[i,:] = np.hstack((max_setup, max_exit, max_manipulation, max_return, max_query))
-
+		
 	## Now that you have the matrix, compute the information score
+	info = info_score(roi_score_mat,p_roi)
 
+	## Gather everything into a single dataframe, including the max_atts per roi, probs of occupancy, etc
+	
+
+## temp visualizations, head by head
+# g = sns.displot(data=sublayerhead,
+# 	x="attn_max_manipulation_indices",
+# 	hue="knowledge_cue",
+# 	col="condition",
+# 	kind="kde",
+# 	fill=True,
+# 	common_norm=False,
+# 	height=4,aspect=1)
 
