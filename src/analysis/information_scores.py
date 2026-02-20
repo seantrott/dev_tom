@@ -1,12 +1,5 @@
 ## Compute information scores for attention heads, over False Belief passage regions of interest
 
-## Goal: Generating a Tensor A with dimensions corresponding to the number of models, steps, layers, heads, passages, and rois? Where the values contained in Tensor A correspond to the max attention head scores for the corresponding region of interest. 
-## And similarly, make a Tensor B with the same number and type of dimensions, but containing values representing the length of the region of interest as a fraction over the entire length of the tokenized passage? 
-
-# prompt for Claude: 
-#
-# hello! I am in Python, and I have a dataframe with columns: `model_shorthand`, `step`, `layer`, `head`, `tokenized_passage`, and max attention scores for each of five regions of interest within this tokenized passage: `attn_max_setup_indices, attn_max_exit_indices, attn_max_manipulation_indices attn_max_return_indices, attn_max_query_indices`. I also have the corresponding token indices that map onto each passage, for each region of interest: setup_indices', 'exit_indices', 'manipulation_indices', 'return_indices', 'query_indices', which contain tuples (start_index, end_index), inclusive of end index. What is the most efficient way of generating a Tensor A with dimensions corresponding to the number of models, steps, layers, heads, passages, and rois? Where the values contained in Tensor A correspond to the max attention head scores for the corresponding region of interest. And similarly, what is the best way to make a Tensor B with the same number and type of dimensions, but containing values representing the length of the region of interest as a fraction over the entire length of the tokenized passage?
-
 import ast
 import os
 
@@ -46,15 +39,16 @@ def info_score(roi_score_mat, p_roi_mat):
     """
     info_scores = []
     for attn_scores, p_occupancies in zip(roi_score_mat, p_roi_mat):
-        F_bar = np.sum(p_occupancies * attn_scores)  # occupancy-weighted mean
-        if F_bar == 0:
-            continue  # skip degenerate passages
-        info = 0
-		for F_i, p_i in zip(attn_scores, p_occupancies):
-		    if F_i <= 0:
-		        continue  # zero attention contributes nothing
-		    info += p_i * (F_i / F_bar) * np.log2(F_i / F_bar)
-        info_scores.append(info)
+    	F_bar = np.sum(p_occupancies * attn_scores)  # occupancy-weighted mean
+    	if F_bar == 0:
+    		continue  # skip degenerate passages
+    	info = 0
+    	for F_i, p_i in zip(attn_scores, p_occupancies):
+    		if F_i <= 0:
+    			continue  # zero attention contributes nothing
+    		info += p_i * (F_i / F_bar) * np.log2(F_i / F_bar)
+    	info_scores.append(info)
+
     return np.mean(info_scores) if info_scores else np.nan
 
 
@@ -70,64 +64,81 @@ datapath = "../../data/processed/aggregated_attn_rois/"
 files = os.listdir(datapath)
 olmo_files = [f for f in files if "OLMo" in f] # filter for Olmo in case other models are here 
 
-df = pd.read_csv(os.path.join(datapath,olmo_files[0]))
+for file in olmo_files:
+	df = pd.read_csv(os.path.join(datapath,file))
 
-unique_steps = set(df["step"].tolist())
-unique_layers = set(df["layer"].tolist())
-unique_heads = set(df["head"].tolist())
-layer_heads = list(product(unique_layers,unique_heads))
+	model_path = df["model_path"].iloc[0] # grab this for filename saving later
 
-n_passages = len(set(df["passage"].tolist()))
-n_rois = 5
-info_results = [] # initialize the var where you'll collect your info scores
-for layer, head in tqdm(layer_heads):
-	sublayerhead = df[(df["layer"] == layer) & (df["head"] == head)].reset_index()
-	p_roi = np.zeros((n_passages,n_rois))
-	max_attns = np.zeros((n_passages,n_rois))
-	for i,row in sublayerhead.iterrows():
-		tokenized_passage = ast.literal_eval(row["tokenized_passage"])
-		## Compute probabilities of "occupancy" e.g. fraction of tokens roi occupies in passage
-		n_tokens_passage = len(tokenized_passage)
-		n_tokens_setup = ast.literal_eval(row["setup_indices"])[1] - ast.literal_eval(row["setup_indices"])[0] # n tokens for setup
-		n_tokens_exit = ast.literal_eval(row["exit_indices"])[1] - ast.literal_eval(row["exit_indices"])[0]# n tokens for exit
-		n_tokens_manipulation = ast.literal_eval(row["manipulation_indices"])[1] - ast.literal_eval(row["manipulation_indices"])[0]# n tokens for manipulation
-		n_tokens_return = ast.literal_eval(row["return_indices"])[1] - ast.literal_eval(row["return_indices"])[0]# n tokens for return
-		n_tokens_query = ast.literal_eval(row["query_indices"])[1] - ast.literal_eval(row["query_indices"])[0]# n tokens for query
-		# create an array of probabilities of occupancy
-		n_roi = np.hstack((n_tokens_setup, n_tokens_exit, n_tokens_manipulation, n_tokens_return, n_tokens_query))
-		p_roi[i,:] = n_roi/n_tokens_passage
-		## Arrange the maximum attention scores per roi in a numpy array
-		max_setup = row["attn_max_setup_indices"]
-		max_exit = row["attn_max_exit_indices"]
-		max_manipulation = row["attn_max_manipulation_indices"]
-		max_return = row["attn_max_return_indices"]
-		max_query = row["attn_max_query_indices"]
-		## Add these as a new row in a matrix of passages x attention scores
-		max_attns[i,:] = np.hstack((max_setup, max_exit, max_manipulation, max_return, max_query))
-	## Now that you have the matrices of max attentions and probabilities of roi occupancy, 
-	## compute the information score
-	info = info_score(max_attns,p_roi)
-	
-	info_results.append({
-		"model_shorthand": row["model_shorthand"],
-		"step": row["step"], # constant for everything in sublayerhead dataframe
-		"tokens_seen": row["tokens_seen"],
-		"layer": layer,
-		"head": head,
-		"info_score": info})
+	unique_steps = set(df["step"].tolist())
+	unique_layers = set(df["layer"].tolist())
+	unique_heads = set(df["head"].tolist())
+	layer_heads = list(product(unique_layers,unique_heads))
 
-df_info = pd.DataFrame(info_results)
+	n_passages = len(set(df["passage"].tolist()))
+	n_rois = 5
+	info_results = [] # initialize the var where you'll collect your info scores
+	for layer, head in tqdm(layer_heads):
+		sublayerhead = df[(df["layer"] == layer) & (df["head"] == head)].reset_index()
+		p_roi = np.zeros((n_passages,n_rois))
+		max_attns = np.zeros((n_passages,n_rois))
+		for i,row in sublayerhead.iterrows():
+			tokenized_passage = ast.literal_eval(row["tokenized_passage"])
+			## Compute probabilities of "occupancy" e.g. fraction of tokens roi occupies in passage
+			n_tokens_passage = len(tokenized_passage)
+			n_tokens_setup = ast.literal_eval(row["setup_indices"])[1] - ast.literal_eval(row["setup_indices"])[0] # n tokens for setup
+			n_tokens_exit = ast.literal_eval(row["exit_indices"])[1] - ast.literal_eval(row["exit_indices"])[0]# n tokens for exit
+			n_tokens_manipulation = ast.literal_eval(row["manipulation_indices"])[1] - ast.literal_eval(row["manipulation_indices"])[0]# n tokens for manipulation
+			n_tokens_return = ast.literal_eval(row["return_indices"])[1] - ast.literal_eval(row["return_indices"])[0]# n tokens for return
+			n_tokens_query = ast.literal_eval(row["query_indices"])[1] - ast.literal_eval(row["query_indices"])[0]# n tokens for query
+			# create an array of probabilities of occupancy
+			n_roi = np.hstack((n_tokens_setup, n_tokens_exit, n_tokens_manipulation, n_tokens_return, n_tokens_query))
+			p_roi[i,:] = n_roi/n_tokens_passage
+			## Arrange the maximum attention scores per roi in a numpy array
+			max_setup = row["attn_max_setup_indices"]
+			max_exit = row["attn_max_exit_indices"]
+			max_manipulation = row["attn_max_manipulation_indices"]
+			max_return = row["attn_max_return_indices"]
+			max_query = row["attn_max_query_indices"]
+			## Add these as a new row in a matrix of passages x attention scores
+			max_attns[i,:] = np.hstack((max_setup, max_exit, max_manipulation, max_return, max_query))
+		## Now that you have the matrices of max attentions and probabilities of roi occupancy, 
+		## compute the information score
+		info = info_score(max_attns,p_roi)
+		
+		step = row["step"]
+		tokens_seen = row["tokens_seen"]
 
-# ## temp visualizations, head by head
-g = sns.displot(data=df_info,
-	x="info_score",
-	hue="layer",
-	kind = "kde",
-	cut=0,
-	fill=True)
-g = sns.histplot(data=df_info,
-	x="info_score",
-	hue="layer")
+		info_results.append({
+			"model_path": row["model_path"],
+			"model_shorthand": row["model_shorthand"],
+			"step": step, # constant for everything in sublayerhead dataframe
+			"tokens_seen": tokens_seen,
+			"layer": layer,
+			"head": head,
+			"info_score": info})
+
+	df_info = pd.DataFrame(info_results)
+
+	savepath = "../../data/processed/fb_infoscores/"
+	filename = f"fb-infoscores-{model_path.split('/')[-1]}-step{int(step)}-tokens{tokens_seen}.csv"
+
+	if not os.path.exists(savepath): 
+		os.mkdir(savepath)
+
+	# save the information scores to csv
+	df_info.to_csv(os.path.join(savepath,filename))
+              
+
+# ## temp visualizations
+# g = sns.displot(data=df_info,
+# 	x="info_score",
+# 	hue="layer",
+# 	kind = "kde",
+# 	cut=0,
+# 	fill=True)
+# g = sns.histplot(data=df_info,
+# 	x="info_score",
+# 	hue="layer")
 # g = sns.displot(data=sublayerhead,
 # 	x="attn_max_manipulation_indices",
 # 	hue="knowledge_cue",
