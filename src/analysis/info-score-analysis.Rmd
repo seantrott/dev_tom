@@ -1,0 +1,103 @@
+---
+title: "Analysis of False Belief Attention Allocation"
+author: "Pam Rivière, Cameron Jones, Sean Trott"
+date: "February 20, 2026"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi = 300, fig.format = "png")
+
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(lmtest)
+library(forcats)
+library(broom)
+library(lme4)
+library(viridis)
+library(ggridges)
+library(lmerTest)
+library(ggrepel)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
+
+```
+
+# Load information score dataframes
+
+```{r}
+setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+
+dir_path <- "../../data/processed/fb_infoscores/"
+csv_files <- list.files(path = dir_path, pattern = "*.csv", full.names = TRUE)
+csv_list <- csv_files %>%
+  map(~ read.csv(.))
+df <- bind_rows(csv_list) %>%
+  mutate(model_shorthand = str_to_title(model_shorthand))
+nrow(df)
+
+```
+
+
+# Visualize the means of attention head information scores, layer by layer
+
+```{r}
+df <- df %>% 
+  group_by(model_path,model_shorthand,step,tokens_seen,layer) %>%
+  mutate(layer_mean_info_score = mean(info_score))
+
+# rank-ordering the steps for color-coding purposes 
+# TODO: in future, actually rank order by the percentile of fb task performance 
+# this step corresponds to (this is, after all, how I chose these steps)
+df <- df %>%
+  group_by(model_shorthand) %>%
+  mutate(step_rank = as.integer(factor(step, levels= sort(unique(step))))) %>%
+  ungroup()
+
+n_steps <- df %>%
+  group_by(model_shorthand) %>%
+  summarise(n = n_distinct(step_rank))
+n_colors <- max(n_steps$n)
+
+df %>%
+  ggplot(aes(x = layer, y = layer_mean_info_score)) + 
+  #geom_point(aes(x = layer, y = info_score), alpha = 0.4, color = "gray") + 
+  geom_point(aes(color=factor(step_rank)),alpha=0.8) +
+  scale_color_manual(values = viridisLite::viridis(n_colors,option="mako",
+                                                   begin = 0.15,end = 0.8)) + 
+  facet_grid(model_shorthand ~ step_rank) + 
+  theme_minimal()
+              
+```
+
+# Visualize info scores as heat map of layer by head indices
+
+```{r}
+
+df %>%
+  ggplot(aes(x = layer, y = head, fill = info_score)) + 
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") + 
+  facet_grid(model_shorthand ~ step) +
+  theme_minimal()
+  
+df %>%
+  ggplot(aes(x = layer, y = head, fill = info_score)) + 
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") + 
+  facet_grid(model_shorthand ~ step_rank) +
+  theme_minimal()
+```
