@@ -16,7 +16,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dpi = 300, fig.format = "png")
+knitr::opts_chunk$set(dpi = 300, fig.format = "pdf")
 
 ```
 
@@ -200,7 +200,7 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_point(size = 3, alpha = 0.7) +
   geom_text(aes(label = model_shorthand), vjust = -0.8, hjust = 0.5, size = 3) +
   geom_hline(yintercept = .5, linetype = "dashed",
-             size = 1.2, alpha = .5) +
+             size = 1, alpha = .8) +
   scale_x_log10(labels = scales::comma_format()) +  # Log scale for params
   labs(
     title = "False Belief Task Accuracy at Final Step",
@@ -211,26 +211,30 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   theme(plot.title = element_text(hjust = 0.6),
         plot.subtitle = element_text(hjust = 0.6))
 
+tmp <- df_summ_fb %>%
+  filter(step > 0)
 # PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
-ggplot(df_summ_fb, aes(x = n_params_approx, y = mean_accuracy)) +
+ggplot(tmp, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
   geom_point(data = final_accuracy, size = 4, 
              aes(color = model_family), 
              alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
-             size = 1.2, alpha = .5) +
+             size = 1, alpha = .8) +
   scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
                                                   begin = 0.8, end = 0.15)) + 
   geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
   scale_x_log10(labels = scales::comma_format()) +
   labs(
     title = "False Belief Task Accuracy: Progression and Final Step",
-    subtitle = "Red points highlight accuracy at final pretraining step",
+    subtitle = "Colored circles highlight accuracy at final pretraining step",
     x = "Number of Parameters (log scale)",
     y = "Accuracy"
   ) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(text = element_text(size = 15),
+        legend.position="bottom")
 
 ## PAPER FIGURE: filter out the Pythia-14M, since it doesn't add much? 
 final_accuracy_exclude14m <- final_accuracy %>%
@@ -255,22 +259,25 @@ df_summ_fb %>%
     x = "Number of Parameters (log scale)",
     y = "Accuracy"
   ) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(text = element_text(size = 15),
+        legend.position="bottom")
 
 
 df_summ_fb %>%
   mutate(step_modded = step + 1) %>%
+  filter(step > 0) %>%
   ggplot(aes(x = step_modded,
              y = mean_accuracy,
              color = model_shorthand)) +
   #geom_point(size = 3,
   #           alpha = .7) +
   geom_hline(yintercept = .83,##TODO: Calculate from scratch
-             linetype = "dotted", color = "red",
+             linetype = "dashed", color = "red",
              size = 1.2, alpha = .8) + 
   geom_line(size = 1) +
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   scale_x_log10() +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
@@ -286,6 +293,7 @@ df_summ_fb %>%
   facet_wrap(~stage)
 
 df_summ_fb %>%
+  filter(step > 0) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -309,7 +317,15 @@ df_summ_fb %>%
   facet_wrap(~stage)
 
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
+min_val <- df_summ_fb %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  pull(tokens_seen_numeric_mod) %>%
+  min(na.rm = TRUE)
+
 df_summ_fb %>%
+  filter(step > 0) %>%
   filter(stage == "stage1" | is.na(stage)) %>%
   filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
@@ -317,8 +333,9 @@ df_summ_fb %>%
              color = model_shorthand)) +
   geom_line(size = 1.5, alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
-             size = 1.2, alpha = .5) +
-  scale_x_log10(labels = scales::comma_format()) +
+             size = 1, alpha = .8) +
+  scale_x_log10(breaks = sort(unique(c(min_val, scales::log_breaks()(range(df_summ_fb$tokens_seen_numeric_mod))))),
+    labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   #scale_y_continuous(limits = c(0.25, 0.75)) +
   labs(x = "Tokens Seen",
@@ -401,7 +418,13 @@ df_coef %>%
     x = NULL, y = "Coefficient Estimate",
   ) +
   theme_minimal(base_size = 12)
+max(olmo_and_pythia$step)
 
+# Most models do get higher accuracy for true belief than false belief:  
+olmo_and_pythia %>%
+  group_by(model_shorthand, condition) %>%
+  summarise(accuracy = mean(correct)) 
+  
 
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
 ```
@@ -433,6 +456,7 @@ print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
 
 df_summ_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(step > 1) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -462,9 +486,62 @@ df_summ_fb %>%
 ```
 
 ```{r}
+# Find the tokens seen for Pythia12 max accuracy
+
+# Filter for Pythia 12b  data
+pythia_data <- df_summ_fb[df_summ_fb$model_shorthand == "Pythia 12b", ]
+
+# Calculate the median accuracy for this model
+max_accuracy_across_training <- max(pythia_data$mean_accuracy)
+
+# Display results
+print(paste("Max accuracy:", max_accuracy_across_training))
+
+```
+
+```{r}
+# Find the tokens seen for Olmo 2 1b max accuracy
+
+# Filter for Olmo 2 1b  data
+olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 1b", ]
+
+# Calculate the median accuracy for this model
+max_accuracy_across_training <- max(olmo_data$mean_accuracy)
+
+# Display results
+print(paste("Max accuracy:", max_accuracy_across_training))
+
+```
+
+```{r}
+# Find the tokens seen for Olmo 2 13b as the ramp in accuracy is taking place
+
+# Filter for Olmo 2 13b  data
+olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 13b", ]
+
+# Calculate the median accuracy for this model
+max_accuracy_across_training <- max(olmo_data$mean_accuracy)
+
+# Find the row(s) where accuracy is closest to the median
+# Calculate absolute difference from median
+olmo_data$diff_from_max <- abs(olmo_data$mean_accuracy - max_accuracy_across_training)
+
+# Find the tokens_seen value where accuracy is closest to max
+closest_row <- olmo_data[which.min(olmo_data$diff_from_max), ]
+tokens_at_max <- closest_row$tokens_seen_numeric_mod
+
+# Display results
+print(paste("Max accuracy:", max_accuracy_across_training))
+print(paste("Tokens seen at max accuracy:", tokens_at_max))
+print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
+
+
+```
+
+```{r}
 # Find the tokens seen for Olmo 2 7b as the ramp in accuracy is taking place
 
-# Filter for Olmo 2 13b data
+# Filter for Olmo 2 target size data
 olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 7b", ]
 
 # Calculate the median accuracy for this model
@@ -517,6 +594,7 @@ print(paste("Actual accuracy at that point:", closest_row_max$mean_accuracy))
 
 df_summ_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(step > 0) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -671,8 +749,8 @@ df_attn_check = df_attn_check %>%
   mutate(q_label = case_when(
     question_id == 1 ~ "Item was first in {START}",
     question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Original person was {X}",
-    question_id == 4 ~ "Second person was {Y}"
+    question_id == 3 ~ "Person who put item in START was {X}",
+    question_id == 4 ~ "Person who put item in END was {Y}"
   ))
 
 ## Accuracy of item start location
@@ -692,13 +770,14 @@ df_summ_attn = df_summ_attn %>%
   mutate(q_label = case_when(
     question_id == 1 ~ "Item was first in {START}",
     question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Original person was {X}",
-    question_id == 4 ~ "Second person was {Y}"
+    question_id == 3 ~ "Person who put item in START was {X}",
+    question_id == 4 ~ "Person who put item in END was {Y}"
   ))
 
 # PAPER FIGURE - attention check results per question
 df_summ_attn %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -706,8 +785,8 @@ df_summ_attn %>%
   #           alpha = .5)+
   geom_point(size = 3,
              alpha = .7) +
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   scale_x_log10() +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
@@ -717,7 +796,7 @@ df_summ_attn %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(6, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -731,8 +810,8 @@ df_summ_attn %>%
              color = model_shorthand)) +
   geom_point(size = 3,
              alpha = .7) +
-  geom_hline(yintercept = .5, linetype = "dotted",
-             size = 1.2, alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   scale_x_log10(labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
@@ -783,33 +862,6 @@ df_attn_check %>%
                                                     begin = 0.8, end = 0.15)) 
 
 
-#df_olmo13_attn_check %>% 
-#  inner_join(df_model_max) %>%
-#  filter(step == max_step) %>%
-#  group_by(model_shorthand, question_id) %>%
-#  summarise(mean_accuracy = mean(correct),
-#            step = mean(step))
-
-
-
-#df_items = df_olmo13_attn_check %>% 
- # inner_join(df_model_max) %>%
- # filter(step == max_step) %>%
- # group_by(model_shorthand, item, question_id, q_label,
- #          correct_answer, distractor_answer) %>%
- # summarise(mean_accuracy = mean(correct))
-
-
-#df_items %>%
-#  filter(model_shorthand == "OLMO 2 13B") %>%
-#  ggplot(aes(x = factor(item),
- #            y = mean_accuracy)) +
- ## geom_bar(stat = "identity") +
-#  facet_wrap(~q_label) +
-#  labs(x = "Scenario",
- #      y = "Accuracy") +
- # theme_minimal()
-
 ```
 
 ```{r}
@@ -850,11 +902,14 @@ subtitle_text_1 <- df_summ_attn %>%
 # PAPER APPENDIX FIG: Plot accuracy for attention check 1 and false belief by tokens seen
 fb_and_attn_q1 %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Development of Situation Model",
@@ -879,6 +934,8 @@ fb_and_attn_q1 %>%
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(
@@ -922,11 +979,14 @@ subtitle_text_2 <- df_summ_attn %>%
 # PAPER APPENDIX FIG: Plot accuracy for attention check 2 and false belief by tokens seen
 fb_and_attn_q2 %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Development of Situation Model",
@@ -951,6 +1011,8 @@ fb_and_attn_q2 %>%
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(subtitle = subtitle_text_2,
@@ -993,16 +1055,19 @@ subtitle_text_3 <- df_summ_attn %>%
 # PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
 fb_and_attn_q3 %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Development of Situation Model",
        subtitle = subtitle_text_3,
-       x = "Tokens Seen",
+       x = "Log Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
@@ -1022,6 +1087,8 @@ fb_and_attn_q3 %>%
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(subtitle = subtitle_text_3,
@@ -1063,11 +1130,14 @@ subtitle_text_4 <- df_summ_attn %>%
 # PAPER APPENDIX FIG: Plot accuracy for attention check 3 and false belief by tokens seen
 fb_and_attn_q4 %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(subtitle = subtitle_text_4,
@@ -1090,6 +1160,8 @@ fb_and_attn_q4 %>%
              color = task_type)) +
   geom_line(size = 1,
              alpha = .5) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Development of Situation Model",
@@ -1104,6 +1176,7 @@ fb_and_attn_q4 %>%
   theme(text = element_text(size = 15),
         legend.position="bottom") 
 
+
 ## ====== ====== ====== ====== ====== 
 ## ====== FB + ALL ATTN CHECKS ======
 ## ====== ====== ====== ====== ======
@@ -1116,6 +1189,7 @@ fb_and_all_attn <- bind_rows(
   fb_and_attn_q3 %>% filter(task_type == "situation model 3"),
   fb_and_attn_q4 %>% filter(task_type == "situation model 4")
 )
+df_for_gam <- fb_and_all_attn # save this for gam fits later!
 
   
 situation_model_avg <- fb_and_all_attn %>%
@@ -1138,15 +1212,19 @@ fb_and_all_attn <- fb_and_all_attn %>%
 ## PAPER FIGURE: FB & OVERALL SITUATION MODEL
 fb_and_all_attn %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  filter(step > 0) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = task_type)) + 
    geom_line(size = 1,
              alpha = .5) + 
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) + 
   scale_x_log10() + 
-  scale_y_continuous(limits = c(0, 1)) + 
-  labs(title = "Development of Situation Model",
-       x = "Tokens Seen",
+  scale_y_continuous(limits = c(0.25, 0.75)) + 
+  labs(title = "Trajectory of Situation Model & False Belief Task Performance",
+       x = "log Tokens Seen",
        y = "Accuracy",
        color = "",
        shape = "") +
@@ -1156,6 +1234,131 @@ fb_and_all_attn %>%
   theme(text = element_text(size = 15),
         legend.position="bottom") + 
   facet_wrap(~model_shorthand)
+
+```
+
+```{r}
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+## ====== TODO: get attention head information scores  ======
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+# tells us: how informative is a given attention head's scoring over ROIs--are 
+# their patterns uniform (uninformative) or pretty indicative of a given ROI?
+# use Fenton information scores for principal cells
+
+
+```
+
+```{r}
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+## ====== TODO: avg Q1 and Q2 vs. avg Q3 and Q4  ======
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+# these are differentially useful to know ?
+```
+
+```{r}
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+## ====== Find checkpoints where performance increases or tanks ======
+## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
+# Aggregate to get accuracy per checkpoint (helps GAM fit) for just Olmo stage1 & pythia
+
+tmp <- df_for_gam %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  group_by(model_shorthand,
+           task_type,
+           question_id,
+           step,
+           tokens_seen_numeric_mod)
+
+# Fit a GAM for each model and task type separately
+fits <- tmp %>%
+  group_by(model_shorthand, task_type) %>%
+  nest() %>%
+  mutate(
+    gam_fit = map(data, ~ gam(mean_accuracy ~ s(tokens_seen_numeric_mod, k = 10), 
+                              data = .))
+  )
+
+# Find hingepoints (or, elbow points)
+elbow_points <- tmp %>%
+  group_by(model_shorthand, task_type) %>%
+  group_split() %>%
+  set_names(map_chr(., ~ paste(unique(.$model_shorthand), 
+                               unique(.$task_type), 
+                               sep = " - "))) %>%
+  map(~ gam(mean_accuracy ~ s(tokens_seen_numeric_mod, k = 10), data = .)) %>%
+  imap_dfr(function(model, name) {
+    parts <- str_split(name, " - ")[[1]]
+    model_name <- parts[1]
+    task_name <- parts[2]
+    
+    model_data <- tmp %>% 
+      filter(model_shorthand == model_name, task_type == task_name) %>%
+      filter(!is.na(tokens_seen_numeric_mod))
+    
+    if (nrow(model_data) == 0) {
+      return(NULL)
+    }
+    
+    token_range <- seq(min(model_data$tokens_seen_numeric_mod),
+                       max(model_data$tokens_seen_numeric_mod),
+                       length.out = 1000)
+    
+    predictions <- predict(model, 
+                          newdata = data.frame(tokens_seen_numeric_mod = token_range))
+    
+    # Find peak first
+    peak_idx <- which.max(predictions)
+    
+    # Only look for crossing after the peak
+    after_peak <- predictions[(peak_idx + 1):length(predictions)]
+    below_chance_after_peak <- which(after_peak < 0.5)
+    
+    if (length(below_chance_after_peak) == 0) {
+      return(data.frame(
+        model_shorthand = model_name,
+        task_type = task_name,
+        below_chance_tokens = NA,
+        below_chance_accuracy = NA,
+        peak_tokens = token_range[peak_idx],
+        peak_accuracy = predictions[peak_idx],
+        goes_below_chance = FALSE
+      ))
+    } else {
+      first_below_idx <- peak_idx + below_chance_after_peak[1]
+      
+      return(data.frame(
+        model_shorthand = model_name,
+        task_type = task_name,
+        below_chance_tokens = token_range[first_below_idx],
+        below_chance_accuracy = predictions[first_below_idx],
+        peak_tokens = token_range[peak_idx],
+        peak_accuracy = predictions[peak_idx],
+        goes_below_chance = TRUE
+      ))
+    }
+  })
+
+print(elbow_points)
+
+ggplot(tmp, aes(x = tokens_seen_numeric_mod, y = mean_accuracy)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray50", linewidth = 0.5) +
+  geom_smooth(method = "gam", 
+              formula = y ~ s(x, k = 10), 
+              se = TRUE, 
+              color = "blue") +
+  geom_vline(data = elbow_points,
+             aes(xintercept = below_chance_tokens),
+             color = "red", linetype = "dashed") +
+  facet_grid(task_type ~ model_shorthand, scales = "free") +
+  scale_x_log10() +
+  labs(title = "GAM Fits by LM and Task Type",
+       x = "Log Tokens Seen",
+       y = "Mean Accuracy") +
+  theme_minimal()
+
 
 ```
 
@@ -1193,7 +1396,8 @@ df_all = df_summ_attn %>%
 
 ### New plot
 plot_data <- df_all %>%
-  dplyr::select(model_shorthand, tokens_seen_numeric_mod, step, question_id, 
+  filter(step > 0) %>%
+   dplyr::select(model_shorthand, tokens_seen_numeric_mod, step, question_id, 
          ac_accuracy, fb_accuracy) %>%
   pivot_longer(cols = c(ac_accuracy, fb_accuracy),
                names_to = "task_type",
@@ -1205,8 +1409,8 @@ plot_data <- df_all %>%
   mutate(q_label = case_when(
     question_id == 1 ~ "Item was first in {START}",
     question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Original person was {X}",
-    question_id == 4 ~ "Second person was {Y}"
+    question_id == 3 ~ "Person who put item in START was {X}",
+    question_id == 4 ~ "Person who put item in END was {Y}"
   ))
 
 
@@ -1218,6 +1422,8 @@ plot_data %>%
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
   geom_point(size = 2, alpha = 0.6) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
@@ -1241,6 +1447,8 @@ plot_data %>%
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
   geom_point(size = 2, alpha = 0.6) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
@@ -1263,6 +1471,8 @@ plot_data %>%
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
   geom_point(size = 2, alpha = 0.6) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
   facet_wrap(~ reorder(q_label, question_id),, ncol = 2) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
