@@ -20,12 +20,12 @@ from del_models import clear_huggingface_cache
 MODELS = {
     ### OLMo
     "EleutherAI/pythia-14m": "Pythia 14m",
-    # "EleutherAI/pythia-1b": "Pythia 1B",
-    #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
-    #"EleutherAI/pythia-12b": "Pythia 12B",
-    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    "EleutherAI/pythia-1b": "Pythia 1B",
+    "EleutherAI/pythia-6.9b": "Pythia 6.9B",
+    "EleutherAI/pythia-12b": "Pythia 12B",
+    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
 #MODELS = {
@@ -268,7 +268,6 @@ if __name__ == "__main__":
 
             # revision_list = ['step143000']
         
-            print(revision_list)
         
             for rev in revision_list:
                 print(f"Running FB with checkpoint: {rev}")
@@ -277,7 +276,7 @@ if __name__ == "__main__":
                 suffix = rev.replace("/", "_") # to tag output files uniquely
                 
                 # Set up save path, filename, etc.
-                savepath = f"../../data/processed/fb_local/"
+                savepath = f"data/processed/fb_local_control/"
                 if not os.path.exists(savepath): 
                     os.makedirs(savepath)
             

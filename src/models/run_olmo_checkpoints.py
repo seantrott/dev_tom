@@ -23,7 +23,7 @@ MODELS = {
     #"EleutherAI/pythia-1b": "Pythia 1B",
     #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
     #"EleutherAI/pythia-12b": "Pythia 12B",
-    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
@@ -149,8 +149,8 @@ def main(model_path, revision = None, suffix=None):
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         revision=revision,
-        device_map="auto",
-        use_auth_token=True
+        device_map="auto" #,
+        # use_auth_token=True
     )
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
     tokenizer = AutoTokenizer.from_pretrained(model_path)
