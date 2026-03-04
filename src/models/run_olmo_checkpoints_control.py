@@ -295,7 +295,7 @@ if __name__ == "__main__":
                      revision=revision,  
                      suffix=suffix)  
 
-                # clear_huggingface_cache()
+                clear_huggingface_cache()
                 
                 
             
