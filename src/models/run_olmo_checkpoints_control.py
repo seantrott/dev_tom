@@ -19,8 +19,8 @@ from del_models import clear_huggingface_cache
 
 MODELS = {
     ### OLMo
-    # "EleutherAI/pythia-14m": "Pythia 14m",
-    "EleutherAI/pythia-1b": "Pythia 1B",
+    "EleutherAI/pythia-14m": "Pythia 14m",
+    # "EleutherAI/pythia-1b": "Pythia 1B",
     #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
     #"EleutherAI/pythia-12b": "Pythia 12B",
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
@@ -145,6 +145,14 @@ def main(model_path, revision = None, suffix=None):
     print(filename)
     print(savepath)
 
+
+    # Skip if already computed
+    output_path = os.path.join(savepath,filename)
+    if os.path.exists(output_path):
+        print(f"  Skipping {revision} — already exists at {filename}")
+        return
+    
+
     ### Load model
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
@@ -258,7 +266,7 @@ if __name__ == "__main__":
             revision_list = get_revision_list(model_path, all_revisions)
             print(revision_list)
 
-            revision_list = ['step143000']
+            # revision_list = ['step143000']
         
             print(revision_list)
         
