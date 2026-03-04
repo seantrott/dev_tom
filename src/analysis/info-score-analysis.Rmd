@@ -1,0 +1,194 @@
+---
+title: "Analysis of False Belief Attention Allocation"
+author: "Pam Rivière, Cameron Jones, Sean Trott"
+date: "February 20, 2026"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi = 300, fig.format = "png")
+
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(lmtest)
+library(forcats)
+library(broom)
+library(lme4)
+library(viridis)
+library(ggridges)
+library(lmerTest)
+library(ggrepel)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
+
+```
+
+# Load information score dataframes
+
+```{r}
+setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+
+dir_path <- "../../data/processed/fb_infoscores/"
+csv_files <- list.files(path = dir_path, pattern = "*.csv", full.names = TRUE)
+csv_list <- csv_files %>%
+  map(~ read_csv(.))
+df <- bind_rows(csv_list) %>%
+  mutate(model_shorthand = str_to_title(model_shorthand))
+nrow(df)
+
+```
+
+
+# Visualize the means of attention head information scores, layer by layer
+
+```{r}
+df <- df %>% 
+  group_by(model_path,model_shorthand,step,tokens_seen,layer) %>%
+  mutate(layer_mean_info_score = mean(info_score))
+
+# rank-ordering the steps for color-coding purposes 
+# TODO: in future, actually rank order by the percentile of fb task performance 
+# this step corresponds to (this is, after all, how I chose these steps)
+df <- df %>%
+  group_by(model_shorthand) %>%
+  mutate(step_rank = as.integer(factor(step, levels= sort(unique(step))))) %>%
+  ungroup()
+
+n_steps <- df %>%
+  group_by(model_shorthand) %>%
+  summarise(n = n_distinct(step_rank))
+n_colors <- max(n_steps$n)
+
+df %>%
+  ggplot(aes(x = layer, y = layer_mean_info_score)) + 
+  #geom_point(aes(x = layer, y = info_score), alpha = 0.4, color = "gray") + 
+  geom_point(aes(color=factor(step_rank)),alpha=0.8) +
+  scale_color_manual(values = viridisLite::viridis(n_colors,option="mako",
+                                                   begin = 0.15,end = 0.8)) + 
+  facet_grid(model_shorthand ~ step_rank) + 
+  theme_minimal()
+
+```
+
+# Visualize info scores as heat map of layer by head indices
+
+```{r}
+# filtering by bootstrapped significance testing
+p_alpha = 0.001   
+df %>%
+  filter(p_value <= p_alpha) %>%
+  ggplot(aes(x = layer, y = head, fill = info_score)) + 
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") + 
+  facet_grid(model_shorthand ~ step) +
+  theme_minimal()
+
+df %>%
+  ggplot(aes(x = layer, y = head, fill = info_score)) + 
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") + 
+  facet_grid(model_shorthand ~ step) +
+  theme_minimal()
+  
+df %>%
+  ggplot(aes(x = layer, y = head, fill = info_score)) + 
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") + 
+  facet_grid(model_shorthand ~ step_rank) +
+  theme_minimal()
+```
+
+# TODO: figure out which rois these heads distribute their max attention to, for the most part, across passages
+
+```{r}
+dir_path <- "../../data/processed/aggregated_attn_rois"
+csv_files <- list.files(path = dir_path, pattern = "*.csv", full.names = TRUE)
+csv_list <- csv_files %>%
+  map(~read.csv(.))
+df_aggattn <- bind_rows(csv_list) %>%
+  mutate(model_shorthand = str_to_title(model_shorthand))
+nrow(df_aggattn)
+```
+
+```{r}
+df_sig <- df %>%
+  filter(p_value <= p_alpha)
+
+# select rows from the aggregated attention df that correspond to heads
+# with significant information scores
+df_aggattn_sig <- df_aggattn %>%
+  semi_join(
+    filter(df_sig, p_value < p_alpha),
+    by = c("model_shorthand", "step", "tokens_seen", "layer", "head")
+  )
+
+tmp <- df_aggattn_sig %>%
+  group_by(model_shorthand,step,tokens_seen,layer,head) %>%
+  summarise(mean_max_setup = mean(attn_max_setup_indices),
+         mean_max_exit = mean(attn_max_exit_indices),
+         mean_max_manipulation = mean(attn_max_manipulation_indices),
+         mean_max_return = mean(attn_max_return_indices),
+         mean_max_query = mean(attn_max_query_indices)) %>%
+  select(model_shorthand, step, tokens_seen, layer, head,
+         mean_max_setup, mean_max_exit, mean_max_manipulation, 
+         mean_max_return, mean_max_query)
+nrow(tmp)
+
+df_summ_max_roi <- tmp %>%
+  mutate(
+    roi_w_max_overall = case_when(
+      mean_max_setup == pmax(mean_max_setup, mean_max_exit, mean_max_manipulation, mean_max_return, mean_max_query) ~ "setup",
+      mean_max_exit == pmax(mean_max_setup, mean_max_exit, mean_max_manipulation, mean_max_return, mean_max_query) ~ "exit",
+      mean_max_manipulation == pmax(mean_max_setup, mean_max_exit, mean_max_manipulation, mean_max_return, mean_max_query) ~ "manipulation",
+      mean_max_return == pmax(mean_max_setup, mean_max_exit, mean_max_manipulation, mean_max_return, mean_max_query) ~ "return", 
+      mean_max_query == pmax(mean_max_setup, mean_max_exit, mean_max_manipulation, mean_max_return, mean_max_query) ~ "query"
+    )
+  )
+
+# count the heads per layer that allocate max attention to a given roi in aggregate
+heatmap_df <- df_summ_max_roi %>%
+  group_by(model_shorthand, step, tokens_seen, layer, roi_w_max_overall) %>%
+  summarise(head_count = n(), .groups = "drop")
+
+# Yay! Now visualize
+heatmap_df %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = layer, y = roi_w_max_overall, fill = head_count)) + 
+  geom_tile() + 
+  scale_fill_viridis() + 
+  labs(
+    x = "Layer", 
+    y = "Region of Interest", 
+    fill = "Number of Heads",
+    title = "Max Attention Allocation to FB Task Passage ROIs"
+  ) + 
+  facet_grid(model_shorthand ~ step) +
+  theme_minimal()
+  
+heatmap_df %>%
+  filter(model_shorthand == "Olmo 2 7b") %>%
+  ggplot(aes(x = layer, y = roi_w_max_overall, fill = head_count)) + 
+  geom_tile() + 
+  scale_fill_viridis() + 
+  labs(
+    x = "Layer", 
+    y = "Region of Interest", 
+    fill = "Number of Heads",
+    title = "Max Attention Allocation to FB Task Passage ROIs"
+  ) + 
+  facet_grid(model_shorthand ~ step) +
+  theme_minimal()
+```
