@@ -152,7 +152,37 @@ tmp <- df_all_models_fb %>%
 
 (To do: run LRT at each time step for each model.)
 
+```{r}
+
+df_summ = df_all_models_fb %>%
+  group_by(model_shorthand, step,
+           tokens_seen_numeric_mod, 
+           n_params_approx,
+           condition, knowledge_cue) %>%
+  summarise(# mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_lo,
+             color = condition,
+             linetype = knowledge_cue)) +
+  geom_line() +
+  geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_x_log10() +
+  theme_minimal() +
+  facet_wrap(~reorder(model_shorthand, n_params_approx))
+
+```
+
+
 ## Accuracy metric
+
+
 
 
 ```{r}
