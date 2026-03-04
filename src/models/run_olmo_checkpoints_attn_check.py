@@ -26,11 +26,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 MODELS = {
     ### OLMo
     #"EleutherAI/pythia-14m": "Pythia 14m",
-    "EleutherAI/pythia-1b": "Pythia 1B",
-    "EleutherAI/pythia-6.9b": "Pythia 6.9B",
-    "EleutherAI/pythia-12b": "Pythia 12B"#,
+    #"EleutherAI/pythia-1b": "Pythia 1B",
+    #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
+    #"EleutherAI/pythia-12b": "Pythia 12B"#,
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
@@ -150,7 +150,8 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision = revision)
 
     # Load attention-check data (canonical Q/As) and stimuli variants, then merge by item
-    df_attn = pd.read_csv("../../data/raw/fb_attn_check.csv")
+    #df_attn = pd.read_csv("../../data/raw/fb_attn_check.csv")
+    df_attn = pd.read_csv("../../data/raw/fb_attn_check_minimal_questions.csv")
     df_stims = pd.read_csv("../../data/raw/fb.csv")
 
     df_attn["item"] = df_attn["item"].astype(int)
@@ -282,7 +283,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
 
     name_part = model_path.split("/")[-1]
     filename = f"fb_attn-{name_part}-{suffix or 'default'}.csv"
-    save_dir = "../../data/processed/attn-checks-local/"
+    save_dir = "../../data/processed/attn-checks-minimal-questions-local/"
     os.makedirs(save_dir, exist_ok=True)
     out.to_csv(os.path.join(save_dir, filename), index=False)
 
@@ -362,7 +363,8 @@ if __name__ == "__main__":
 
                 suffix = rev.replace("/", "_")
 
-                savepath = f"../../data/processed/attn-checks-local/"
+                # Define the save location and filename just to check if you've already run this checkpoint
+                savepath = f"../../data/processed/attn-checks-minimal-questions-local/"
                 if not os.path.exists(savepath): 
                     os.makedirs(savepath)
 
