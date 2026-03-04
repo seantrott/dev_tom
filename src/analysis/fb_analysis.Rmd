@@ -234,6 +234,31 @@ ggplot(df_summ_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   ) +
   theme_minimal()
 
+## PAPER FIGURE: filter out the Pythia-14M, since it doesn't add much? 
+final_accuracy_exclude14m <- final_accuracy %>%
+  filter(model_shorthand != "Pythia 14m")
+df_summ_fb %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  ggplot(aes(x = n_params_approx, y = mean_accuracy)) + 
+  geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
+  geom_point(alpha = 0.3, size = 1, color = "gray") +
+  geom_point(data = final_accuracy_exclude14m, size = 4, 
+             aes(color = model_family), 
+             alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1.2, alpha = .5) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  geom_text_repel(data = final_accuracy_exclude14m, aes(label = model_shorthand), size = 3) +
+  scale_x_log10(labels = scales::comma_format()) +
+  labs(
+    title = "False Belief Task Accuracy: Progression and Final Step",
+    subtitle = "Colored points highlight accuracy at final pretraining step",
+    x = "Number of Parameters (log scale)",
+    y = "Accuracy"
+  ) +
+  theme_minimal()
+
 
 df_summ_fb %>%
   mutate(step_modded = step + 1) %>%
@@ -285,9 +310,10 @@ df_summ_fb %>%
         legend.position="bottom") +
   facet_wrap(~stage)
 
-# PAPER FIGURE: Plot of Olmo stage1 and Pythias
+# PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
 df_summ_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -314,15 +340,41 @@ df_summ_fb %>%
         legend.position="bottom") 
 
 
-# Filter for only stage1 olmo data and pythia models (e.g. exclude olmo stage2)
+# Filter for only stage1 olmo data and pythia models greater than 14m (e.g. exclude olmo stage2)
 olmo_and_pythia <- df_all_models_fb %>%
-  filter(stage == "stage1" | is.na(stage)) 
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m")
 
-  
+# Z-score the variables that will go into the statistical model
+olmo_and_pythia <- olmo_and_pythia %>%
+  mutate(z_nparams = scale(n_params_approx),
+         z_tokensseen = scale(tokens_seen_numeric_mod))
+
 ### PAPER LMER: How do model properties predict the probability of a correct response?
 mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
                    log10(tokens_seen_numeric_mod) +
+                   (1 | start) +
+                   (1 | model_shorthand),
+                 family = binomial())
+summary(mod_full)
+
+mod_full = glmer(data = olmo_and_pythia,
+                 correct ~ condition + knowledge_cue + 
+                   log10(n_params_approx) +
+                   log10(tokens_seen_numeric_mod) +
+                   log10(n_params_approx) * log10(tokens_seen_numeric_mod) +
+                   (1 | start) +
+                   (1 | model_shorthand),
+                 family = binomial())
+summary(mod_full)
+
+# with z-scaled variables
+mod_full = glmer(data = olmo_and_pythia,
+                 correct ~ condition + knowledge_cue + 
+                   z_nparams +
+                   z_tokensseen +
+                   z_nparams * z_tokensseen +
                    (1 | start) +
                    (1 | model_shorthand),
                  family = binomial())
@@ -342,6 +394,11 @@ df_coef %>%
                 width = 0.2) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
   coord_flip() +
+  scale_x_discrete(labels = c("conditionTrue Belief" = "Condition: True Belief",
+                               "z_tokensseen" = "z(# Tokens Seen)",
+                               "z_nparams" = "z(# Parameters)",
+                               "knowledge_cueImplicit" = "Knowledge Cue: Implicit",
+                              "z_nparams:z_tokensseen" = "z(# Parameters):z(# Tokens Seen)")) +
   labs(
     x = NULL, y = "Coefficient Estimate",
   ) +
