@@ -156,7 +156,7 @@ def main(model_path, revision = None, suffix=None):
     ### Load model
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
-        # revision=revision,
+        revision=revision,
         device_map="auto",
         # use_auth_token=True
     )
