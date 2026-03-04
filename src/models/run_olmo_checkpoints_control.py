@@ -19,9 +19,9 @@ from del_models import clear_huggingface_cache
 
 MODELS = {
     ### OLMo
-    "EleutherAI/pythia-14m": "Pythia 14m",
-    "EleutherAI/pythia-1b": "Pythia 1B",
-    "EleutherAI/pythia-6.9b": "Pythia 6.9B",
+    # "EleutherAI/pythia-14m": "Pythia 14m",
+    # "EleutherAI/pythia-1b": "Pythia 1B",
+    # "EleutherAI/pythia-6.9b": "Pythia 6.9B",
     # "EleutherAI/pythia-12b": "Pythia 12B",
     "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
