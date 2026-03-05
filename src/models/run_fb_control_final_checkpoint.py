@@ -44,7 +44,7 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 
 def main(model_path):
 
-    savepath = "data/processed/fb_local_control/"
+    savepath = "data/processed/fb_local_control_final/"
     os.makedirs(savepath, exist_ok=True)
 
     model_name = model_path.split('/')[-1]
