@@ -30,8 +30,8 @@ MODELS = {
     #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
     #"EleutherAI/pythia-12b": "Pythia 12B"#,
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 }
 
 
@@ -146,7 +146,8 @@ def _answer_probabilities(
 def main(model_path: str, summary: bool = False, revision: str = None, suffix: str = None):
     
     # Load model and tokenizer
-    model = AutoModelForCausalLM.from_pretrained(model_path, revision = revision, device_map="auto")
+    model = AutoModelForCausalLM.from_pretrained(model_path, revision = revision, device_map="auto",torch_dtype=torch.float16,
+    low_cpu_mem_usage=True,)
     tokenizer = AutoTokenizer.from_pretrained(model_path, revision = revision)
 
     # Load attention-check data (canonical Q/As) and stimuli variants, then merge by item
@@ -176,7 +177,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
         how="inner",
     )
 
-    print(df.columns)
+    #print(df.columns)
 
     results = []
 
@@ -250,7 +251,7 @@ def main(model_path: str, summary: bool = False, revision: str = None, suffix: s
                             "is_correct": bool(p_correct > p_distr),
                         }
                     )
-                    print(results)
+                    #print(results)
                 finally:
                     pbar.update(1)
 
