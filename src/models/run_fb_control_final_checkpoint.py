@@ -36,6 +36,7 @@ def next_seq_prob(model, tokenizer, seen, unseen):
     total_log_prob = sum(log_probs)
     total_prob = torch.exp(total_log_prob)
     return total_prob.item()
+
 def main(model_path):
 
     savepath = "data/processed/fb_local_control_final/"
@@ -43,6 +44,7 @@ def main(model_path):
     model_name = model_path.split('/')[-1]
     filename = f"fb-{model_name}-final.csv"
     output_path = os.path.join(savepath, filename)
+    print(model_path)
     if os.path.exists(output_path):
         print(f"  Skipping {model_path} — already exists at {output_path}")
         return
