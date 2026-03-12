@@ -1,0 +1,39 @@
+---
+title: "Logit Lens AC Analysis"
+author: "Sean Trott, Cameron Jones, Pam Rivière"
+date: "April 24, 2025"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi = 300, fig.format = "pdf")
+
+```
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(lmtest)
+library(forcats)
+library(broom)
+library(lme4)
+library(viridis)
+library(ggridges)
+library(lmerTest)
+library(ggrepel)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
+
+```
+

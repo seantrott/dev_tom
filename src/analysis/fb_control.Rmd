@@ -1,0 +1,246 @@
+---
+title: "Control FB Task (Stress Test)"
+author: "Sean Trott, Cameron Jones, Pam Rivière"
+date: "April 24, 2025"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi = 300, fig.format = "png")
+
+```
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(lmtest)
+library(forcats)
+library(broom)
+library(lme4)
+library(viridis)
+library(ggridges)
+library(lmerTest)
+library(ggrepel)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
+
+```
+
+# Load LLM False Belief Data
+
+```{r}
+# setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
+
+# Grab data for false belief task
+directory_path <- "../../data/processed/fb_local_control/"
+csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
+csv_list <- csv_files %>%
+  map(~ read_csv(.))
+df_all_models <- bind_rows(csv_list) %>%
+  mutate(model_shorthand = str_to_title(model_shorthand))
+nrow(df_all_models)
+```
+
+
+## Accuracy metric
+
+
+### Over time
+
+```{r accuracy}
+### Correct answer is always end location in control task
+df_all_models = df_all_models %>%
+  mutate(correct = log_odds < 0)
+
+
+
+df_summ = df_all_models %>%
+  group_by(model_shorthand, step, condition, knowledge_cue) %>%
+  summarise(mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+df_summ %>%
+  ggplot(aes(x = step,
+             y = mean_accuracy,
+             color = condition,
+             linetype = knowledge_cue)) +
+  geom_line() +
+  geom_hline(yintercept = .5, linetype = "dotted") +
+  geom_point(size = 2, alpha = .4) +
+  scale_x_log10() +
+  theme_minimal() +
+  facet_wrap(~model_shorthand)
+
+df_summ %>%
+  ggplot(aes(x = step,
+             y = mean_lo,
+             color = condition,
+             linetype = knowledge_cue)) +
+  geom_line() +
+  geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_x_log10() +
+  theme_minimal() +
+  facet_wrap(~model_shorthand)
+
+
+
+
+summary(lmer(data = df_all_models,
+        log_odds ~ condition + knowledge_cue +
+          first_mention + recent_mention + 
+          log10(step + 1) +
+         # log10(n_params) +
+          (1|start) +
+          (1 | model_shorthand)))
+
+
+
+
+df_all_models %>%
+  group_by(model_shorthand) %>%
+  mutate(max_step = max(step)) %>%
+  filter(step == max_step) %>%
+  ggplot(aes(x = log_odds,
+             y = condition,
+             fill = knowledge_cue)) +
+  geom_density_ridges(alpha = .4) +
+  theme_minimal() +
+  facet_wrap(~model_shorthand)
+
+```
+
+
+### Final checkpoint (aligned with FB task)
+
+```{r accuracy}
+### Correct answer is always end location in control task
+df_all_models = df_all_models %>%
+  mutate(correct = log_odds < 0)
+
+# Map model names to parameter counts for ordering
+param_lookup <- tibble(
+  model_shorthand = c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
+                       "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b"),
+  n_params = c(14e6, 1e9, 6.9e9, 12e9, 1e9, 7e9, 13e9),
+  model_family = c("Pythia", "Pythia", "Pythia", "Pythia",
+                    "OLMo 2", "OLMo 2", "OLMo 2")
+)
+
+
+
+df_all_models %>%
+  group_by(model_shorthand) %>%
+  summarise(max_step = max(step))
+
+
+df_summ_lo <- df_all_models %>%
+  group_by(model_shorthand) %>%
+  mutate(max_step = max(step)) %>%
+  filter(step == max_step) %>%
+  left_join(param_lookup, by = "model_shorthand") %>%
+  group_by(model_shorthand, n_params, model_family, condition, knowledge_cue) %>%
+  summarise(mean_lo = mean(log_odds),
+            se_lo = sd(log_odds) / sqrt(n()),
+            .groups = "drop") %>%
+  mutate(model_shorthand = fct_reorder(model_shorthand, n_params))
+
+df_summ_lo %>%
+  ggplot(aes(x = model_shorthand,
+             y = mean_lo,
+             fill = condition,
+             alpha = knowledge_cue,
+             group = interaction(condition, knowledge_cue))) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_errorbar(aes(ymin = mean_lo - se_lo, ymax = mean_lo + se_lo),
+                position = position_dodge(width = 0.7), width = 0.2) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_alpha_manual(values = c("Explicit" = 1, "Implicit" = 0.5)) +
+  theme_minimal() +
+  labs(x = "Model", y = "Mean Log Odds", alpha = "Knowledge Cue") +
+  facet_wrap(~model_family, scales = "free_x")
+
+
+df_summ %>%
+  ggplot(aes(x = reorder(model_shorthand, n_params),
+             y = mean_accuracy,
+             fill = condition,
+             alpha = knowledge_cue)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_hline(yintercept = .5, linetype = "dotted") +
+  scale_alpha_manual(values = c("Explicit" = 1, "Implicit" = 0.5)) +
+  theme_minimal() +
+  labs(x = "Model", y = "Mean Accuracy", alpha = "Knowledge Cue") +
+  facet_wrap(~model_family, scales = "free_x")
+
+
+## scaling_results_rq1
+df_summ %>%
+  group_by(model_shorthand, n_params) %>%
+  summarise(mean_accuracy = mean(mean_accuracy)) %>%
+  ggplot(aes(x = n_params,
+             y = mean_accuracy)) +
+  geom_point(size = 6,
+             alpha = .5) +
+  scale_x_log10() +
+  geom_text_repel(aes(label=model_shorthand), size=3) +
+  labs(x = "Parameters",
+       y = "Mean Accuracy") +
+  theme_minimal() +
+  theme(text = element_text(size = 15),
+        legend.position = "bottom") 
+
+
+
+### Statistical analysis
+df_final = df_all_models %>%
+  group_by(model_shorthand) %>%
+  mutate(max_step = max(step)) %>%
+  filter(step == max_step) %>%
+  inner_join(param_lookup)
+
+
+
+results <- map_dfr(unique(df_final$model_shorthand), function(m) {
+  df_m <- df_final %>% filter(model_shorthand == m)
+  mod <- lmer(log_odds ~ condition + knowledge_cue +
+                first_mention + recent_mention +
+                (1 | start),
+              data = df_m)
+  broom.mixed::tidy(mod, effects = "fixed") %>%
+    filter(term %in% c("conditionTrue Belief", "knowledge_cueImplicit")) %>%
+    mutate(model = m)
+})
+
+results %>%
+  dplyr::select(model, term, estimate, std.error, p.value) %>%
+  arrange(term, model) %>%
+  print(n = Inf)
+
+results %>%
+  left_join(param_lookup, by = c("model" = "model_shorthand")) %>%
+  mutate(model = fct_reorder(model, n_params)) %>%
+  ggplot(aes(x = model, y = estimate, color = term)) +
+  geom_point(size = 3, position = position_dodge(width = 0.4)) +
+  geom_errorbar(aes(ymin = estimate - std.error,
+                     ymax = estimate + std.error),
+                width = 0.2,
+                position = position_dodge(width = 0.4)) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  theme_minimal() +
+  labs(x = "Model", y = "Coefficient (log odds)",
+       color = "Term") +
+  facet_wrap(~model_family, scales = "free_x")
+
+```
