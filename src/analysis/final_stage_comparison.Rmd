@@ -1,0 +1,223 @@
+---
+title: "Analysis of FB in different stages"
+author: "Sean Trott, Cameron Jones, Pam Rivière"
+date: "April 24, 2025"
+#output:
+  #pdf_document: 
+    #   fig_caption: yes
+    #   keep_md: yes
+    #   keep_tex: yes
+    #   html_document:
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dpi = 300, fig.format = "pdf")
+
+```
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(lmtest)
+library(forcats)
+library(broom)
+library(lme4)
+library(viridis)
+library(ggridges)
+library(lmerTest)
+library(ggrepel)
+library(ggcorrplot)
+library(dplyr)
+library(ggplot2)
+
+```
+
+# Load LLM False Belief Data
+
+```{r}
+# setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
+# setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+
+# Grab data for false belief task
+directory_path <- "../../data/processed/fb_final_stages/"
+csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
+csv_list <- csv_files %>%
+  map(~ read_csv(.))
+df_all_models <- bind_rows(csv_list) %>%
+  mutate(model_shorthand = str_to_title(model_shorthand))
+nrow(df_all_models)
+
+ 
+
+df_all_models = df_all_models %>%
+  mutate(correct = case_when(
+    condition == "False Belief" & log_odds > 0 ~ TRUE,
+    condition == "True Belief" & log_odds <= 0 ~ TRUE,
+    TRUE ~ FALSE  # all other cases are incorrect
+  ))
+
+```
+
+## Process data
+
+```{r}
+### Process data
+# Create a clean stage label and ordering
+df_plot <- df_all_models %>%
+  mutate(
+    # Identify model family (size)
+    model_size = case_when(
+      str_detect(model_shorthand, "1b") ~ "1B",
+      str_detect(model_shorthand, "7b") ~ "7B",
+      str_detect(model_shorthand, "13b") ~ "13B"
+    ),
+    # Create clean stage labels for plotting
+    stage_label = case_when(
+      stage == "stage1" ~ "Stage 1",
+      stage == "stage2" ~ "Stage 2",
+      is.na(stage) & str_detect(model_shorthand, "Sft") ~ "SFT",
+      is.na(stage) & str_detect(model_shorthand, "Dpo") ~ "DPO",
+      is.na(stage) & str_detect(model_shorthand, "Instruct") ~ "Instruct",
+      # The base model (no stage, no SFT/DPO/Instruct suffix) = final pretrained
+      TRUE ~ "Pretrained"
+    )
+  ) %>%
+  # Set the stage ordering
+  mutate(
+    stage_label = factor(stage_label, levels = c(
+      "Stage 1", "Stage 2", "Pretrained", "SFT", "DPO", "Instruct"
+    ))
+  )
+
+```
+
+
+# Visualization and analysis
+
+## Log odds by stage and step
+
+```{r}
+df_summary_lo <- df_plot %>%
+  group_by(model_size, stage_label, condition, knowledge_cue) %>%
+  summarise(
+    mean_lo = mean(log_odds, na.rm = TRUE),
+    se = sd(log_odds, na.rm = TRUE) / sqrt(n()),
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(model_size = factor(model_size, levels = c("1B", "7B", "13B")))
+
+ggplot(df_summary_lo, aes(x = stage_label, y = mean_lo,
+                           color = condition, group = condition)) +
+  geom_point(size = 2.5) +
+  geom_line(linewidth = 0.7) +
+  geom_errorbar(aes(ymin = mean_lo - 1.96 * se, ymax = mean_lo + 1.96 * se),
+                width = 0.15, linewidth = 0.4) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.4) +
+  facet_grid(knowledge_cue ~ model_size) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "magma",
+                                                    begin = 0.8, end = 0.15)) +
+  labs(
+    x = "Training Stage",
+    y = "Mean Log Odds",
+    color = "Condition",
+    title = "Log Odds Across Training Stages by Knowledge Cue"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold", size = 13)
+  )
+
+```
+
+
+## Accuracy by stage and step
+
+```{r}
+df_summary <- df_plot %>%
+  group_by(model_size, stage_label, condition) %>%
+  summarise(
+    accuracy = mean(correct, na.rm = TRUE),
+    n = n(),
+    se = sqrt(accuracy * (1 - accuracy) / n),
+    .groups = "drop"
+  )
+ 
+df_summary <- df_summary %>%
+  mutate(model_size = factor(model_size, levels = c("1B", "7B", "13B")))
+
+
+ggplot(df_summary, aes(x = stage_label, y = accuracy, 
+                             color = condition, group = condition)) +
+  geom_point(size = 3) +
+  geom_line(linewidth = 0.8) +
+  geom_errorbar(aes(ymin = accuracy - 1.96 * se, ymax = accuracy + 1.96 * se),
+                width = 0.15, linewidth = 0.5) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray50", linewidth = 0.4) +
+  facet_wrap(~ model_size, nrow = 1) +
+  scale_y_continuous(limits = c(0, 1), labels = scales::percent_format()) +
+  labs(
+    x = "Training Stage",
+    y = "Accuracy",
+    color = "Condition",
+    title = "False Belief Task Accuracy Across OLMo 2 Training Stages"
+  ) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "magma", 
+                                                begin = 0.8, end = 0.15)) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold", size = 13)
+  )
+
+
+
+ 
+
+### Also showing by knowledge cue
+df_summary_acc <- df_plot %>%
+  group_by(model_size, stage_label, condition, knowledge_cue) %>%
+  summarise(
+    accuracy = mean(correct, na.rm = TRUE),
+    n = n(),
+    se = sqrt(accuracy * (1 - accuracy) / n),
+    .groups = "drop"
+  ) %>%
+  mutate(model_size = factor(model_size, levels = c("1B", "7B", "13B")))
+
+ggplot(df_summary_acc, aes(x = stage_label, y = accuracy,
+                            color = condition, group = condition)) +
+  geom_point(size = 2.5) +
+  geom_line(linewidth = 0.7) +
+  geom_errorbar(aes(ymin = accuracy - 1.96 * se, ymax = accuracy + 1.96 * se),
+                width = 0.15, linewidth = 0.4) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray50", linewidth = 0.4) +
+  facet_grid(knowledge_cue ~ model_size) +
+  scale_y_continuous(limits = c(0, 1), labels = scales::percent_format()) +
+  scale_color_manual(values = viridisLite::viridis(2, option = "magma",
+                                                    begin = 0.8, end = 0.15)) +
+  labs(
+    x = "Training Stage",
+    y = "Accuracy",
+    color = "Condition",
+    title = "False Belief Task Accuracy Across Training Stages by Knowledge Cue"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold", size = 13)
+  )
+
+```
