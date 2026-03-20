@@ -39,7 +39,7 @@ library(ggplot2)
 
 # Load LLM False Belief Data
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
 # setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
 
@@ -150,34 +150,6 @@ tmp <- df_all_models_fb %>%
 
 ## Sensitivity to FB over time
 
-(To do: run LRT at each time step for each model.)
-
-```{r}
-
-df_summ = df_all_models_fb %>%
-  group_by(model_shorthand, step,
-           tokens_seen_numeric_mod, 
-           n_params_approx,
-           condition, knowledge_cue) %>%
-  summarise(# mean_accuracy = mean(correct),
-            mean_lo = mean(log_odds))
-
-
-df_summ %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(step > 1) %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_lo,
-             color = condition,
-             linetype = knowledge_cue)) +
-  geom_line() +
-  geom_point(size = 2, alpha = .4) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  scale_x_log10() +
-  theme_minimal() +
-  facet_wrap(~reorder(model_shorthand, n_params_approx))
-
-```
 
 
 ## Accuracy metric
@@ -185,7 +157,7 @@ df_summ %>%
 
 
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 df_all_models_fb = df_all_models_fb %>%
   mutate(correct = case_when(
     condition == "False Belief" & log_odds > 0 ~ TRUE,
@@ -408,6 +380,7 @@ summary(mod_full)
 
 mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
+                   condition * knowledge_cue +
                    log10(n_params_approx) +
                    log10(tokens_seen_numeric_mod) +
                    log10(n_params_approx) * log10(tokens_seen_numeric_mod) +
@@ -419,6 +392,7 @@ summary(mod_full)
 # with z-scaled variables
 mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
+                   condition * knowledge_cue + 
                    z_nparams +
                    z_tokensseen +
                    z_nparams * z_tokensseen +
@@ -441,11 +415,12 @@ df_coef %>%
                 width = 0.2) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray40") +
   coord_flip() +
-  scale_x_discrete(labels = c("conditionTrue Belief" = "Condition: True Belief",
-                               "z_tokensseen" = "z(# Tokens Seen)",
-                               "z_nparams" = "z(# Parameters)",
-                               "knowledge_cueImplicit" = "Knowledge Cue: Implicit",
-                              "z_nparams:z_tokensseen" = "z(# Parameters):z(# Tokens Seen)")) +
+  scale_x_discrete(labels = c("conditionTrue Belief" = "Knowledge State (True Belief)",
+                              "conditionTrue Belief:knowledge_cueImplicit" = "Knowledge State:Knowledge Cue",
+                               "z_tokensseen" = "# Tokens Seen (z-scored)",
+                               "z_nparams" = "# Parameters (z-scored)",
+                               "knowledge_cueImplicit" = "Knowledge Cue (Implicit)",
+                              "z_nparams:z_tokensseen" = "# Parameters:# Tokens Seen")) +
   labs(
     x = NULL, y = "Coefficient Estimate",
   ) +
@@ -461,8 +436,65 @@ olmo_and_pythia %>%
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
 ```
 
+## False Belief Performance for Olmo 2 13b, by Knowledge State and Cue
+(To do: run LRT at each time step for each model.)
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+
+df_summ = df_all_models_fb %>%
+  group_by(model_shorthand, step,
+           tokens_seen_numeric_mod, 
+           n_params_approx,
+           condition, knowledge_cue) %>%
+  summarise(mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_lo,
+             color = condition,
+             linetype = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
+  labs(color = "Knowledge State",       
+       linetype = "Knowledge Cue") 
+
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = condition,
+             linetype = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
+  labs(color = "Knowledge State",       
+       linetype = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Accuracy",
+       title = "False Belief Task Performance by Stimulus Properties") 
+
+```
+
+
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 13b as the ramp in accuracy is taking place
 
 # Filter for Olmo 2 13b data
@@ -520,7 +552,7 @@ df_summ_fb %>%
 
 ## By-item changes
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 
 df_summ_fb_item = df_all_models_fb %>%
   mutate(start_end = paste(start, "-", end)) %>%
@@ -597,7 +629,7 @@ df_summ_fb_item %>%
 
 
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Pythia12 max accuracy
 
 # Filter for Pythia 12b  data
@@ -611,7 +643,7 @@ print(paste("Max accuracy:", max_accuracy_across_training))
 
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 1b max accuracy
 
 # Filter for Olmo 2 1b  data
@@ -625,7 +657,7 @@ print(paste("Max accuracy:", max_accuracy_across_training))
 
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 13b as the ramp in accuracy is taking place
 
 # Filter for Olmo 2 13b  data
@@ -650,7 +682,7 @@ print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
 
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 7b as the ramp in accuracy is taking place
 
 # Filter for Olmo 2 target size data
@@ -743,7 +775,7 @@ Here, we predict the probability of a correct response over tokens seen, focusin
 
 ### Using GAM
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 library(mgcv)
 library(dplyr)
 library(purrr)
@@ -802,7 +834,7 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 **TODO**: Unlike the original task, these aren't necessarily balanced; so differences in probability of start vs. end location, or which person, could also affect accuracy. Could check on this too.
 
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 directory_path <- "../../data/processed/attn-checks-local/"
 
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
@@ -853,7 +885,7 @@ table(df_attn_check$step)
 
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 df_attn_check = df_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
@@ -977,7 +1009,7 @@ df_attn_check %>%
 
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Want to plot:
 # 1. overall Situation Model accuracy superimposed over False Belief Task accuracy
 # 2. individual situation model items accuracy over False Belief Task accuracy
@@ -1368,7 +1400,7 @@ fb_and_all_attn %>%
 # these are differentially useful to know ?
 ```
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 ## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
 ## ====== Find checkpoints where performance increases or tanks ======
 ## ====== ====== ====== ====== ====== ====== ====== ====== ====== ======
@@ -1487,7 +1519,7 @@ Ideas:
 
 CCF: Here, we quantify the correlation between each AC and FB at various "lags". 
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 
 ### Multiple obs. per step/token seen ,so group across?
 df_summ_fb_tokens = df_summ_fb %>%
@@ -1690,7 +1722,7 @@ cat(sprintf("This means q1 leads FB by %d time steps\n", abs(max_lag)))
 
 Granger causality:
 
-```{r}
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
 library(lmtest)
 library(vars)
 
