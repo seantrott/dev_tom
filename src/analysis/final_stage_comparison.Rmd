@@ -101,7 +101,7 @@ df_plot <- df_all_models %>%
 
 ## Log odds by stage and step
 
-```{r}
+```{r log_odds}
 df_summary_lo <- df_plot %>%
   group_by(model_size, stage_label, condition, knowledge_cue) %>%
   summarise(
@@ -141,7 +141,7 @@ ggplot(df_summary_lo, aes(x = stage_label, y = mean_lo,
 
 ## Accuracy by stage and step
 
-```{r}
+```{r accuracy}
 df_summary <- df_plot %>%
   group_by(model_size, stage_label, condition) %>%
   summarise(
