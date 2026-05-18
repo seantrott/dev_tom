@@ -1,6 +1,9 @@
 # factive, non-factive, and implicit verb stimuli
 
+
 import os
+
+import numpy as np
 import pandas as pd
 
 
@@ -19,7 +22,8 @@ df_full = pd.read_csv(datapath)
 
 # filter the original dataframe to grab only Explicit passages
 # this avoids replacing verbs like "goes to" 
-df = df[df["knowledge_cue"] == "Explicit"]
+df = df_full[df_full["knowledge_cue"] == "Explicit"]
+
 
 # iterate across the verbs in the dictionary
 # for every passage query that contains the verb knows, replace with the factives
@@ -40,10 +44,12 @@ for verb, vtype in verb_dict.items():
 
 			passage = original_passage.replace("thinks", verb)
 
+			# note: getting rid of the tokenized passage bc passage 
+			# will need to be re-tokenized during the model run to 
+			# account for the new verbs
 			new_rows.append({"passage": passage,
 				"condition": row["condition"],
 				"knowledge_cue": row["knowledge_cue"],
-				"tokenized_passage": row["tokenized_passage"],
 				"start": row["start"],
 				"end": row["end"],
 				"first_mention": row["first_mention"],
@@ -55,7 +61,23 @@ for verb, vtype in verb_dict.items():
 
 df_verb = pd.DataFrame(new_rows)
 
-# then, save it
+# grab the implicit rows from the original dataframe
+df_implicit = df_full[df_full["knowledge_cue"] == "Implicit"]
+
+# add columns for verb type and verb to match the new dataframe we've made
+df_implicit["verb_type"] = np.repeat("neutral", df_implicit.shape[0])
+df_implicit["verb"] = np.repeat("goes", df_implicit.shape[0])
+df_implicit = df_implicit.drop("tokenized_passage", axis=1)
+
+
+# concatenate this to the dataframe we've made 
+
+df_verb = pd.concat([df_verb,df_implicit])
+
+# then, save it!
+savepath = "data/raw/"
+filename = "fb_multi_verbs.csv"
+df_verb.to_csv(os.path.join(savepath, filename))
 
 
 
