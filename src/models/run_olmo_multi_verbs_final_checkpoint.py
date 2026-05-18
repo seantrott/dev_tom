@@ -141,7 +141,7 @@ def main(model_path, revision=None, suffix="final"):
     results = []
     with tqdm(total=len(df_fb)) as pbar:
         for index, row in df_fb.iterrows():
-            passage = row["passage_control"].replace(" [MASK].", "").strip()
+            passage = row["passage"].replace(" [MASK].", "").strip()
             start_location = " " + row["start"]
             end_location = " " + row["end"]
 
@@ -154,7 +154,6 @@ def main(model_path, revision=None, suffix="final"):
             results.append({
                 "start_prob": start_prob,
                 "end_prob": end_prob,
-                "passage_control": row["passage_control"],
                 "passage": row["passage"],
                 "start": row["start"],
                 "end": row["end"],
