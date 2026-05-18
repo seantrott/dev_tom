@@ -117,7 +117,7 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 
 
 def main(model_path, revision=None, suffix="final"):
-    savepath = "data/processed/fb_local_multi_verb/"
+    savepath = f"data/processed/fb_local_multi_verb/"
     os.makedirs(savepath, exist_ok=True)
 
     model_name = model_path.split("/")[-1]
@@ -163,6 +163,8 @@ def main(model_path, revision=None, suffix="final"):
                 "recent_mention": row["recent_mention"],
                 "log_odds": np.log2(start_prob / end_prob),
                 "condition": row["condition"],
+                'verb_type': row["verb_type"],
+                'verb': row['verb']
             })
             pbar.update(1)
 
