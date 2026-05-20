@@ -87,7 +87,7 @@ df_all_models_verb_task = df_all_models_verb_task %>%
   ))
 ```
 
-## Accuracy metric
+## Analysis
 
 ### Final step
 
@@ -389,23 +389,6 @@ df_summ_verbs %>%
   theme(legend.position = "bottom")
 
 
-## BY VERB TYPE
-df_summ %>%
-  ggplot(aes(x = tokens_seen_numeric,
-             y = mean_lo,
-             color = condition,
-             shape = verb_type)) +
-  geom_line() +
-  geom_point(size = 2, alpha = .5) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  scale_x_log10() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  labs(title = "Control Task Log Odds (Start v. End)",
-       y = "Log Odds",
-       x = "Number of Tokens Seen (log scale)") +
-  theme_minimal() +
-  facet_wrap(~model_shorthand)
 
 ```
 
