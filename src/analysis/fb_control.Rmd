@@ -41,6 +41,7 @@ library(ggplot2)
 
 ```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
+setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
 
 # Grab data for false belief task
 directory_path <- "../../data/processed/fb_local_control/"
@@ -50,6 +51,45 @@ csv_list <- csv_files %>%
 df_all_models <- bind_rows(csv_list) %>%
   mutate(model_shorthand = str_to_title(model_shorthand))
 nrow(df_all_models)
+
+
+# Create a column with numeric versions of the tokens seen for that step, using 
+# the Olmo file naming convention
+df_all_models$tokens_seen_numeric <- as.numeric(sub("B", "", df_all_models$tokens_seen)) * 1e9
+
+df_all_models = df_all_models %>%
+  # filter(stage == "stage1") %>%
+  mutate(model_id = paste(stage, "step", "-", step)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+## NOTE: Pythia model data contains a "main" checkpoint/step that appears as a NaN in the `step` column
+## must change this to the actual value of the final step, 143000
+df_all_models$step[is.na(df_all_models$step)] <- 143000 #hard-coded the final step 
+
+# sort df columns by model name and step value
+df_all_models <- df_all_models %>%
+  arrange(model_shorthand, step)  # arrange in ascending order
+
+metadata <- read_csv("../../data/raw/metadata_models.csv")
+# merge the metadata with the fb task df
+df_all_models_control_task <- df_all_models %>% left_join(metadata, by = "model_shorthand")
+
+tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+# merge stepwise tokens data for Pythia models
+df_all_models_control_task <- df_all_models_control_task %>%
+  left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+
+df_all_models_control_task = df_all_models_control_task %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b") ~ "Olmo 2",
+  ))
 ```
 
 ## Param lookup
@@ -73,46 +113,63 @@ param_lookup <- tibble(
 
 ```{r accuracy_over_time}
 ### Correct answer is always end location in control task
-df_all_models = df_all_models %>%
+df_all_models_control_task = df_all_models_control_task %>%
   mutate(correct = log_odds < 0)
 
 
 
+<<<<<<< HEAD
 df_summ = df_all_models %>%
   left_join(param_lookup, by = "model_shorthand") %>%
   group_by(model_shorthand, n_params, model_family, step, condition, knowledge_cue) %>%
+=======
+df_summ = df_all_models_control_task %>%
+  group_by(model_shorthand, step, tokens_seen_numeric, condition, knowledge_cue) %>%
+>>>>>>> d91e2b8c82b5f79f3ad9f05889b2339fc9f91877
   summarise(mean_accuracy = mean(correct),
             mean_lo = mean(log_odds),
             .groups = "drop")
 
 df_summ %>%
-  ggplot(aes(x = step,
+  ggplot(aes(x = tokens_seen_numeric,
              y = mean_accuracy,
              color = condition,
-             linetype = knowledge_cue)) +
+             shape = knowledge_cue)) +
   geom_line() +
   geom_hline(yintercept = .5, linetype = "dotted") +
   geom_point(size = 2, alpha = .4) +
   scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  labs(title = "Control Task Accuracy",
+       y = "Accuracy",
+       x = "Number of Tokens Seen (log scale)") + 
   theme_minimal() +
   facet_wrap(~model_shorthand)
+
+  
 
 df_summ %>%
-  ggplot(aes(x = step,
+  ggplot(aes(x = tokens_seen_numeric,
              y = mean_lo,
              color = condition,
-             linetype = knowledge_cue)) +
+             shape = knowledge_cue)) +
   geom_line() +
-  geom_point(size = 2, alpha = .4) +
+  geom_point(size = 2, alpha = .5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
   scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  labs(title = "Control Task Log Odds (Start v. End)",
+       y = "Log Odds",
+       x = "Number of Tokens Seen (log scale)") +
   theme_minimal() +
   facet_wrap(~model_shorthand)
 
 
 
 
-summary(lmer(data = df_all_models,
+summary(lmer(data = df_all_models_control_task,
         log_odds ~ condition + knowledge_cue +
           first_mention + recent_mention + 
           log10(step + 1) +
@@ -120,16 +177,36 @@ summary(lmer(data = df_all_models,
           (1|start) +
           (1 | model_shorthand)))
 
+## check on whether the log odds are in fact larger for explicit in false belief 
+## than explicit true belief (e.g. is there an interaction between knowl_state*knowl_cue
+## even when it's the Antagonist the model is computing probabilities over.
+olmo13b <- df_all_models_control_task %>%
+  filter(model_shorthand == "Olmo 2 13b") 
+
+summary(lmer(data = olmo13b,
+        log_odds ~ condition + knowledge_cue +
+          condition * knowledge_cue + 
+          first_mention + recent_mention +
+         # log10(n_params) +
+          (1|start)))
+
+summary(lmer(data = olmo13b,
+        log_odds ~ condition + knowledge_cue +
+          condition * knowledge_cue +
+         # log10(n_params) +
+          (1|start)))
 
 
 
-df_all_models %>%
+df_all_models_control_task %>%
   group_by(model_shorthand) %>%
   mutate(max_step = max(step)) %>%
   filter(step == max_step) %>%
   ggplot(aes(x = log_odds,
              y = condition,
              fill = knowledge_cue)) +
+  scale_fill_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
   geom_density_ridges(alpha = .4) +
   theme_minimal() +
   facet_wrap(~model_shorthand)
@@ -156,6 +233,9 @@ df_summ_lo <- df_all_models %>%
             .groups = "drop") %>%
   mutate(model_shorthand = fct_reorder(model_shorthand, n_params))
 
+## FINAL CHECKPOINT 
+library(scales)
+
 df_summ_lo %>%
   ggplot(aes(x = model_shorthand,
              y = mean_lo,
@@ -166,9 +246,15 @@ df_summ_lo %>%
   geom_errorbar(aes(ymin = mean_lo - se_lo, ymax = mean_lo + se_lo),
                 position = position_dodge(width = 0.7), width = 0.2) +
   geom_hline(yintercept = 0, linetype = "dotted") +
-  scale_alpha_manual(values = c("Explicit" = 1, "Implicit" = 0.5)) +
-  theme_minimal() +
-  labs(x = "Model", y = "Mean Log Odds", alpha = "Knowledge Cue") +
+  scale_color_manual(values = viridisLite::viridis(4, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  scale_alpha_manual(values = c("Explicit" = 1, "Implicit" = 0.3)) +
+  scale_fill_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
+  scale_x_discrete(labels = label_wrap(7)) + 
+  theme_minimal(base_size = 16) +
+  labs(title = "Antagonist Belief Tracking",
+       x = "Language Model", y = "Mean Log Odds", fill = "Knowledge State", alpha = "Knowledge Cue") +
   facet_wrap(~model_family, scales = "free_x")
 
 
@@ -180,6 +266,8 @@ df_summ %>%
   geom_col(position = position_dodge(width = 0.7), width = 0.6) +
   geom_hline(yintercept = .5, linetype = "dotted") +
   scale_alpha_manual(values = c("Explicit" = 1, "Implicit" = 0.5)) +
+  scale_fill_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) +
   theme_minimal() +
   labs(x = "Model", y = "Mean Accuracy", alpha = "Knowledge Cue") +
   facet_wrap(~model_family, scales = "free_x")

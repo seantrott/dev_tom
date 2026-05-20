@@ -204,7 +204,7 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_point(size = 3, alpha = 0.7) +
   geom_text(aes(label = model_shorthand), vjust = -0.8, hjust = 0.5, size = 3) +
   geom_hline(yintercept = .5, linetype = "dashed",
-             size = 1, alpha = .8) +
+             linewidth = 1, alpha = .8) +
   scale_x_log10(labels = scales::comma_format()) +  # Log scale for params
   labs(
     title = "False Belief Task Accuracy at Final Step",
@@ -389,7 +389,18 @@ mod_full = glmer(data = olmo_and_pythia,
                  family = binomial())
 summary(mod_full)
 
-# with z-scaled variables
+# with z-scaled variables, without interaction between stimulus properties
+mod_full = glmer(data = olmo_and_pythia,
+                 correct ~ condition + knowledge_cue + 
+                   z_nparams +
+                   z_tokensseen +
+                   z_nparams * z_tokensseen +
+                   (1 | start) +
+                   (1 | model_shorthand),
+                 family = binomial())
+summary(mod_full)
+
+# with z-scaled variables, AND interaction terms
 mod_full = glmer(data = olmo_and_pythia,
                  correct ~ condition + knowledge_cue + 
                    condition * knowledge_cue + 
@@ -427,10 +438,42 @@ df_coef %>%
   theme_minimal(base_size = 12)
 max(olmo_and_pythia$step)
 
-# Most models do get higher accuracy for true belief than false belief:  
-olmo_and_pythia %>%
+# Stage 1: Most models do get higher accuracy for true belief than false belief  
+stage1_mean_acc_by_knowledge_state <- olmo_and_pythia %>%
   group_by(model_shorthand, condition) %>%
   summarise(accuracy = mean(correct)) 
+print(stage1_mean_acc_by_knowledge_state)
+
+stage1_mean_acc_by_stimproperties <- olmo_and_pythia %>%
+  group_by(model_shorthand, condition, knowledge_cue) %>%
+  summarise(accuracy = mean(correct))
+print(stage1_mean_acc_by_stimproperties)
+
+olmo_and_pythia %>%
+  group_by(model_shorthand, condition, knowledge_cue) %>%
+  mutate(accuracy = mean(correct)) %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  ggplot(aes(x = model_shorthand, y = accuracy, fill = knowledge_cue)) +
+  geom_boxplot() +
+  facet_wrap(~ condition) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  labs(title = "Olmo 2 13b Mean FB Task Accuracy Across Pretraining")
+
+
+# Stage 1 & Stage 2: Stage 2 improves mean accuracies in False Belief (for both Explicit and Implicit), and improves True Belief ONLY in implicit condition, but worsens performance in the explicit condition--Olmo13b EVEN MORE SENSITIVE to knowledge cue when you include Stage 2
+df_all_models_fb %>%
+  group_by(model_shorthand, condition) %>%
+  summarise(accuracy = mean(correct)) 
+
+df_all_models_fb %>%
+  group_by(model_shorthand, condition, knowledge_cue) %>%
+  summarise(accuracy = mean(correct))
+
+library(ggstats)
+
+ggcoef_model(mod_full, significance = 0.001)  # handles everything automatically
+
   
 
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
@@ -491,9 +534,67 @@ df_summ %>%
        y = "Accuracy",
        title = "False Belief Task Performance by Stimulus Properties") 
 
+### 
+df_summ = df_all_models_fb %>%
+  group_by(model_shorthand, step,
+           tokens_seen_numeric_mod, 
+           n_params_approx,
+           condition,
+           knowledge_cue) %>%
+  summarise(mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+## PAPER FIGURE
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~condition) + 
+  labs(color = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Accuracy",
+       title = "False Belief Task Performance by Stimulus Properties") +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+## APPENDIX: companion figure, shows log odds
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_lo,
+             color = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~condition) + 
+  labs(color = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Log-Odds (Start v. End)",
+       title = "False Belief Task Performance by Stimulus Properties") +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+
+
 ```
 
-
+## Finding Number of Tokens Seen for median accuracy
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 13b as the ramp in accuracy is taking place
 
@@ -627,7 +728,7 @@ df_summ_fb_item %>%
   theme(text = element_text(size = 10))
 ```
 
-
+## Pythia 12b max accuracy
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Pythia12 max accuracy
@@ -643,6 +744,7 @@ print(paste("Max accuracy:", max_accuracy_across_training))
 
 ```
 
+## Olmo 2 1b max accuracy
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
 # Find the tokens seen for Olmo 2 1b max accuracy
 
@@ -657,8 +759,9 @@ print(paste("Max accuracy:", max_accuracy_across_training))
 
 ```
 
+## Find Number of Tokens Seen for max accuracy in Olmo2 13b
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
-# Find the tokens seen for Olmo 2 13b as the ramp in accuracy is taking place
+# 
 
 # Filter for Olmo 2 13b  data
 olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 13b", ]
@@ -682,8 +785,9 @@ print(paste("Actual accuracy at that point:", closest_row$mean_accuracy))
 
 ```
 
+## Find Number of Tokens seen for median, 75th percentile, and max accuracies in Olmo2 7b
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
-# Find the tokens seen for Olmo 2 7b as the ramp in accuracy is taking place
+# Find the tokens seen for Olmo 2 7b for given accuracies
 
 # Filter for Olmo 2 target size data
 olmo_data <- df_summ_fb[df_summ_fb$model_shorthand == "Olmo 2 7b", ]
@@ -892,10 +996,10 @@ df_attn_check = df_attn_check %>%
     log_odds <= 0 ~ FALSE
   )) %>%
   mutate(q_label = case_when(
-    question_id == 1 ~ "Item was first in {START}",
-    question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Person who put item in START was {X}",
-    question_id == 4 ~ "Person who put item in END was {Y}"
+    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
+    question_id == 2 ~ "At end of story, ITEM in {LOC}",
+    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
+    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
   ))
 
 ## Accuracy of item start location
@@ -913,10 +1017,10 @@ df_summ_attn %>%
 
 df_summ_attn = df_summ_attn %>%
   mutate(q_label = case_when(
-    question_id == 1 ~ "Item was first in {START}",
-    question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Person who put item in START was {X}",
-    question_id == 4 ~ "Person who put item in END was {Y}"
+    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
+    question_id == 2 ~ "At end of story, ITEM in {LOC}",
+    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
+    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
   ))
 
 # PAPER FIGURE - attention check results per question
@@ -970,8 +1074,7 @@ df_summ_attn %>%
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
-  facet_wrap(~reorder(q_label, question_id))
-
+  facet_wrap(~reorder(q_label, question_id), labeller = label_wrap_gen(width = 40))
 
 ### Final step
 df_model_max = df_attn_check %>%
@@ -990,7 +1093,7 @@ df_attn_check %>%
                        # size=1, 
                        alpha = .6,
                        stat="density") +
-  labs(x = "Log Odds (Start vs. End)",
+  labs(x = "Log Odds (Correct vs. Incorrect)",
        y = "",
        fill = "") +
   theme_minimal() +
@@ -1552,10 +1655,10 @@ plot_data <- df_all %>%
     task_type == "fb_accuracy" ~ "False Belief"
   )) %>%
   mutate(q_label = case_when(
-    question_id == 1 ~ "Item was first in {START}",
-    question_id == 2 ~ "At end of story, item in {END}",
-    question_id == 3 ~ "Person who put item in START was {X}",
-    question_id == 4 ~ "Person who put item in END was {Y}"
+    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
+    question_id == 2 ~ "At end of story, ITEM in {LOC}",
+    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
+    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
   ))
 
 
@@ -1566,10 +1669,10 @@ plot_data %>%
                       y = accuracy, 
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
-  geom_point(size = 2, alpha = 0.6) +
+  #geom_point(size = 2, alpha = 0.6) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1, alpha = .8) +
-  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2, labeller = label_wrap_gen(width = 40)) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
   #                   name = "Tokens Seen") +
@@ -1577,7 +1680,7 @@ plot_data %>%
                      name = "Accuracy") +
   scale_color_manual(values = c("Situation Model" = "#808080", 
                                  "False Belief" = "#21908CFF")) +
-  labs(x = "Tokens Seen (Log10)",
+  labs(x = "Number of Tokens Seen (log scale)",
        color = "Task Type") +
   theme_minimal(base_size = 14) +
   theme(legend.position = "bottom",
@@ -1591,10 +1694,10 @@ plot_data %>%
                       y = accuracy, 
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
-  geom_point(size = 2, alpha = 0.6) +
+  #geom_point(size = 2, alpha = 0.6) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1, alpha = .8) +
-  facet_wrap(~ reorder(q_label, question_id), ncol = 2) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2, labeller = label_wrap_gen(width = 40)) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
   #                   name = "Tokens Seen") +
@@ -1602,7 +1705,7 @@ plot_data %>%
                      name = "Accuracy") +
   scale_color_manual(values = c("Situation Model" = "#808080", 
                                  "False Belief" = "#21908CFF")) +
-  labs(x = "Tokens Seen (Log10)",
+  labs(x = "Number of Tokens Seen (log scale)",
        color = "Task Type") +
   theme_minimal(base_size = 14) +
   theme(legend.position = "bottom",
@@ -1615,10 +1718,10 @@ plot_data %>%
                       y = accuracy, 
                       color = task_type)) +
   geom_line(size = 1, alpha = 0.8) +
-  geom_point(size = 2, alpha = 0.6) +
+  #geom_point(size = 2, alpha = 0.6) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1, alpha = .8) +
-  facet_wrap(~ reorder(q_label, question_id),, ncol = 2) +
+  facet_wrap(~ reorder(q_label, question_id), ncol = 2, labeller = label_wrap_gen(width = 40)) +
   scale_x_log10() +
   # scale_x_continuous(labels = scales::scientific,
   #                   name = "Tokens Seen") +
@@ -1626,15 +1729,40 @@ plot_data %>%
                      name = "Accuracy") +
   scale_color_manual(values = c("Situation Model" = "#808080", 
                                  "False Belief" = "#21908CFF")) +
-  labs(x = "Tokens Seen (Log10)",
+  labs(x = "Number of Tokens Seen (log scale)",
        color = "Task Type") +
   theme_minimal(base_size = 14) +
   theme(legend.position = "bottom",
         strip.text = element_text(face = "bold", size = 12))
 
 
+```
+
+### Lmer: Situation Modeling v. Mentalizing Over Pretraining
+```{r}
+### PAPER LMER: Poor-man's quantification of the visually appreciable differences in emergence of accuracies consistent with SM and Mentalizing over pretraining
+mod_full = glmer(data = df_all,
+                 correct ~ step +
+                   ...
+                   (1 | model_shorthand),
+                 family = binomial())
+summary(mod_full)
+
+mod_full = glmer(data = olmo_and_pythia,
+                 correct ~ condition + knowledge_cue + 
+                   condition * knowledge_cue +
+                   log10(n_params_approx) +
+                   log10(tokens_seen_numeric_mod) +
+                   log10(n_params_approx) * log10(tokens_seen_numeric_mod) +
+                   (1 | start) +
+                   (1 | model_shorthand),
+                 family = binomial())
+summary(mod_full)
 
 
+```
+
+```{r}
 model_data_wide <- df_all %>%
   pivot_wider(
     names_from = question_id,
