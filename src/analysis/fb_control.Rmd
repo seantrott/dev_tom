@@ -52,13 +52,26 @@ df_all_models <- bind_rows(csv_list) %>%
 nrow(df_all_models)
 ```
 
+## Param lookup
+
+```{r param_lookup}
+# Map model names to parameter counts for ordering
+param_lookup <- tibble(
+  model_shorthand = c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
+                       "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b"),
+  n_params = c(14e6, 1e9, 6.9e9, 12e9, 1e9, 7e9, 13e9),
+  model_family = c("Pythia", "Pythia", "Pythia", "Pythia",
+                    "OLMo 2", "OLMo 2", "OLMo 2")
+)
+```
+
 
 ## Accuracy metric
 
 
 ### Over time
 
-```{r accuracy}
+```{r accuracy_over_time}
 ### Correct answer is always end location in control task
 df_all_models = df_all_models %>%
   mutate(correct = log_odds < 0)
@@ -66,9 +79,11 @@ df_all_models = df_all_models %>%
 
 
 df_summ = df_all_models %>%
-  group_by(model_shorthand, step, condition, knowledge_cue) %>%
+  left_join(param_lookup, by = "model_shorthand") %>%
+  group_by(model_shorthand, n_params, model_family, step, condition, knowledge_cue) %>%
   summarise(mean_accuracy = mean(correct),
-            mean_lo = mean(log_odds))
+            mean_lo = mean(log_odds),
+            .groups = "drop")
 
 df_summ %>%
   ggplot(aes(x = step,
@@ -124,22 +139,7 @@ df_all_models %>%
 
 ### Final checkpoint (aligned with FB task)
 
-```{r accuracy}
-### Correct answer is always end location in control task
-df_all_models = df_all_models %>%
-  mutate(correct = log_odds < 0)
-
-# Map model names to parameter counts for ordering
-param_lookup <- tibble(
-  model_shorthand = c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
-                       "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b"),
-  n_params = c(14e6, 1e9, 6.9e9, 12e9, 1e9, 7e9, 13e9),
-  model_family = c("Pythia", "Pythia", "Pythia", "Pythia",
-                    "OLMo 2", "OLMo 2", "OLMo 2")
-)
-
-
-
+```{r accuracy_final_checkpoint}
 df_all_models %>%
   group_by(model_shorthand) %>%
   summarise(max_step = max(step))
@@ -188,7 +188,7 @@ df_summ %>%
 ## scaling_results_rq1
 df_summ %>%
   group_by(model_shorthand, n_params) %>%
-  summarise(mean_accuracy = mean(mean_accuracy)) %>%
+  summarise(mean_accuracy = mean(mean_accuracy), .groups = "drop") %>%
   ggplot(aes(x = n_params,
              y = mean_accuracy)) +
   geom_point(size = 6,
@@ -208,7 +208,7 @@ df_final = df_all_models %>%
   group_by(model_shorthand) %>%
   mutate(max_step = max(step)) %>%
   filter(step == max_step) %>%
-  inner_join(param_lookup)
+  inner_join(param_lookup, by = "model_shorthand")
 
 
 
