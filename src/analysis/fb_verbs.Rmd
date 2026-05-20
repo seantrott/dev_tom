@@ -158,21 +158,22 @@ df_final = df_all_models_verb_task %>%
   mutate(max_tokens = max(tokens_seen_numeric)) %>%
   filter(tokens_seen_numeric == max_tokens) 
 
+
+
+### Need to update
 mod_final = lmer(data = df_final,
                  log_odds ~ verb_type * condition + 
                    recent_mention + first_mention +
                    # (1 | model_shorthand) + 
+                   (1 | verb) +
                    (1 | start),
                  REML = FALSE)
 
 summary(mod_final)
 
-emm <- emmeans(mod_final, ~ verb_type | condition)
-
-plot(emm)
 
 
-### Means
+### Show overall
 df_summary <- df_final %>%
   group_by(verb_type, condition) %>%
   summarize(
@@ -210,44 +211,115 @@ ggplot(df_summary,
     legend.key.width = unit(0.8, "cm")
   ) 
 
-
-### With raw data
-ggplot(df_final,
-       aes(x = verb_type,
-           y = log_odds,
-           color = condition)) +
-  geom_jitter(alpha = 0.05,
-              width = 0.1,
-              height = 0) +
-  stat_summary(aes(group = condition),
-               fun = mean,
-               geom = "line",
-               position = position_dodge(width = 0.2)) +
-  stat_summary(fun = mean,
-               geom = "point",
-               size = 3,
-               position = position_dodge(width = 0.2)) +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) +
-  stat_summary(fun.data = mean_se,
-               geom = "errorbar",
-               width = 0.1,
-               position = position_dodge(width = 0.2)) +
-  labs(
-    x = "Verb Type",
-    y = "Mean Log Odds",
-    color = "Condition"
-  ) +
-  theme_minimal() +
-  theme(
-    text = element_text(size = 15),
-    legend.position = "bottom",
-    legend.box = "vertical",
-    legend.text = element_text(size = 11),
-    legend.key.width = unit(0.8, "cm")
-  ) 
 ```
 
+#### Explanatory power
+
+```{r final_step_model_comps}
+
+
+
+library(lme4)
+library(dplyr)
+library(ggplot2)
+
+### Remove verb as random factor b/c otherwise it'll soak up too much variance
+### That would be attributed to verb_type
+mods <- list(
+
+  null =
+    lmer(
+      log_odds ~
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    ),
+
+  condition =
+    lmer(
+      log_odds ~
+        condition +
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    ),
+
+  verb_type =
+    lmer(
+      log_odds ~
+        verb_type +
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    ),
+
+  mentions =
+    lmer(
+      log_odds ~
+        recent_mention +
+        first_mention +
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    ),
+
+  additive =
+    lmer(
+      log_odds ~
+        verb_type +
+        condition +
+        recent_mention +
+        first_mention +
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    ),
+
+  interaction =
+    lmer(
+      log_odds ~
+        verb_type * condition +
+        recent_mention +
+        first_mention +
+        (1 | start),
+      data = df_final,
+      REML = FALSE
+    )
+)
+
+aic_df <- tibble(
+  model = names(mods),
+  AIC = sapply(mods, AIC)
+) %>%
+  mutate(
+    delta_AIC = AIC - min(AIC)
+  ) %>%
+  arrange(delta_AIC)
+
+aic_df
+
+ggplot(aic_df,
+       aes(x = reorder(model, delta_AIC),
+           y = delta_AIC,
+           fill = model)) +
+  geom_col(width = 0.7) +
+  coord_flip() +
+  geom_hline(yintercept = c(2, 6, 10),
+             linetype = "dashed",
+             color = "grey60") +
+  labs(
+    x = NULL,
+    y = expression(Delta*AIC)
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none")
+### test
+summary(lm(data = df_final,
+                 log_odds ~ verb_type))
+summary(lm(data = df_final,
+                 log_odds ~ condition))
+
+```
 
 ### Over time
 
@@ -338,4 +410,60 @@ df_summ %>%
 ```
 
 
+### Track explanatory power
+
+```{r}
+fit_aic_by_step <- function(dat) {
+
+  m_null <- lmer(log_odds ~  (1 | start),
+                 data = dat, REML = FALSE)
+
+  m_cond <- lmer(log_odds ~ condition +
+                   (1 | start),
+                 data = dat, REML = FALSE)
+
+  m_verb <- lmer(log_odds ~ verb_type +
+                   (1 | start),
+                 data = dat, REML = FALSE)
+
+  tibble(
+    AIC_null = AIC(m_null),
+    AIC_condition = AIC(m_cond),
+    AIC_verb_type = AIC(m_verb)
+  ) %>%
+    mutate(
+      step = unique(dat$step),
+      tokens = unique(dat$tokens_seen_numeric),
+      delta_cond = AIC_condition - AIC_null,
+      delta_verb = AIC_verb_type - AIC_null
+    )
+}
+
+aic_time <- df_all_models_verb_task %>%
+  group_by(step, tokens_seen_numeric) %>%
+  group_modify(~fit_aic_by_step(.x)) %>%
+  ungroup()
+
+aic_long <- aic_time %>%
+  select(step, tokens_seen_numeric, delta_cond, delta_verb) %>%
+  tidyr::pivot_longer(
+    cols = c(delta_cond, delta_verb),
+    names_to = "predictor",
+    values_to = "delta_AIC"
+  )
+
+ggplot(aic_long,
+       aes(x = tokens_seen_numeric,
+           y = delta_AIC,
+           color = predictor)) +
+  geom_line() +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_x_log10() +
+  labs(
+    y = expression(Delta*AIC ~ "(vs null)"),
+    x = "Tokens seen",
+    color = "Predictor"
+  ) +
+  theme_minimal(base_size = 14)
+```
 
