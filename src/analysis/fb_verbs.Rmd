@@ -93,22 +93,38 @@ df_all_models_verb_task = df_all_models_verb_task %>%
 ### Over time
 
 ```{r accuracy}
-### Correct answer is always end location in control task
+### Mark correct answers
 df_all_models_verb_task = df_all_models_verb_task %>%
-  mutate(correct = log_odds < 0)
+  mutate(correct = case_when(
+    condition == "False Belief" & log_odds > 0 ~ TRUE,
+    condition == "True Belief" & log_odds <= 0 ~ TRUE,
+    TRUE ~ FALSE  # all other cases are incorrect
+  ))
 
 
-
-df_summ = df_all_models_verb_task %>%
-  group_by(model_shorthand, step, tokens_seen_numeric, condition, knowledge_cue, verb_type) %>%
+df_summ_verbs <- df_all_models_verb_task %>%
+  group_by(model_path, model_shorthand,
+           step, tokens_seen_numeric, model_family, stage, condition, verb_type) %>%
   summarise(mean_accuracy = mean(correct),
-            mean_lo = mean(log_odds))
+            mean_lo = mean(log_odds)) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-df_summ %>%
+df_summ_verbs %>%
+  select(model_shorthand, mean_accuracy)
+mean(df_all_models_verb_task$correct)
+
+df_summ_verbs %>%
+  ungroup() %>%
+  arrange(desc(mean_accuracy)) %>%
+  select(model_shorthand, mean_accuracy, step, stage, condition, verb_type) %>%
+  head(5)
+
+
+df_summ_verbs %>%
   ggplot(aes(x = tokens_seen_numeric,
              y = mean_accuracy,
              color = condition,
-             shape = knowledge_cue)) +
+             shape = verb_type)) +
   geom_line() +
   geom_hline(yintercept = .5, linetype = "dotted") +
   geom_point(size = 2, alpha = .4) +
@@ -123,11 +139,11 @@ df_summ %>%
 
   
 
-df_summ %>%
+df_summ_verbs %>%
   ggplot(aes(x = tokens_seen_numeric,
              y = mean_lo,
              color = condition,
-             shape = knowledge_cue)) +
+             shape = verb_type)) +
   geom_line() +
   geom_point(size = 2, alpha = .5) +
   geom_hline(yintercept = 0, linetype = "dotted") +
