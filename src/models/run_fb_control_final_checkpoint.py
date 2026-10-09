@@ -12,16 +12,17 @@ import os
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs
-from del_models import clear_huggingface_cache
+#from del_models import clear_huggingface_cache
 
 MODELS = {
     # "EleutherAI/pythia-14m": "Pythia 14m",
     # "EleutherAI/pythia-1b": "Pythia 1B",
     # "EleutherAI/pythia-6.9b": "Pythia 6.9B",
     # "EleutherAI/pythia-12b": "Pythia 12B",
-    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
-    "allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    "allenai/OLMo-2-0425-1B": "OLMO 2 1B",
+    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
+    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
+    "allenai/OLMo-2-0325-32B": "OLMO 2 32B"
 }
 
 PYTHIA_FINAL_REVISION = "step143000"
@@ -29,8 +30,21 @@ PYTHIA_FINAL_REVISION = "step143000"
 
 def sample_log_indices(k, mylist):
     """k: number of points to sample from list"""
-    if k > len(mylist):
-        raise ValueError("k cannot be larger than the length of the list")
+    def sample_log_indices(k, mylist):
+    """Sample up to k log-spaced indices; returns all indices if the list has <= k items."""
+    n = len(mylist)
+    if k < 1:
+        raise ValueError("k must be at least 1")
+    if n == 0:
+        raise ValueError("mylist is empty")
+    if k >= n:
+        return list(range(n))
+    
+    # This function originally began below, but I was running into issues where a stage2-ingredient
+    # only had a single checkpoint, and was throwing errors here because the actual k was smaller 
+    # than my threshold
+    #if k > len(mylist):
+    #    raise ValueError("k cannot be larger than the length of the list")
     oversample_factor = 2
     raw = np.logspace(0, np.log10(len(mylist) - 1), num=k * oversample_factor)
     indices = np.unique(raw.astype(int))
@@ -62,7 +76,6 @@ def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
         logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
         selected1 = [stage1_ckpts[i] for i in logstage1]
-
         ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
         n_ingredients = np.unique(ingredients_list)
         min_k_stage2 = 5
@@ -73,7 +86,6 @@ def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
             selected2.append([current_list[i] for i in logstage2])
         all_selected = selected1 + selected2
         return [item for sublist in all_selected for item in (sublist if isinstance(sublist, list) else [sublist])]
-
     print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
     indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
     return [checkpoints_sorted[i] for i in indices]
@@ -85,14 +97,11 @@ def get_last_stage1_from_revision_list(model_path: str) -> str:
     all_revisions = [b.name for b in refs.branches] + [t.name for t in refs.tags]
     if not all_revisions:
         raise ValueError(f"No usable checkpoints found for {model_path}")
-
     revision_list = get_revision_list(model_path, all_revisions)
-
     # Filter to just stage1 checkpoints from the revision list
     stage1_from_list = [r for r in revision_list if "stage1" in r]
     if not stage1_from_list:
         raise ValueError(f"No stage1 checkpoints in revision list for {model_path}")
-
     last = stage1_from_list[-1]
     print(f"  Last stage1 checkpoint from revision list for {model_path}: {last}")
     return last
@@ -203,7 +212,6 @@ if __name__ == "__main__":
         help="Optional HuggingFace model id. If not set, iterate full roster.",
     )
     args = parser.parse_args()
-
     if args.model is not None:
         is_pythia = "pythia" in args.model.lower()
         if is_pythia:
@@ -215,13 +223,11 @@ if __name__ == "__main__":
     else:
         for model_path in MODELS.keys():
             is_pythia = "pythia" in model_path.lower()
-
             if is_pythia:
                 rev = PYTHIA_FINAL_REVISION
             else:
                 rev = get_last_stage1_from_revision_list(model_path)
-
             suffix = rev.replace("/", "_")
             print(f"Running FB for: {model_path} @ {rev}")
             main(model_path, revision=rev, suffix=suffix)
-            clear_huggingface_cache()
+            #clear_huggingface_cache()
