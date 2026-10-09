@@ -30,8 +30,7 @@ PYTHIA_FINAL_REVISION = "step143000"
 
 def sample_log_indices(k, mylist):
     """k: number of points to sample from list"""
-    def sample_log_indices(k, mylist):
-    """Sample up to k log-spaced indices; returns all indices if the list has <= k items."""
+
     n = len(mylist)
     if k < 1:
         raise ValueError("k must be at least 1")
