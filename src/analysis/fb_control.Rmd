@@ -41,10 +41,11 @@ library(ggplot2)
 
 ```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/NLMs/epistemology/dev_tom/src/analysis")
-setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+#setwd("/Users/pamelariviere/Dropbox/Research/projects/dev_tom/src/analysis")
+setwd("/Users/pamelariviere/Desktop/Research/dev_tom/")
 
 # Grab data for false belief task
-directory_path <- "../../data/processed/fb_local_control/"
+directory_path <- "data/processed/fb_local_control/"
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
   map(~ read_csv(.))
@@ -70,11 +71,11 @@ df_all_models$step[is.na(df_all_models$step)] <- 143000 #hard-coded the final st
 df_all_models <- df_all_models %>%
   arrange(model_shorthand, step)  # arrange in ascending order
 
-metadata <- read_csv("../../data/raw/metadata_models.csv")
+metadata <- read_csv("data/raw/metadata_models.csv")
 # merge the metadata with the fb task df
 df_all_models_control_task <- df_all_models %>% left_join(metadata, by = "model_shorthand")
 
-tokens_seen_pythia <- read_csv("../../data/raw/pythia_tokens_seen.csv")
+tokens_seen_pythia <- read_csv("data/raw/pythia_tokens_seen.csv")
 # merge stepwise tokens data for Pythia models
 df_all_models_control_task <- df_all_models_control_task %>%
   left_join(tokens_seen_pythia %>% select(model_shorthand, step, tokens_seen_from_df1 = tokens_seen_numeric), 
@@ -98,10 +99,10 @@ df_all_models_control_task = df_all_models_control_task %>%
 # Map model names to parameter counts for ordering
 param_lookup <- tibble(
   model_shorthand = c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
-                       "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b"),
-  n_params = c(14e6, 1e9, 6.9e9, 12e9, 1e9, 7e9, 13e9),
+                       "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b", "Olmo 2 32b"),
+  n_params = c(14e6, 1e9, 6.9e9, 12e9, 1e9, 7e9, 13e9, 32e9),
   model_family = c("Pythia", "Pythia", "Pythia", "Pythia",
-                    "OLMo 2", "OLMo 2", "OLMo 2")
+                    "OLMo 2", "OLMo 2", "OLMo 2", "OLMo 2")
 )
 ```
 
@@ -118,14 +119,12 @@ df_all_models_control_task = df_all_models_control_task %>%
 
 
 
-<<<<<<< HEAD
-df_summ = df_all_models %>%
-  left_join(param_lookup, by = "model_shorthand") %>%
-  group_by(model_shorthand, n_params, model_family, step, condition, knowledge_cue) %>%
-=======
+#HEAD
+#df_summ = df_all_models %>%
+#  left_join(param_lookup, by = "model_shorthand") %>%
+ # group_by(model_shorthand, n_params, model_family, step, condition, knowledge_cue) 
 df_summ = df_all_models_control_task %>%
   group_by(model_shorthand, step, tokens_seen_numeric, condition, knowledge_cue) %>%
->>>>>>> d91e2b8c82b5f79f3ad9f05889b2339fc9f91877
   summarise(mean_accuracy = mean(correct),
             mean_lo = mean(log_odds),
             .groups = "drop")
@@ -257,7 +256,7 @@ df_summ_lo %>%
        x = "Language Model", y = "Mean Log Odds", fill = "Knowledge State", alpha = "Knowledge Cue") +
   facet_wrap(~model_family, scales = "free_x")
 
-
+## TODO: fix issues below to be able to knit the file!
 df_summ %>%
   ggplot(aes(x = reorder(model_shorthand, n_params),
              y = mean_accuracy,
