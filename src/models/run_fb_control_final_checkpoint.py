@@ -145,7 +145,8 @@ def main(model_path, revision=None, suffix="final"):
         torch_dtype=torch.bfloat16,   # or dtype=... in newer transformers
         low_cpu_mem_usage=True,
     )
-    tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+    #tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
 
     df_fb = pd.read_csv("data/raw/fb_control.csv")
 
