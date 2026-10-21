@@ -23,9 +23,12 @@ MODELS = {
     #"EleutherAI/pythia-1b": "Pythia 1B",
     #"EleutherAI/pythia-6.9b": "Pythia 6.9B",
     #"EleutherAI/pythia-12b": "Pythia 12B",
-    "allenai/OLMo-2-1124-13B": "OLMO 2 13B",
+    #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
+    "allenai/OLMo-2-0325-32B": "OLMO 2 32B",
+    "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think",
+    "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
 }
 
 #MODELS = {
@@ -146,13 +149,21 @@ def main(model_path, revision = None, suffix=None):
     print(savepath)
 
     ### Load model
-    model = AutoModelForCausalLM.from_pretrained(
-        model_path,
-        revision=revision,
-        device_map="auto" #,
-        # use_auth_token=True
+    if "32" in model_path: 
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            revision=revision,
+            device_map="auto",
+            dtype=torch.bfloat16,   # go down to 16-precision for 32B to load in memory
+            low_cpu_mem_usage=True,
     )
-    tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+    else: 
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            revision=revision,
+            device_map="auto" #,
+            # use_auth_token=True
+        )
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
