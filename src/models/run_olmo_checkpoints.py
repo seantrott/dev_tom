@@ -145,7 +145,7 @@ def next_seq_prob(model, tokenizer, seen, unseen):
 def main(model_path, revision = None, suffix=None):
 
     # Set up save path, filename, etc.
-    savepath = f"../../data/processed/fb_local/"
+    savepath = f"data/processed/fb_local/"
     if not os.path.exists(savepath): 
         os.makedirs(savepath)
 
@@ -286,7 +286,7 @@ if __name__ == "__main__":
                 suffix = rev.replace("/", "_") # to tag output files uniquely
                 
                 # Set up save path, filename, etc.
-                savepath = f"../../data/processed/fb_local/"
+                savepath = f"data/processed/fb_local/"
                 if not os.path.exists(savepath): 
                     os.makedirs(savepath)
             
