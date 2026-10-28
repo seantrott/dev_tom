@@ -280,7 +280,7 @@ if __name__ == "__main__":
             #print(revision_list)
         
             for rev in revision_list:
-                print(f"Running FB with checkpoint: {rev}")
+                #print(f"Running FB with checkpoint: {rev}")
         
                 revision = rev # pass revision into main
                 suffix = rev.replace("/", "_") # to tag output files uniquely
@@ -296,9 +296,9 @@ if __name__ == "__main__":
                     filename = f"fb-{model_path.split('/')[-1]}-{suffix}.csv"
             
                 # Skip this checkpoint's analysis if you've already run it before
-                print("Checking if we've already run this analysis...")
+                #print("Checking if we've already run this analysis...")
                 if os.path.exists(os.path.join(savepath,filename)):
-                    print("Already run this model for this checkpoint.")
+                    #print("Already run this model for this checkpoint.")
                     continue
         
                 main(model_path=model_path,
