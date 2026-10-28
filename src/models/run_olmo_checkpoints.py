@@ -277,7 +277,7 @@ if __name__ == "__main__":
                     
             revision_list = get_revision_list(model_path, all_revisions)
         
-            print(revision_list)
+            #print(revision_list)
         
             for rev in revision_list:
                 print(f"Running FB with checkpoint: {rev}")
