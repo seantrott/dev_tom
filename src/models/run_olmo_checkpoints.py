@@ -27,8 +27,8 @@ MODELS = {
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
     "allenai/OLMo-2-0325-32B": "OLMO 2 32B",
-    "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think",
     "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
+    "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think",
 }
 
 #MODELS = {
@@ -277,7 +277,7 @@ if __name__ == "__main__":
                     
             revision_list = get_revision_list(model_path, all_revisions)
         
-            #print(revision_list)
+            print(revision_list)
         
             for rev in revision_list:
                 #print(f"Running FB with checkpoint: {rev}")
