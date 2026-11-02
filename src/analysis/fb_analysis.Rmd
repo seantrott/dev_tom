@@ -293,7 +293,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -317,7 +317,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
                                                   begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
