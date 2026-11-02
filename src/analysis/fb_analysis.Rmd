@@ -421,6 +421,48 @@ df_ridge %>%
         strip.text.y = element_text(angle = 0),
         legend.position = "top")
 
+# Another version, with stage 2 zoom-in: 
+olmo_models <- model_order[grepl("^Olmo", model_order)]
+
+chance_olmo <- chance %>% filter(family == "Olmo 2")
+
+df_ridge <- df_ridge %>%
+  mutate(curve = if_else(stage == "stage2", as.character(ingredient), "stage1"))
+
+ingredients <- df_ridge %>%
+  filter(stage == "stage2") %>%
+  distinct(curve) %>%
+  pull(curve) %>%
+  sort()
+
+pal <- c(stage1 = "grey40",
+         setNames(palette.colors(length(ingredients), palette = "Okabe-Ito"),
+                  ingredients))
+
+df_ridge %>%
+  filter(tokens_seen_numeric_mod > 0, family == "Olmo 2") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, y = y,
+             group = line_id, color = curve)) +
+  geom_hline(data = chance_olmo,
+               aes(yintercept = y_chance), 
+               inherit.aes = FALSE,
+               linetype = "dashed", color = "grey50", linewidth = 0.4) +
+  geom_line(linewidth = 0.6, alpha = 0.7) + 
+  facet_grid(family ~ ., scales = "free_y", space = "free_y") + 
+  scale_y_continuous(breaks = seq_along(model_order) + 0.4,
+                     labels = model_order) + 
+  scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = pal) + 
+  labs(x = "Tokens (Log10)", y = NULL, color = NULL) + 
+  theme_minimal(base_size = 12) + 
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text.y = element_text(angle = 0),
+        legend.position = "top")
+
+
+
+
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
 min_val <- df_summ_fb %>%
   filter(step > 0) %>%
