@@ -142,6 +142,8 @@ tmp <- df_all_models_fb %>%
 # this will mean that you should keep in mind which column name (`step` or 
 # `tokens_seen_numeric_mod`) you want to group by for your analysis -- there are
 # as many actually unique data points as there are number of `step` x number of conditions
+
+#This problem also seems to affect Olmo 2 32b.
  
 ```
 
