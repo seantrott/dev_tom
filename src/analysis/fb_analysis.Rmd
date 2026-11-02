@@ -355,7 +355,14 @@ model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
 d0 <- df_summ_fb %>%
   rename(model = model_shorthand,
          family = model_family,
-         value = mean_accuracy)
+         value = mean_accuracy) %>%
+  mutate(stage = coalesce(stage, "stage1")) %>%
+  group_by(model) %>%
+  mutate(stage1_end = max(tokens_seen_numeric_mod[stage == "stage1"], na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(tokens_seen_numeric_mod = if_else(stage == "stage2",
+                                           tokens_seen_numeric_mod + stage1_end,
+                                           tokens_seen_numeric_mod))
 
 # These are all in the service of the ridgeline plot: 
 bridge <- d0 %>%
@@ -369,10 +376,14 @@ bridge <- d0 %>%
   mutate(stage = "stage2")
 
 df <- bind_rows(d0, bridge) %>%
-  mutate(line_id = paste(model, coalesce(ingredient, "stage1")))
+  mutate(line_id = case_when(
+    stage == "stage2" ~ paste(model, ingredient),
+    TRUE              ~ paste(model, "stage1")
+  ))
 
 df_ridge <- df %>%
   mutate(model = factor(model, levels = model_order)) %>%
+  filter(!is.na(model), !is.na(family)) %>%
   group_by(model) %>%
   mutate(scaled = (value - min(value, na.rm = TRUE)) /
            (max(value, na.rm = TRUE) - min(value, na.rm = TRUE))) %>%
