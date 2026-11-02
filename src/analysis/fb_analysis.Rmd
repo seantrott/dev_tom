@@ -352,45 +352,53 @@ df_summ_fb %>%
 model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
                  "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b")
 
+d0 <- df_summ_fb %>%
+  rename(model = model_shorthand,
+         family = model_family,
+         value = mean_accuracy)
+
 # These are all in the service of the ridgeline plot: 
-bridge <- df_summ_fb %>%
+bridge <- d0 %>%
   filter(stage %in% "stage1") %>%
-  group_by(model_shorthand) %>%
+  group_by(model) %>%
   slice_max(tokens_seen_numeric_mod, n = 1, with_ties = FALSE) %>%
   ungroup() %>%
   select(-ingredient) %>%
-  inner_join(df%>% filter(stage %in% "stage2") %>% distinct(model_shorthand, ingredient),
-             by = "model_shorthand") %>%
+  inner_join(d0 %>% filter(stage %in% "stage2") %>% distinct(model, ingredient),
+             by = "model") %>%
   mutate(stage = "stage2")
 
-df_ridge <- df_summ_fb %>%
-  mutate(model = factor(model_shorthand, levels = model_order)) %>%
+df <- bind_rows(d0, bridge) %>%
+  mutate(line_id = paste(model, coalesce(ingredient, "stage1")))
+
+df_ridge <- df %>%
+  mutate(model = factor(model, levels = model_order)) %>%
   group_by(model) %>%
-  mutate(scaled = (mean_accuracy - min(mean_accuracy, na.rm = TRUE)) /
-           (max(mean_accuracy, na.rm = TRUE) - min(mean_accuracy, na.rm = TRUE))) %>%
+  mutate(scaled = (value - min(value, na.rm = TRUE)) /
+           (max(value, na.rm = TRUE) - min(value, na.rm = TRUE))) %>%
   ungroup() %>%
   mutate(row = as.numeric(model), 
          y = row + 0.85 * scaled) %>% 
-  arrange(model, tokens_seen_numeric_mod)
+  arrange(line_id, tokens_seen_numeric_mod)
 
 chance <- df_ridge %>%
-  group_by(model_shorthand, model_family, row) %>%
-  summarise(lo = min(mean_accuracy, na.rm =TRUE),
-            hi = max(mean_accuracy, na.rm = TRUE),
+  group_by(model, family, row) %>%
+  summarise(lo = min(value, na.rm =TRUE),
+            hi = max(value, na.rm = TRUE),
             .groups = "drop") %>%
   mutate(y_chance = row + 0.85 * (0.5 - lo) / (hi - lo))
 
 df_ridge %>%
   filter(step > 0) %>%
   ggplot(aes(x = tokens_seen_numeric_mod, 
-             y = y, group = model, color = stage)) +
+             y = y, group = line_id, color = stage)) +
   #geom_hline(aes(yintercept = row), color = "grey90") + 
   geom_hline(data = chance,
                aes(yintercept = y_chance), 
                inherit.aes = FALSE,
                linetype = "dashed", color = "grey50", linewidth = 0.4) +
   geom_line(linewidth = 0.6) + 
-  facet_grid(model_family ~ ., scales = "free_y", space = "free_y") + 
+  facet_grid(family ~ ., scales = "free_y", space = "free_y") + 
   scale_y_continuous(breaks = seq_along(model_order) + 0.4,
                      labels = model_order) + 
   scale_x_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
