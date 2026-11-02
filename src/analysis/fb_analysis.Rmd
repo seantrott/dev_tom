@@ -349,7 +349,27 @@ df_summ_fb %>%
 
 # PAPER FIGURE: Ridgeline plot to show overall developmental shape across pre-
 # training Stage 1 and training Stage 2
+model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
+                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b")
 
+df_ridge <- df_summ_fb %>%
+  mutate(model = factor(model, levels = model_order)) %>%
+  group_by(model) %>%
+  mutate(scaled = (value - min(value, na.rm = TRUE)) /
+           (max(value, na.rm = TRUE) - min(value, na.rm = TRUE))) %>%
+  ungroup() %>%
+  mutate(row = as.numeric(model), 
+         y = row + 0.85 * scaled) %>% 
+  arrange(model, tokens_seen_numeric_mod)
+
+ggplot(df_ridge, aes(x = tokens_seen_numeric_mod, 
+                     y = y, group = model, color = stage)) +
+  geom_hline(aes(yintercept = row), color = "grey90") + 
+  geom_line(linewidth = 0.6) + 
+  facet_grid(family ~ ., scales = "free_y", space = "free_y") + 
+  scale_y_continuous(breaks = seq_along(model_order) + 0.4,
+                     labels = model_order) + 
+  scale_x_continuous(labels = scales::label_number())
 
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
 min_val <- df_summ_fb %>%
