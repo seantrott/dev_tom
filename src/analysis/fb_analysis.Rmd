@@ -170,7 +170,7 @@ df_all_models_fb = df_all_models_fb %>%
 
 df_summ_fb = df_all_models_fb %>%
   group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, model_family, stage) %>%
+           step, tokens_seen_numeric, model_family, stage, ingredient, n_params_approx) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 df_summ_fb %>%
@@ -180,16 +180,16 @@ mean(df_all_models_fb$correct)
 df_summ_fb %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
-  select(model_shorthand, mean_accuracy, step, stage) %>%
+  select(model_shorthand, mean_accuracy, step, stage,ingredient,n_params_approx) %>%
   head(5)
 
 # Get the final step for each model and extract final accuracy
-df_summ_fb = df_all_models_fb %>%
-  group_by(model_path, model_shorthand,
-           step, tokens_seen_numeric, 
-           model_family, stage, n_params_approx) %>%
-  summarise(mean_accuracy = mean(correct)) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+#df_summ_fb = df_all_models_fb %>%
+#  group_by(model_path, model_shorthand,
+#           step, tokens_seen_numeric, 
+#           model_family, stage, n_params_approx) %>%
+ # summarise(mean_accuracy = mean(correct)) %>%
+#  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 final_accuracy <- df_summ_fb %>%
   group_by(model_shorthand, model_family) %>%
@@ -352,24 +352,55 @@ df_summ_fb %>%
 model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
                  "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b")
 
+# These are all in the service of the ridgeline plot: 
+bridge <- df_summ_fb %>%
+  filter(stage %in% "stage1") %>%
+  group_by(model_shorthand) %>%
+  slice_max(tokens_seen_numeric_mod, n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  select(-ingredient) %>%
+  inner_join(df%>% filter(stage %in% "stage2") %>% distinct(model_shorthand, ingredient),
+             by = "model_shorthand") %>%
+  mutate(stage = "stage2")
+
 df_ridge <- df_summ_fb %>%
-  mutate(model = factor(model, levels = model_order)) %>%
+  mutate(model = factor(model_shorthand, levels = model_order)) %>%
   group_by(model) %>%
-  mutate(scaled = (value - min(value, na.rm = TRUE)) /
-           (max(value, na.rm = TRUE) - min(value, na.rm = TRUE))) %>%
+  mutate(scaled = (mean_accuracy - min(mean_accuracy, na.rm = TRUE)) /
+           (max(mean_accuracy, na.rm = TRUE) - min(mean_accuracy, na.rm = TRUE))) %>%
   ungroup() %>%
   mutate(row = as.numeric(model), 
          y = row + 0.85 * scaled) %>% 
   arrange(model, tokens_seen_numeric_mod)
 
-ggplot(df_ridge, aes(x = tokens_seen_numeric_mod, 
-                     y = y, group = model, color = stage)) +
-  geom_hline(aes(yintercept = row), color = "grey90") + 
+chance <- df_ridge %>%
+  group_by(model_shorthand, model_family, row) %>%
+  summarise(lo = min(mean_accuracy, na.rm =TRUE),
+            hi = max(mean_accuracy, na.rm = TRUE),
+            .groups = "drop") %>%
+  mutate(y_chance = row + 0.85 * (0.5 - lo) / (hi - lo))
+
+df_ridge %>%
+  filter(step > 0) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+             y = y, group = model, color = stage)) +
+  #geom_hline(aes(yintercept = row), color = "grey90") + 
+  geom_hline(data = chance,
+               aes(yintercept = y_chance), 
+               inherit.aes = FALSE,
+               linetype = "dashed", color = "grey50", linewidth = 0.4) +
   geom_line(linewidth = 0.6) + 
-  facet_grid(family ~ ., scales = "free_y", space = "free_y") + 
+  facet_grid(model_family ~ ., scales = "free_y", space = "free_y") + 
   scale_y_continuous(breaks = seq_along(model_order) + 0.4,
                      labels = model_order) + 
-  scale_x_continuous(labels = scales::label_number())
+  scale_x_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = c("stage1" = "grey40", "stage2" = "#D55E00")) + 
+  labs(x = "Tokens (Log10)", y = NULL, color = NULL) + 
+  theme_minimal(base_size = 12) + 
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text.y = element_text(angle = 0),
+        legend.position = "top")
 
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
 min_val <- df_summ_fb %>%
