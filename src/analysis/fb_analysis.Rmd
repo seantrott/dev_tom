@@ -414,7 +414,7 @@ df_ridge %>%
                      labels = model_order) + 
   scale_x_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
   scale_color_manual(values = c("stage1" = "grey40", "stage2" = "#D55E00")) + 
-  labs(x = "Tokens (Log10)", y = NULL, color = NULL) + 
+  labs(x = "Number of Tokens Seen (Log10)", y = NULL, color = NULL) + 
   theme_minimal(base_size = 12) + 
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor = element_blank(),
@@ -453,7 +453,7 @@ df_ridge %>%
                      labels = model_order) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
   scale_color_manual(values = pal) + 
-  labs(x = "Tokens (Log10)", y = NULL, color = NULL) + 
+  labs(x = "Number of Tokens Seen", y = NULL, color = NULL) + 
   theme_minimal(base_size = 12) + 
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor = element_blank(),
