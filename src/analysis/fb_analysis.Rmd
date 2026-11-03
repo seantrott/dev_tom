@@ -436,9 +436,15 @@ ingredients <- df_ridge %>%
   pull(curve) %>%
   sort()
 
-pal <- c(stage1 = "grey40",
-         setNames(palette.colors(length(ingredients), palette = "Okabe-Ito"),
-                  ingredients))
+# Set up the palette for the individual ingredients
+library(paletteer)
+
+pal_cols <- as.character(paletteer::paletteer_d("vapoRwave::cool"))
+
+n   <- length(ingredients)
+idx <- round(seq(1, length(pal_cols), length.out = n))
+
+pal <- c(setNames(pal_cols[idx], ingredients))
 
 df_ridge %>%
   filter(tokens_seen_numeric_mod > 0, family == "Olmo 2") %>%
@@ -454,7 +460,7 @@ df_ridge %>%
                      labels = model_order) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = NULL, color = NULL) + 
+  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL) + 
   theme_minimal(base_size = 12) + 
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor = element_blank(),
@@ -462,15 +468,6 @@ df_ridge %>%
         legend.position = "bottom")
 
 ## Now, just zoomed-in inset for the Stage 2, 1 per Olmo 2 model: 
-library(paletteer)
-
-pal_cols <- as.character(paletteer::paletteer_d("vapoRwave::cool"))
-
-n   <- length(ingredients)
-idx <- round(seq(1, length(pal_cols), length.out = n))
-
-pal <- c(setNames(pal_cols[idx], ingredients))
-
 # INSET: Olmo 2 1b, Stage 2
 df_summ_fb %>%
   filter(model_shorthand == "Olmo 2 1b") %>%
@@ -485,9 +482,9 @@ df_summ_fb %>%
              color = "grey50", 
              linewidth = 0.4) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
-  scale_y_continuous(limits = c(0.2,0.8)) +
+  scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = NULL, color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 1b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -510,9 +507,9 @@ df_summ_fb %>%
              color = "grey50", 
              linewidth = 0.4) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
-  scale_y_continuous(limits = c(0.2,0.8)) +
+  scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = NULL, color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 7b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -535,9 +532,9 @@ df_summ_fb %>%
              color = "grey50", 
              linewidth = 0.4) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
-  scale_y_continuous(limits = c(0.2,0.8)) +
+  scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = NULL, color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 13b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -554,15 +551,16 @@ df_summ_fb %>%
              y = mean_accuracy,
              color = ingredient)) + 
   geom_line(alpha = 0.7,
-            size = 5) +
+            size = 5) + 
+  geom_point(alpha = 0.7, size = 6) +
   geom_hline(yintercept = 0.5,
              linetype = "dashed", 
              color = "grey50", 
              linewidth = 0.4) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
-  scale_y_continuous(limits = c(0.2,0.8)) +
+  scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = NULL, color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 32b::Stage 2") + 
   theme_minimal(base_size = 14) + 
