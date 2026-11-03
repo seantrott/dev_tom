@@ -26,7 +26,7 @@ MODELS = {
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
-    "allenai/OLMo-2-0325-32B": "OLMO 2 32B",
+    #"allenai/OLMo-2-0325-32B": "OLMO 2 32B",
     "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
     "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think",
 }
@@ -166,13 +166,13 @@ def main(model_path, revision = None, suffix=None):
             dtype=torch.bfloat16,   # go down to 16-precision for 32B to load in memory
             low_cpu_mem_usage=True,
     )
-    else: 
+    else:
         model = AutoModelForCausalLM.from_pretrained(
             model_path,
             revision=revision,
             device_map="auto" #,
             # use_auth_token=True
-        )
+            )
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
@@ -225,7 +225,12 @@ def main(model_path, revision = None, suffix=None):
 
         df_results['stage'] = stage
         df_results['ingredient'] = ingredient
-        df_results['step'] = int(step.replace("step", "")) if step else None
+
+        if "Think" in model_path:
+            df_results['step'] = int(step.replace("step_", "")) if step else None
+        else:
+            df_results['step'] = int(step.replace("step", "")) if step else None
+
         df_results['tokens_seen'] = tokens.replace("tokens", "") if tokens else None
     else:
         df_results['stage'] = None
