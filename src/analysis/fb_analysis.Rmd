@@ -460,7 +460,7 @@ df_ridge %>%
                      labels = model_order) + 
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL) + 
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL) + 
   theme_minimal(base_size = 12) + 
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor = element_blank(),
@@ -484,7 +484,7 @@ df_summ_fb %>%
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
   scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 1b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -509,7 +509,7 @@ df_summ_fb %>%
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
   scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 7b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -534,7 +534,7 @@ df_summ_fb %>%
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
   scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 13b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -560,7 +560,7 @@ df_summ_fb %>%
   scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
   scale_y_continuous(limits = c(0.4,0.8)) +
   scale_color_manual(values = pal) + 
-  labs(x = "Number of Tokens Seen", y = "Mean Accuracy", color = NULL,
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
        title = "FB Task Performance", 
        subtitle = "Olmo 2 32b::Stage 2") + 
   theme_minimal(base_size = 14) + 
@@ -568,8 +568,6 @@ df_summ_fb %>%
         panel.grid.minor = element_blank(),
         strip.text.y = element_text(angle = 0),
         legend.position = "bottom")
-
-  
 
 
 
@@ -581,6 +579,7 @@ min_val <- df_summ_fb %>%
   pull(tokens_seen_numeric_mod) %>%
   min(na.rm = TRUE)
 
+# APPENDIX FIGURE:(fbt accuracy over pretraining-linear axis)
 df_summ_fb %>%
   filter(step > 0) %>%
   filter(stage == "stage1" | is.na(stage)) %>%
@@ -591,8 +590,38 @@ df_summ_fb %>%
   geom_line(size = 1.5, alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1, alpha = .8) +
-  scale_x_log10(breaks = sort(unique(c(min_val, scales::log_breaks()(range(df_summ_fb$tokens_seen_numeric_mod))))),
-    labels = scales::comma_format()) +
+  scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
+  #scale_y_continuous(limits = c(0.25, 0.75)) +
+  labs(x = "Number of Tokens Seen",
+       y = "Accuracy",
+       color = "",
+       shape = "") +
+  theme_bw() +
+  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+                                                  begin = 0.9, end = 0.1)) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    x = "Number of Tokens Seen",
+    y = "Accuracy"
+  ) +
+  theme_minimal() + 
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+# PAPER FIGURE: (fbt accuracy over pretraining: log axis)
+df_summ_fb %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(model_shorthand != "Pythia 14m") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = model_shorthand)) +
+  geom_line(size = 1.5, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             size = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
+  #scale_x_log10(breaks = sort(unique(c(min_val, scales::log_breaks()(range(df_summ_fb$tokens_seen_numeric_mod))))),
+    #labels = scales::comma_format()) +
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   #scale_y_continuous(limits = c(0.25, 0.75)) +
   labs(x = "Tokens Seen",
@@ -600,8 +629,8 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(7, option = "mako", 
-                                                  begin = 0.8, end = 0.1)) +
+  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+                                                  begin = 0.9, end = 0.1)) +
   labs(
     title = "False Belief Task Accuracy Over Pretraining",
     x = "Number of Tokens Seen (log scale)",
@@ -610,6 +639,7 @@ df_summ_fb %>%
   theme_minimal() + 
   theme(text = element_text(size = 15),
         legend.position="bottom") 
+
 
 
 # Filter for only stage1 olmo data and pythia models greater than 14m (e.g. exclude olmo stage2)
