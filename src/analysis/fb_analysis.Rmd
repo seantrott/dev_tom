@@ -293,7 +293,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -317,7 +317,7 @@ df_summ_fb %>%
        y = "Accuracy",
        color = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
                                                   begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -341,7 +341,7 @@ df_summ_fb %>%
        y = "Accuracy",
        color = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
                                                   begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -353,6 +353,7 @@ model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
                  "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b")
 
 d0 <- df_summ_fb %>%
+  filter(model_shorthand != "Olmo 3 7b-Think") %>%
   rename(model = model_shorthand,
          family = model_family,
          value = mean_accuracy) %>%
