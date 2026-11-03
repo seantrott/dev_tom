@@ -645,7 +645,8 @@ df_summ_fb %>%
 # Filter for only stage1 olmo data and pythia models greater than 14m (e.g. exclude olmo stage2)
 olmo_and_pythia <- df_all_models_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
-  filter(model_shorthand != "Pythia 14m")
+  filter(model_shorthand != "Pythia 14m") %>%
+  filter(model_shorthand != "Olmo 3 7b-Think")
 
 # Z-score the variables that will go into the statistical model
 olmo_and_pythia <- olmo_and_pythia %>%
