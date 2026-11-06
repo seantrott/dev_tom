@@ -28,7 +28,9 @@ MODELS = {
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
     #"allenai/OLMo-2-0325-32B": "OLMO 2 32B",
     "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
-    "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think",
+    "allenai/Olmo-3.1-32B-Think": "OLMO 3 32B-Think", # TODO: correct the label to OLMO 3.1 after the run is done
+    "allenai/Olmo-3-1025-7B": "OLMO 3 7B",
+    "allenai/Olmo-3-1125-32B": "OLMO 3 32B"
 }
 
 #MODELS = {
