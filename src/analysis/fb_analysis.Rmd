@@ -91,6 +91,15 @@ df_all_models_fb = df_all_models_fb %>%
                            "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
     model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
                            "Olmo 2 32b") ~ "Olmo 2",
+    model_shorthand %in% c("Olmo 3 7b-Think", 
+                           "Olmo 3 32b-Think") ~ "Olmo 3"),
+    training_type = case_when(
+      model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b",
+                           "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
+                           "Olmo 2 32b") ~ "Pretraining",
+      model_shorthand %in% c("Olmo 3 7b-Think", 
+                           "Olmo 3 32b-Think") ~ "Postraining"
   ))
 
 length(unique(df_tmp$model_id))
@@ -132,7 +141,7 @@ tmp <- df_all_models_fb %>%
   filter(tokens_seen_numeric_mod %in% problem_tokens) %>% 
   arrange(tokens_seen_numeric_mod, step)
 
-#For Olmo 2 7b --> see filenames for 
+# For Olmo 2 7b --> see filenames for 
 #   ....stage1_step600_3B, 
 #.  ....stage1_step700_3B
 #.  ....stage1_step850_4B
@@ -144,7 +153,11 @@ tmp <- df_all_models_fb %>%
 # `tokens_seen_numeric_mod`) you want to group by for your analysis -- there are
 # as many actually unique data points as there are number of `step` x number of conditions
 
-#This problem also seems to affect Olmo 2 32b.
+# This problem also seems to affect Olmo 2 32b.
+
+# For the Olmo 3 -Think family, I don't have tokens seen extractable from 
+# revision filenames, so will have to add this metadata post-hoc, like I do
+# for the Pythia suite
  
 ```
 
@@ -229,7 +242,7 @@ ggplot(tmp, aes(x = n_params_approx, y = mean_accuracy)) +
              alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
              size = 1, alpha = .8) +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
                                                   begin = 0.8, end = 0.15)) + 
   geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
   scale_x_log10(labels = scales::comma_format()) +
