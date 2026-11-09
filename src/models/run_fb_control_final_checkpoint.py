@@ -22,7 +22,33 @@ MODELS = {
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
     #"allenai/OLMo-2-0425-1B": "OLMO 2 1B",
-    "allenai/OLMo-2-0325-32B": "OLMO 2 32B"
+    #"allenai/OLMo-2-0325-32B": "OLMO 2 32B"
+}
+
+MODELS = {
+    ### OLMo
+    'allenai/OLMo-2-1124-7B': 'OLMo 2 7B',
+    'allenai/OLMo-2-1124-7B-SFT': 'OLMo 2 7B SFT',
+    'allenai/OLMo-2-1124-7B-DPO': 'OLMo 2 7B DPO',
+    'allenai/OLMo-2-1124-7B-Instruct': 'OLMO 2 7B Instruct', 
+    'allenai/OLMo-2-1124-13B': 'OLMO 2 13B',
+    'allenai/OLMo-2-1124-13B-SFT': 'OLMO 2 13B SFT', 
+    'allenai/OLMo-2-1124-13B-DPO': 'OLMo 2 13B DPO', 
+    'allenai/OLMo-2-1124-13B-Instruct': 'OLMO 2 13B Instruct',
+    'allenai/OLMo-2-0325-32B': 'OLMO 2 32B',
+    'allenai/OLMo-2-0325-32B-SFT': 'OLMO 2 32B SFT', 
+    'allenai/OLMo-2-0325-32B-Instruct': 'OLMO 2 32B Instruct',
+    'allenai/OLMo-2-0325-32B-DPO': 'OLMO 2 32B DPO',
+    'allenai/OLMo-2-0425-1B': 'OLMO 2 1B',
+    'allenai/OLMo-2-0425-1B-SFT': 'OLMO 2 1B SFT',
+    'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
+    'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
+    "allenai/OLMo-2-0325-32B": "OLMO 2 32B",
+    "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
+    "allenai/Olmo-3-1025-7B": "OLMO 3 7B",
+    "allenai/Olmo-3-1125-32B": "OLMO 3 32B",
+    "allenai/Olmo-3.1-32B-Think": "OLMO 3.1 32B-Think"
+
 }
 
 PYTHIA_FINAL_REVISION = "step143000"
@@ -75,18 +101,28 @@ def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
         logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
         selected1 = [stage1_ckpts[i] for i in logstage1]
-        ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
-        n_ingredients = np.unique(ingredients_list)
-        min_k_stage2 = 5
-        selected2 = []
-        for ingredient in n_ingredients:
-            current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
-            logstage2 = sample_log_indices(min_k_stage2, current_list)
-            selected2.append([current_list[i] for i in logstage2])
+        if "ingredient" in stage2_ckpts:
+            ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
+            n_ingredients = np.unique(ingredients_list)
+            min_k_stage2 = 5
+            selected2 = []
+            for ingredient in n_ingredients:
+                current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
+                logstage2 = sample_log_indices(min_k_stage2, current_list)
+                selected2.append([current_list[i] for i in logstage2])
+        else:
+            # just keep all of them for now, until you have a better sense for what you'd 
+            # like to explore with stage 2 -- this especially applies to Olmo 3 models
+            selected2 = stage2_ckpts   
         all_selected = selected1 + selected2
         return [item for sublist in all_selected for item in (sublist if isinstance(sublist, list) else [sublist])]
+
     print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
-    indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
+    if len(checkpoints_sorted) < 40:
+        # just keep all of them
+        indices = range(0,len(checkpoints_sorted))
+    else: 
+        indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
     return [checkpoints_sorted[i] for i in indices]
 
 
