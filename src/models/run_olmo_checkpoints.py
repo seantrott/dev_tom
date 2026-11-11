@@ -12,9 +12,18 @@ import re
 
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from huggingface_hub import list_repo_refs
+from huggingface_hub import list_repo_refs, HfApi
+from huggingface_hub.utils import RevisionNotFoundError
+
 
 from del_models import clear_huggingface_cache
+
+from huggingface_hub.utils import RevisionNotFoundError
+
+_api = HfApi()
+_weights_cache = {}
+
+
 
 
 MODELS = {
@@ -89,42 +98,106 @@ def sample_log_indices(k, mylist):
             indices = np.hstack((0, indices))
     return indices
 
-def get_revision_list(model_path: str, all_revisions: list[str]) -> list[str]:
-    """Return a revision list with stage-aware or fallback log sampling."""
+# Had to add the following function because some Olmo 3 checkpoint files didn't contain weights on HF
+def revision_has_weights(model_path: str, revision: str) -> bool:
+    """True if the revision has a config.json and weight files (cached)."""
+    key = (model_path, revision)
+    if key in _weights_cache:
+        return _weights_cache[key]
+    try:
+        files = _api.list_repo_files(model_path, revision=revision)
+    except RevisionNotFoundError:
+        ok = False
+    # Other errors (rate limits, network) are deliberately NOT caught, so a
+    # transient failure doesn't get misreported as "missing weights".
+    else:
+        has_config = "config.json" in files
+        has_weights = any(
+            f.endswith(".safetensors")
+            or (f.startswith("pytorch_model") and f.endswith(".bin"))
+            for f in files
+        )
+        ok = has_config and has_weights
+    _weights_cache[key] = ok
+    return ok
+
+def select_with_weights(model_path, ckpts, indices):
+    """
+    ckpts: step-sorted list of revisions (one group, e.g. stage1 or one ingredient).
+    indices: positions in ckpts that we *intended* to sample.
+    Returns (selected, missing). Any intended checkpoint without weights goes in
+    `missing`, and the nearest preceding checkpoint with weights is used instead.
+    """
+    chosen, missing = set(), []
+    for i in indices:
+        i = int(i)
+        if revision_has_weights(model_path, ckpts[i]):
+            chosen.add(i)
+            continue
+        missing.append(ckpts[i])
+        for j in range(i - 1, -1, -1):
+            if revision_has_weights(model_path, ckpts[j]):
+                chosen.add(j)
+                break
+        else:
+            print(f"Warning: no preceding checkpoint with weights found for {ckpts[i]}")
+    selected = [ckpts[i] for i in sorted(chosen)]  # sorted + deduplicated
+    return selected, missing
+
+def get_revision_list(model_path: str, all_revisions: list[str]):
+    """Return (revision_list, missing_weights_revisions)."""
     def parse_step(x):
         match = re.search(r"step(\d+)", x)
         return int(match.group(1)) if match else float("inf")
+
     checkpoints_sorted = sorted(all_revisions, key=parse_step)
     stage1_ckpts = [c for c in checkpoints_sorted if "stage1" in c]
     stage2_ckpts = [c for c in checkpoints_sorted if "stage2" in c]
     min_k_stage1 = 40
+    missing_weights_revisions = []
+
     if stage1_ckpts and stage2_ckpts:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
-        logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
-        selected1 = [stage1_ckpts[i] for i in logstage1]
-        if "ingredient" in stage2_ckpts:
-            ingredients_list = [int(c.split("ingredient")[-1][0]) for c in stage2_ckpts]
-            n_ingredients = np.unique(ingredients_list)
-            min_k_stage2 = 5
-            selected2 = []
-            for ingredient in n_ingredients:
-                current_list = [c for c in stage2_ckpts if "ingredient" + str(ingredient) in c]
-                logstage2 = sample_log_indices(min_k_stage2, current_list)
-                selected2.append([current_list[i] for i in logstage2])
-        else:
-            # just keep all of them for now, until you have a better sense for what you'd 
-            # like to explore with stage 2 -- this especially applies to Olmo 3 models
-            selected2 = stage2_ckpts   
-        all_selected = selected1 + selected2
-        return [item for sublist in all_selected for item in (sublist if isinstance(sublist, list) else [sublist])]
 
-    print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
-    if len(checkpoints_sorted) < 40:
-        # just keep all of them
-        indices = range(0,len(checkpoints_sorted))
-    else: 
-        indices = sample_log_indices(min(min_k_stage1, len(checkpoints_sorted)), checkpoints_sorted)
-    return [checkpoints_sorted[i] for i in indices]
+        logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
+        selected1, miss1 = select_with_weights(model_path, stage1_ckpts, logstage1)
+        missing_weights_revisions += miss1
+
+        selected2 = []
+        if any("ingredient" in c for c in stage2_ckpts):
+            ingredient_ids = sorted({
+                int(m.group(1))
+                for c in stage2_ckpts
+                if (m := re.search(r"ingredient(\d+)", c))
+            })
+            min_k_stage2 = 5
+            for ingredient in ingredient_ids:
+                current_list = [c for c in stage2_ckpts
+                                if re.search(rf"ingredient{ingredient}(?!\d)", c)]
+                logstage2 = sample_log_indices(min_k_stage2, current_list)
+                sel, miss = select_with_weights(model_path, current_list, logstage2)
+                selected2 += sel
+                missing_weights_revisions += miss
+        else:
+            # keep all stage2 checkpoints (that have weights), for now
+            selected2, miss2 = select_with_weights(
+                model_path, stage2_ckpts, range(len(stage2_ckpts)))
+            missing_weights_revisions += miss2
+
+        revision_list = selected1 + selected2
+    else:
+        print(f"No stage1/stage2 structure found for {model_path}. Using fallback.")
+        if len(checkpoints_sorted) < min_k_stage1:
+            indices = range(len(checkpoints_sorted))
+        else:
+            indices = sample_log_indices(min_k_stage1, checkpoints_sorted)
+        revision_list, missing_weights_revisions = select_with_weights(
+            model_path, checkpoints_sorted, indices)
+
+    if missing_weights_revisions:
+        print(f"{len(missing_weights_revisions)} sampled revisions lack weights: "
+              f"{missing_weights_revisions}")
+    return revision_list, missing_weights_revisions
 
     
 def next_seq_prob(model, tokenizer, seen, unseen):
@@ -287,9 +360,10 @@ if __name__ == "__main__":
                 print(f"No usable checkpoints found for {model_path}, skipping.")
                 continue
                     
-            revision_list = get_revision_list(model_path, all_revisions)
+            revision_list, missing_weights_revisions = get_revision_list(model_path, all_revisions)
         
             #print(revision_list)
+            #print(missing_weights_revisions)  # Add these to methods section if not empty!
         
             for rev in revision_list:
                 #print(f"Running FB with checkpoint: {rev}")
