@@ -1,24 +1,24 @@
 """Run FB task by loading models from HF locally."""
 
 import argparse
-
-import pandas as pd
-import numpy as np
-import transformers
-import torch
+import json
 import os
 import random
 import re
+import torch
+import transformers
+
+import pandas as pd
+import numpy as np
 
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from huggingface_hub import list_repo_refs, HfApi
 from huggingface_hub.utils import RevisionNotFoundError
 
-
+from datetime import datetime, timezone
 from del_models import clear_huggingface_cache
 
-from huggingface_hub.utils import RevisionNotFoundError
 
 _api = HfApi()
 _weights_cache = {}
@@ -125,27 +125,32 @@ def select_with_weights(model_path, ckpts, indices):
     """
     ckpts: step-sorted list of revisions (one group, e.g. stage1 or one ingredient).
     indices: positions in ckpts that we *intended* to sample.
-    Returns (selected, missing). Any intended checkpoint without weights goes in
-    `missing`, and the nearest preceding checkpoint with weights is used instead.
+    Returns (selected, substitutions), where substitutions maps each intended
+    revision lacking weights to the preceding revision used instead (or None
+    if no earlier checkpoint with weights exists).
     """
-    chosen, missing = set(), []
+    chosen, substitutions = set(), {}
     for i in indices:
         i = int(i)
         if revision_has_weights(model_path, ckpts[i]):
             chosen.add(i)
             continue
-        missing.append(ckpts[i])
+        fallback = None
         for j in range(i - 1, -1, -1):
             if revision_has_weights(model_path, ckpts[j]):
                 chosen.add(j)
+                fallback = ckpts[j]
                 break
-        else:
+        if fallback is None:
             print(f"Warning: no preceding checkpoint with weights found for {ckpts[i]}")
+        substitutions[ckpts[i]] = fallback
     selected = [ckpts[i] for i in sorted(chosen)]  # sorted + deduplicated
-    return selected, missing
+    return selected, substitutions
+
 
 def get_revision_list(model_path: str, all_revisions: list[str]):
-    """Return (revision_list, missing_weights_revisions)."""
+    """Return (revision_list, missing_weights_revisions), where the latter is
+    a dict {intended_revision: substituted_revision_or_None}."""
     def parse_step(x):
         match = re.search(r"step(\d+)", x)
         return int(match.group(1)) if match else float("inf")
@@ -154,14 +159,14 @@ def get_revision_list(model_path: str, all_revisions: list[str]):
     stage1_ckpts = [c for c in checkpoints_sorted if "stage1" in c]
     stage2_ckpts = [c for c in checkpoints_sorted if "stage2" in c]
     min_k_stage1 = 40
-    missing_weights_revisions = []
+    missing_weights_revisions = {}
 
     if stage1_ckpts and stage2_ckpts:
         print(f"Found stage1 ({len(stage1_ckpts)}) and stage2 ({len(stage2_ckpts)}) checkpoints.")
 
         logstage1 = sample_log_indices(min_k_stage1, stage1_ckpts)
-        selected1, miss1 = select_with_weights(model_path, stage1_ckpts, logstage1)
-        missing_weights_revisions += miss1
+        selected1, sub1 = select_with_weights(model_path, stage1_ckpts, logstage1)
+        missing_weights_revisions.update(sub1)
 
         selected2 = []
         if any("ingredient" in c for c in stage2_ckpts):
@@ -175,14 +180,13 @@ def get_revision_list(model_path: str, all_revisions: list[str]):
                 current_list = [c for c in stage2_ckpts
                                 if re.search(rf"ingredient{ingredient}(?!\d)", c)]
                 logstage2 = sample_log_indices(min_k_stage2, current_list)
-                sel, miss = select_with_weights(model_path, current_list, logstage2)
+                sel, sub = select_with_weights(model_path, current_list, logstage2)
                 selected2 += sel
-                missing_weights_revisions += miss
+                missing_weights_revisions.update(sub)
         else:
-            # keep all stage2 checkpoints (that have weights), for now
-            selected2, miss2 = select_with_weights(
+            selected2, sub2 = select_with_weights(
                 model_path, stage2_ckpts, range(len(stage2_ckpts)))
-            missing_weights_revisions += miss2
+            missing_weights_revisions.update(sub2)
 
         revision_list = selected1 + selected2
     else:
@@ -195,10 +199,31 @@ def get_revision_list(model_path: str, all_revisions: list[str]):
             model_path, checkpoints_sorted, indices)
 
     if missing_weights_revisions:
-        print(f"{len(missing_weights_revisions)} sampled revisions lack weights: "
-              f"{missing_weights_revisions}")
+        print(f"{len(missing_weights_revisions)} sampled revisions lack weights:")
+        for intended, substitute in missing_weights_revisions.items():
+            print(f"  {intended} -> {substitute}")
     return revision_list, missing_weights_revisions
 
+
+def save_missing_weights(model_path, missing_weights_revisions, revision_list,
+                         out_dir="data/processed"):
+    """Write the intended->substituted mapping (and what was actually run) to JSON."""
+    os.makedirs(out_dir, exist_ok=True)
+    safe_name = model_path.replace("/", "__")
+    out_path = os.path.join(out_dir, f"{safe_name}_missing_weights.json")
+
+    record = {
+        "model_path": model_path,
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "n_missing": len(missing_weights_revisions),
+        "substitutions": missing_weights_revisions,  # {intended: substituted or null}
+        "n_selected": len(revision_list),
+        "revision_list": revision_list,
+    }
+    with open(out_path, "w") as f:
+        json.dump(record, f, indent=2)
+    print(f"Saved missing-weights record to {out_path}")
+    return out_path
     
 def next_seq_prob(model, tokenizer, seen, unseen):
     device = next(model.parameters()).device  # get model's actual device
@@ -361,6 +386,8 @@ if __name__ == "__main__":
                 continue
                     
             revision_list, missing_weights_revisions = get_revision_list(model_path, all_revisions)
+            save_missing_weights(model_path, missing_weights_revisions, revision_list,
+                     out_dir="data/processed/fb_local")  
         
             #print(revision_list)
             #print(missing_weights_revisions)  # Add these to methods section if not empty!
