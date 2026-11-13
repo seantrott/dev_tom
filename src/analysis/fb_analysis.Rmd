@@ -184,18 +184,18 @@ df_all_models_fb = df_all_models_fb %>%
   ))
 
 df_summ_fb = df_all_models_fb %>%
-  group_by(model_path, model_shorthand,
+  group_by(training_type,model_path, model_shorthand,
            step, tokens_seen_numeric, model_family, stage, ingredient, n_params_approx) %>%
   summarise(mean_accuracy = mean(correct)) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 df_summ_fb %>%
-  select(model_shorthand, mean_accuracy)
+  select(training_type,model_shorthand, mean_accuracy)
 mean(df_all_models_fb$correct)
 
 df_summ_fb %>%
   ungroup() %>%
   arrange(desc(mean_accuracy)) %>%
-  select(model_shorthand, mean_accuracy, step, stage,ingredient,n_params_approx) %>%
+  select(training_type,model_shorthand, mean_accuracy, step, stage,ingredient,n_params_approx) %>%
   head(5)
 
 # Get the final step for each model and extract final accuracy
@@ -207,13 +207,14 @@ df_summ_fb %>%
 #  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 final_accuracy <- df_summ_fb %>%
-  group_by(model_shorthand, model_family) %>%
+  group_by(training_type,model_shorthand, model_family) %>%
   filter(step == max(step)) %>%  # Get the final step for each model
   ungroup()
 
 final_accuracy <- df_summ_fb %>%
   filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
-  group_by(model_shorthand) %>%
+  group_by(training_type,model_shorthand) %>%
+  filter(training_type == "Pretraining") %>%
   slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
   ungroup()
 
@@ -233,10 +234,11 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   theme(plot.title = element_text(hjust = 0.6),
         plot.subtitle = element_text(hjust = 0.6))
 
-tmp <- df_summ_fb %>%
-  filter(step > 0)
+pretraining_acc_fb <- df_summ_fb %>%
+  filter(step > 0) %>%
+  filter(training_type == "Pretraining")
 # PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in color
-ggplot(tmp, aes(x = n_params_approx, y = mean_accuracy)) +
+ggplot(pretraining_acc_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
   geom_point(data = final_accuracy, size = 4, 
