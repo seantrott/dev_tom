@@ -13,16 +13,18 @@ import numpy as np
 
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from huggingface_hub import list_repo_refs, HfApi
+from huggingface_hub import list_repo_refs, HfApi, hf_hub_download
 from huggingface_hub.utils import RevisionNotFoundError
 
 from datetime import datetime, timezone
 from del_models import clear_huggingface_cache
 
 
+# The following became necessary with the Olmo 3 runs, because they occasionally have missing weights
+# or mismatches in vocab length relative to the config!
 _api = HfApi()
 _weights_cache = {}
-
+_vocab_cache = {}
 
 
 
@@ -64,6 +66,19 @@ MODELS = {
 
 #}
 
+def get_config_vocab_size(model_path: str, revision: str):
+    """vocab_size from a revision's config.json (cached), or None if unavailable.
+    Only downloads the small config file, never the weights."""
+    key = (model_path, revision)
+    if key not in _vocab_cache:
+        try:
+            cfg_path = hf_hub_download(model_path, "config.json", revision=revision)
+            with open(cfg_path) as f:
+                _vocab_cache[key] = json.load(f).get("vocab_size")
+        except EntryNotFoundError:  # from huggingface_hub.errors; no config.json here
+            _vocab_cache[key] = None
+    return _vocab_cache[key]
+
 
 def sample_log_indices(k, mylist):
     """k: number of points to sample from list"""
@@ -99,17 +114,17 @@ def sample_log_indices(k, mylist):
     return indices
 
 # Had to add the following function because some Olmo 3 checkpoint files didn't contain weights on HF
-def revision_has_weights(model_path: str, revision: str) -> bool:
-    """True if the revision has a config.json and weight files (cached)."""
-    key = (model_path, revision)
+def revision_has_weights(model_path: str, revision: str, reference_vocab=None) -> bool:
+    """True if the revision has a config.json, weight files, and (when a
+    reference is given) a config vocab_size matching that reference (cached)."""
+    key = (model_path, revision, reference_vocab)
     if key in _weights_cache:
         return _weights_cache[key]
     try:
         files = _api.list_repo_files(model_path, revision=revision)
     except RevisionNotFoundError:
         ok = False
-    # Other errors (rate limits, network) are deliberately NOT caught, so a
-    # transient failure doesn't get misreported as "missing weights".
+    # Other errors (rate limits, network) are deliberately NOT caught.
     else:
         has_config = "config.json" in files
         has_weights = any(
@@ -118,33 +133,38 @@ def revision_has_weights(model_path: str, revision: str) -> bool:
             for f in files
         )
         ok = has_config and has_weights
+        if ok and reference_vocab is not None:
+            ok = get_config_vocab_size(model_path, revision) == reference_vocab
     _weights_cache[key] = ok
     return ok
 
+
 def select_with_weights(model_path, ckpts, indices):
     """
-    ckpts: step-sorted list of revisions (one group, e.g. stage1 or one ingredient).
-    indices: positions in ckpts that we *intended* to sample.
-    Returns (selected, substitutions), where substitutions maps each intended
-    revision lacking weights to the preceding revision used instead (or None
-    if no earlier checkpoint with weights exists).
+    Same contract as before. The expected vocab size is taken from the first
+    revision in `ckpts` (the first checkpoint of this stage/ingredient).
     """
+    reference_vocab = get_config_vocab_size(model_path, ckpts[0])
+    if reference_vocab is None:
+        print(f"Warning: couldn't read vocab_size from {ckpts[0]}; "
+              f"skipping the vocab consistency check for this group")
+
     chosen, substitutions = set(), {}
     for i in indices:
         i = int(i)
-        if revision_has_weights(model_path, ckpts[i]):
+        if revision_has_weights(model_path, ckpts[i], reference_vocab):
             chosen.add(i)
             continue
         fallback = None
         for j in range(i - 1, -1, -1):
-            if revision_has_weights(model_path, ckpts[j]):
+            if revision_has_weights(model_path, ckpts[j], reference_vocab):
                 chosen.add(j)
                 fallback = ckpts[j]
                 break
         if fallback is None:
             print(f"Warning: no preceding checkpoint with weights found for {ckpts[i]}")
         substitutions[ckpts[i]] = fallback
-    selected = [ckpts[i] for i in sorted(chosen)]  # sorted + deduplicated
+    selected = [ckpts[i] for i in sorted(chosen)]
     return selected, substitutions
 
 

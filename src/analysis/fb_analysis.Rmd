@@ -91,13 +91,15 @@ df_all_models_fb = df_all_models_fb %>%
                            "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
     model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
                            "Olmo 2 32b") ~ "Olmo 2",
-    model_shorthand %in% c("Olmo 3 7b-Think", 
+    model_shorthand %in% c("Olmo 3 32b", "Olmo 3 7b",
+                           "Olmo 3 7b-Think", 
                            "Olmo 3 32b-Think") ~ "Olmo 3"),
     training_type = case_when(
       model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
                            "Pythia 6.9b", "Pythia 12b",
                            "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
-                           "Olmo 2 32b") ~ "Pretraining",
+                           "Olmo 2 32b","Olmo 3 32b", 
+                           "Olmo 3 7b") ~ "Pretraining",
       model_shorthand %in% c("Olmo 3 7b-Think", 
                            "Olmo 3 32b-Think") ~ "Postraining"
   ))
@@ -233,7 +235,7 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
 
 tmp <- df_summ_fb %>%
   filter(step > 0)
-# PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in red
+# PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in color
 ggplot(tmp, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
