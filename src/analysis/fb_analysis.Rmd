@@ -84,6 +84,31 @@ df_all_models_fb <- df_all_models_fb %>%
   select(-tokens_seen_from_df1) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
+#TODO: double-check these token estimates per step! Current ones are based batch
+#size times step count
+tokens_seen_olmo3_7b <- read_csv("../../data/raw/olmo3_7b_stage1_stage2_tokens_seen.csv")
+tokens_seen_olmo3_7b<- tokens_seen_olmo3_7b %>%
+  filter(str_starts(revision, "stage1-"))
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_olmo3_7b %>% select(model_shorthand, step,
+                                            tokens_seen_from_df1 =
+                                              tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+tokens_seen_olmo3_32b <- read_csv("../../data/raw/olmo3_32b_stage1_stage2_tokens_seen.csv")
+tokens_seen_olmo3_32b <- tokens_seen_olmo3_32b %>%
+  filter(str_starts(revision, "stage1-"))
+df_all_models_fb <- df_all_models_fb %>%
+  left_join(tokens_seen_olmo3_32b %>% select(model_shorthand, step,
+                                            tokens_seen_from_df1 =
+                                              tokens_seen_numeric), 
+            by = c("model_shorthand", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
+  select(-tokens_seen_from_df1) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 df_all_models_fb = df_all_models_fb %>%
   mutate(model_family = case_when(
@@ -310,7 +335,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(12, option = "mako", 
                                                   begin = 0.8, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -334,7 +359,7 @@ df_summ_fb %>%
        y = "Accuracy",
        color = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(12, option = "mako", 
                                                   begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -358,7 +383,7 @@ df_summ_fb %>%
        y = "Accuracy",
        color = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(9, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(12, option = "mako", 
                                                   begin = 0.9, end = 0.15)) +
   theme(text = element_text(size = 15),
         legend.position="bottom") +
@@ -367,10 +392,12 @@ df_summ_fb %>%
 # PAPER FIGURE: Ridgeline plot to show overall developmental shape across pre-
 # training Stage 1 and training Stage 2
 model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
-                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b")
+                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b","Olmo 2 32b",
+                 "Olmo 3 7b", "Olmo 3 32b")
 
 d0 <- df_summ_fb %>%
-  filter(model_shorthand != "Olmo 3 7b-Think") %>%
+  filter(!model_shorthand %in% c("Olmo 3 7b-Think",
+                                "Olmo 3 32b-Think")) %>%
   rename(model = model_shorthand,
          family = model_family,
          value = mean_accuracy) %>%
