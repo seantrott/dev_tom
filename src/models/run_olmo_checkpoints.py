@@ -66,6 +66,9 @@ MODELS = {
 
 #}
 
+EXCLUDE_PATTERNS = [re.compile(r"-from-2T-ckpt$")] # rm these from the Olmo 3 7b run (different architecture)
+
+
 def get_config_vocab_size(model_path: str, revision: str):
     """vocab_size from a revision's config.json (cached), or None if unavailable.
     Only downloads the small config file, never the weights."""
@@ -78,6 +81,15 @@ def get_config_vocab_size(model_path: str, revision: str):
         except EntryNotFoundError:  # from huggingface_hub.errors; no config.json here
             _vocab_cache[key] = None
     return _vocab_cache[key]
+
+
+def drop_excluded(revisions):
+    kept, dropped = [], []
+    for r in revisions:
+        (dropped if any(p.search(r) for p in EXCLUDE_PATTERNS) else kept).append(r)
+    if dropped:
+        print(f"Excluded {len(dropped)} revisions: {dropped}")
+    return kept
 
 
 def sample_log_indices(k, mylist):
@@ -401,6 +413,7 @@ if __name__ == "__main__":
         
             # Combine and deduplicate all tag/branch names
             all_revisions = [b.name for b in refs.branches] + [t.name for t in refs.tags]
+            all_revisions = drop_excluded(all_revisions)
             if not all_revisions:
                 print(f"No usable checkpoints found for {model_path}, skipping.")
                 continue
@@ -409,6 +422,7 @@ if __name__ == "__main__":
             save_missing_weights(model_path, missing_weights_revisions, revision_list,
                      out_dir="data/processed/fb_local")  
         
+
             #print(revision_list)
             #print(missing_weights_revisions)  # Add these to methods section if not empty!
         
