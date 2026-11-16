@@ -43,7 +43,6 @@ MODELS = {
     'allenai/OLMo-2-0425-1B-SFT': 'OLMO 2 1B SFT',
     'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
     'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
-    "allenai/OLMo-2-0325-32B": "OLMO 2 32B",
     "allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
     "allenai/Olmo-3-1025-7B": "OLMO 3 7B",
     "allenai/Olmo-3-1125-32B": "OLMO 3 32B",
@@ -174,14 +173,23 @@ def main(model_path, revision=None, suffix="final"):
         return
 
     print(f"  Loading {model_path} revision={revision}")
-    model = AutoModelForCausalLM.from_pretrained(
-        model_path,
-        revision=revision,
-        device_map="auto",
-        dtype=torch.bfloat16,   # or dtype=... in newer transformers
-        low_cpu_mem_usage=True,
+
+   ### Load model
+    if "32" in model_path: 
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            revision=revision,
+            device_map="auto",
+            dtype=torch.bfloat16,   # go down to 16-precision for 32B to load in memory
+            low_cpu_mem_usage=True,
     )
-    #tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            revision=revision,
+            device_map="auto" #,
+            # use_auth_token=True
+            )
     tokenizer = AutoTokenizer.from_pretrained(model_path)
 
     df_fb = pd.read_csv("data/raw/fb_control.csv")
