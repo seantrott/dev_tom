@@ -48,12 +48,13 @@ _vocab_cache = {}
     #"EleutherAI/pythia-12b": "Pythia 12B"#,
     #"allenai/OLMo-2-1124-13B": "OLMO 2 13B",
     #"allenai/OLMo-2-1124-7B": "OLMO 2 7B",
-    "allenai/OLMo-2-0425-1B": "OLMO 2 1B"
+    #"allenai/OLMo-2-0425-1B": "OLMO 2 1B"
 #}
 
 MODELS = {
     ### OLMo
     'allenai/OLMo-2-1124-7B': 'OLMo 2 7B',
+    "allenai/Olmo-3-1025-7B": "OLMO 3 7B",
     #'allenai/OLMo-2-1124-7B-SFT': 'OLMo 2 7B SFT',
     #'allenai/OLMo-2-1124-7B-DPO': 'OLMo 2 7B DPO',
     #'allenai/OLMo-2-1124-7B-Instruct': 'OLMO 2 7B Instruct', 
@@ -70,7 +71,6 @@ MODELS = {
     #'allenai/OLMo-2-0425-1B-DPO': 'OLMO 2 1B DPO',
     #'allenai/OLMo-2-0425-1B-Instruct': 'OLMO 2 1B Instruct',
     #"allenai/Olmo-3-7B-Think": "OLMO 3 7B-Think",
-    "allenai/Olmo-3-1025-7B": "OLMO 3 7B",
     "allenai/Olmo-3-1125-32B": "OLMO 3 32B",
     #"allenai/Olmo-3.1-32B-Think": "OLMO 3.1 32B-Think"
 
