@@ -86,28 +86,29 @@ df_all_models_fb <- df_all_models_fb %>%
 
 #TODO: double-check these token estimates per step! Current ones are based batch
 #size times step count
-tokens_seen_olmo3_7b <- read_csv("../../data/raw/olmo3_7b_stage1_stage2_tokens_seen.csv")
-tokens_seen_olmo3_7b<- tokens_seen_olmo3_7b %>%
-  filter(str_starts(revision, "stage1-"))
-df_all_models_fb <- df_all_models_fb %>%
-  left_join(tokens_seen_olmo3_7b %>% select(model_shorthand, step,
-                                            tokens_seen_from_df1 =
-                                              tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
-  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+make_olmo3_lookup <- function(path) {
+  read_csv(path, show_col_types = FALSE) %>%
+    mutate(
+      stage = str_extract(revision, "^stage\\d"),
+      ingredient = case_when(
+        str_detect(revision, "ingredient") ~ str_extract(revision, "ingredient[0-9+]+"),
+        str_detect(revision, "-mix-")      ~ str_remove(revision, "^stage2-step47684-"),
+        TRUE                               ~ NA_character_
+      ),
+      tokens_lookup = if (is.character(tokens_seen_numeric)) parse_number(tokens_seen_numeric) else tokens_seen_numeric
+    ) %>%
+    select(model_shorthand, stage, ingredient, step, tokens_lookup)
+}
 
-tokens_seen_olmo3_32b <- read_csv("../../data/raw/olmo3_32b_stage1_stage2_tokens_seen.csv")
-tokens_seen_olmo3_32b <- tokens_seen_olmo3_32b %>%
-  filter(str_starts(revision, "stage1-"))
+tokens_seen_olmo3 <- bind_rows(
+  make_olmo3_lookup("../../data/raw/olmo3_7b_stage1_stage2_tokens_seen.csv"),
+  make_olmo3_lookup("../../data/raw/olmo3_32b_stage1_stage2_tokens_seen.csv")
+)
+
 df_all_models_fb <- df_all_models_fb %>%
-  left_join(tokens_seen_olmo3_32b %>% select(model_shorthand, step,
-                                            tokens_seen_from_df1 =
-                                              tokens_seen_numeric), 
-            by = c("model_shorthand", "step")) %>%
-  mutate(tokens_seen_numeric = coalesce(tokens_seen_numeric, tokens_seen_from_df1)) %>%
-  select(-tokens_seen_from_df1) %>%
+  left_join(tokens_seen_olmo3, by = c("model_shorthand", "stage", "ingredient", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_lookup, tokens_seen_numeric)) %>%
+  select(-tokens_lookup) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
 df_all_models_fb = df_all_models_fb %>%
@@ -231,10 +232,10 @@ df_summ_fb %>%
  # summarise(mean_accuracy = mean(correct)) %>%
 #  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
-final_accuracy <- df_summ_fb %>%
-  group_by(training_type,model_shorthand, model_family) %>%
-  filter(step == max(step)) %>%  # Get the final step for each model
-  ungroup()
+#final_accuracy <- df_summ_fb %>%
+#  group_by(training_type,model_shorthand, model_family) %>%
+#  filter(step == max(step)) %>%  # Get the final step for each model
+#  ungroup()
 
 final_accuracy <- df_summ_fb %>%
   filter(!is.na(step), !is.na(model_shorthand)) %>%  # Remove NAs
@@ -262,28 +263,62 @@ ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
 pretraining_acc_fb <- df_summ_fb %>%
   filter(step > 0) %>%
   filter(training_type == "Pretraining")
+
 # PAPER FIGURE: Plot displays fb task accuracy for all steps, final step in color
+# One palette per family: start/end of the gradient
+df_plot <- pretraining_acc_fb %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(!model_shorthand %in% c("Pythia 14m",
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think"))
+df_plot %>% distinct(model_family, model_shorthand) %>% arrange(model_family, model_shorthand)
+
+# Parse size in millions of parameters from the label, for ordering
+parse_size <- function(x) {
+  num  <- as.numeric(gsub(".*?(\\d+\\.?\\d*)\\s*([mMbB]).*", "\\1", x))
+  unit <- tolower(gsub(".*?(\\d+\\.?\\d*)\\s*([mMbB]).*", "\\2", x))
+  ifelse(unit == "b", num * 1000, num)
+}
+
+model_key <- df_plot %>%
+  distinct(model_family, model_shorthand) %>%
+  mutate(size = parse_size(model_shorthand)) %>%
+  arrange(model_family, size)
+
+family_pal <- list(
+  "Olmo 2" = c(hcl(200, 25, 85), hcl(200, 90, 25)),  # blue
+  "Olmo 3" = c(hcl(350, 25, 85), hcl(350, 90, 25)),  # pink/magenta
+  "Pythia" = c(hcl(260, 25, 85), hcl(260, 80, 25))   # not so salient
+)
+
+# Choosing the midpoint of each family's color gradient
+family_mid <- sapply(family_pal, function(endpoints) {
+  colorRampPalette(endpoints)(3)[2]
+})
+
+
 ggplot(pretraining_acc_fb, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_line(aes(group = model_shorthand), alpha = 0.3, color = "gray") +
   geom_point(alpha = 0.3, size = 1, color = "gray") +
-  geom_point(data = final_accuracy, size = 4, 
-             aes(color = model_family), 
+  geom_point(data = final_accuracy, size = 4,
+             aes(color = model_family),
              alpha = 0.8) +
   geom_hline(yintercept = .5, linetype = "dashed",
-             size = 1, alpha = .8) +
-  scale_color_manual(values = viridisLite::viridis(3, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) + 
+             linewidth = 1, alpha = .8) +
+  scale_color_manual(values = family_mid) +
   geom_text_repel(data = final_accuracy, aes(label = model_shorthand), size = 3) +
   scale_x_log10(labels = scales::comma_format()) +
   labs(
     title = "False Belief Task Accuracy: Progression and Final Step",
     subtitle = "Colored circles highlight accuracy at final pretraining step",
     x = "Number of Parameters (log scale)",
-    y = "Accuracy"
+    y = "Accuracy",
+    color = ""
   ) +
-  theme_minimal() + 
+  theme_minimal() +
   theme(text = element_text(size = 15),
-        legend.position="bottom")
+        legend.position = "bottom")
 
 ## PAPER FIGURE: filter out the Pythia-14M, since it doesn't add much? 
 final_accuracy_exclude14m <- final_accuracy %>%
@@ -396,8 +431,7 @@ model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b",
                  "Olmo 3 7b", "Olmo 3 32b")
 
 d0 <- df_summ_fb %>%
-  filter(!model_shorthand %in% c("Olmo 3 7b-Think",
-                                "Olmo 3 32b-Think")) %>%
+  filter(!model_shorthand %in% c("Olmo 3 7b-Think", "Olmo 3 32b-Think")) %>%
   rename(model = model_shorthand,
          family = model_family,
          value = mean_accuracy) %>%
@@ -405,9 +439,10 @@ d0 <- df_summ_fb %>%
   group_by(model) %>%
   mutate(stage1_end = max(tokens_seen_numeric_mod[stage == "stage1"], na.rm = TRUE)) %>%
   ungroup() %>%
-  mutate(tokens_seen_numeric_mod = if_else(stage == "stage2",
-                                           tokens_seen_numeric_mod + stage1_end,
-                                           tokens_seen_numeric_mod))
+  mutate(tokens_seen_numeric_mod = if_else(
+    stage == "stage2" & family != "Olmo 3",   # Olmo 3 stage 2 is already cumulative
+    tokens_seen_numeric_mod + stage1_end,
+    tokens_seen_numeric_mod))
 
 # These are all in the service of the ridgeline plot: 
 bridge <- d0 %>%
@@ -491,7 +526,7 @@ idx <- round(seq(1, length(pal_cols), length.out = n))
 pal <- c(setNames(pal_cols[idx], ingredients))
 
 df_ridge %>%
-  filter(tokens_seen_numeric_mod > 0, family == "Olmo 2") %>%
+  filter(tokens_seen_numeric_mod > 0, family %in% c("Olmo 2", "Olmo 3")) %>%
   ggplot(aes(x = tokens_seen_numeric_mod, y = y,
              group = line_id, color = curve)) +
   geom_hline(data = chance_olmo,
@@ -510,6 +545,7 @@ df_ridge %>%
         panel.grid.minor = element_blank(),
         strip.text.y = element_text(angle = 0),
         legend.position = "bottom")
+
 
 ## Now, just zoomed-in inset for the Stage 2, 1 per Olmo 2 model: 
 # INSET: Olmo 2 1b, Stage 2
@@ -613,7 +649,55 @@ df_summ_fb %>%
         strip.text.y = element_text(angle = 0),
         legend.position = "bottom")
 
+df_summ_fb %>%
+  filter(model_shorthand == "Olmo 3 32b") %>%
+  filter(stage == "stage2") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+             y = mean_accuracy,
+             color = ingredient)) + 
+  geom_line(alpha = 0.7,
+            size = 5) + 
+  geom_point(alpha = 0.7, size = 6) +
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed", 
+             color = "grey50", 
+             linewidth = 0.4) + 
+  scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
+  scale_y_continuous(limits = c(0.4,0.8)) +
+  scale_color_manual(values = pal) + 
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
+       title = "FB Task Performance", 
+       subtitle = "Olmo 3 32b::Stage 2") + 
+  theme_minimal(base_size = 14) + 
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text.y = element_text(angle = 0),
+        legend.position = "bottom")
 
+df_summ_fb %>%
+  filter(model_shorthand == "Olmo 3 7b") %>%
+  filter(stage == "stage2") %>%
+  ggplot(aes(x = tokens_seen_numeric_mod, 
+             y = mean_accuracy,
+             color = ingredient)) + 
+  geom_line(alpha = 0.7,
+            size = 5) + 
+  geom_point(alpha = 0.7, size = 6) +
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed", 
+             color = "grey50", 
+             linewidth = 0.4) + 
+  scale_x_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale())) + 
+  scale_y_continuous(limits = c(0.4,0.8)) +
+  scale_color_manual(values = pal) + 
+  labs(x = "Number of Tokens Seen", y = "Accuracy", color = NULL,
+       title = "FB Task Performance", 
+       subtitle = "Olmo 3 7b::Stage 2") + 
+  theme_minimal(base_size = 14) + 
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.text.y = element_text(angle = 0),
+        legend.position = "bottom")
 
 # PAPER FIGURE: Plot of Olmo stage1 and Pythias (without 14M)
 min_val <- df_summ_fb %>%
@@ -641,7 +725,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(11, option = "mako", 
                                                   begin = 0.9, end = 0.1)) +
   labs(
     title = "False Belief Task Accuracy Over Pretraining",
@@ -656,7 +740,9 @@ df_summ_fb %>%
 df_summ_fb %>%
   filter(step > 0) %>%
   filter(stage == "stage1" | is.na(stage)) %>%
-  filter(model_shorthand != "Pythia 14m") %>%
+  filter(!model_shorthand %in% c("Pythia 14m", 
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think")) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -673,7 +759,7 @@ df_summ_fb %>%
        color = "",
        shape = "") +
   theme_bw() +
-  scale_color_manual(values = viridisLite::viridis(8, option = "mako", 
+  scale_color_manual(values = viridisLite::viridis(11, option = "mako", 
                                                   begin = 0.9, end = 0.1)) +
   labs(
     title = "False Belief Task Accuracy Over Pretraining",
@@ -681,8 +767,191 @@ df_summ_fb %>%
     y = "Accuracy"
   ) +
   theme_minimal() + 
-  theme(text = element_text(size = 15),
+  theme(text = element_text(size = 20),
         legend.position="bottom") 
+
+#PAPER FIGURE wip: attempting to get different palettes per family for legibility
+df_plot <- df_summ_fb %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(!model_shorthand %in% c("Pythia 14m",
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think"))
+df_plot %>% distinct(model_family, model_shorthand) %>% arrange(model_family, model_shorthand)
+
+# Parse size in millions of parameters from the label, for ordering
+parse_size <- function(x) {
+  num  <- as.numeric(gsub(".*?(\\d+\\.?\\d*)\\s*([mMbB]).*", "\\1", x))
+  unit <- tolower(gsub(".*?(\\d+\\.?\\d*)\\s*([mMbB]).*", "\\2", x))
+  ifelse(unit == "b", num * 1000, num)
+}
+
+model_key <- df_plot %>%
+  distinct(model_family, model_shorthand) %>%
+  mutate(size = parse_size(model_shorthand)) %>%
+  arrange(model_family, size)
+
+# One palette per family: start/end of the gradient
+family_pal <- list(
+  "Olmo 2" = c(hcl(200, 25, 85), hcl(200, 90, 25)),  # blue
+  "Olmo 3" = c(hcl(350, 25, 85), hcl(350, 90, 25)),  # pink/magenta
+  "Pythia" = c(hcl(260, 25, 85), hcl(260, 80, 25))   # not so salient
+)
+
+model_colors <- model_key %>%
+  group_by(model_family) %>%
+  mutate(color = colorRampPalette(family_pal[[first(model_family)]])(n())) %>%
+  ungroup()
+
+color_vec <- setNames(model_colors$color, model_colors$model_shorthand)
+
+ggplot(df_plot, aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
+
+# APPENDIX FIGURES: PAIRWISE VIEWS
+
+df_plot %>%
+  filter(model_family %in% c("Olmo 2","Pythia")) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    subtitle = "Olmo 2 & Pythia Families",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
+
+df_plot %>%
+  filter(model_family %in% c("Olmo 3","Pythia")) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    subtitle = "Olmo 3 & Pythia Families",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
+
+df_plot %>%
+  filter(model_shorthand %in% c("Olmo 2 7b","Olmo 3 7b",
+                                "Pythia 6.9b")) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    subtitle = "~7b Parameters",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
+
+df_plot %>%
+  filter(model_shorthand %in% c("Olmo 2 13b", 
+                                "Olmo 2 32b", 
+                                "Olmo 3 32b",
+                                "Pythia 12b")) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    subtitle = "~13b and ~32b Parameters",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
+
+
+df_plot %>%
+  filter(model_shorthand %in% c("Olmo 2 32b","Olmo 3 32b", "Pythia 12b")) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+                    y = mean_accuracy,
+                    color = model_shorthand)) +
+  geom_line(linewidth = 2, alpha = 0.8) +
+  geom_hline(yintercept = .5, linetype = "dashed",
+             linewidth = 1, alpha = .8) +
+  scale_x_log10(labels = scales::label_number(
+    scale_cut = scales::cut_short_scale())) +
+  scale_color_manual(values = color_vec,
+                     limits = model_colors$model_shorthand) +
+  labs(
+    title = "False Belief Task Accuracy Over Pretraining",
+    subtitle = "~32b Parameters",
+    x = "Number of Tokens Seen (log scale)",
+    y = "Accuracy",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 20),
+        legend.position = "bottom") + 
+  guides(color = guide_legend(nrow = 3))
 
 
 
