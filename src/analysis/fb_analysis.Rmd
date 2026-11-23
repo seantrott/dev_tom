@@ -954,12 +954,16 @@ df_plot %>%
   guides(color = guide_legend(nrow = 3))
 
 
+# ================================================================================
+#               STATISTICAL MODELS: MODEL SIZE, TRAINING VOLUME
+# ================================================================================
 
-# Filter for only stage1 olmo data and pythia models greater than 14m (e.g. exclude olmo stage2)
+# Filter for only stage1 olmo data and pythia models greater than 14m (e.g. exclude olmo stage2) # TODO: fix error here?
 olmo_and_pythia <- df_all_models_fb %>%
   filter(stage == "stage1" | is.na(stage)) %>%
-  filter(model_shorthand != "Pythia 14m") %>%
-  filter(model_shorthand != "Olmo 3 7b-Think")
+  filter(!model_shorthand %in% c("Pythia 14m",
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think")) 
 
 # Z-score the variables that will go into the statistical model
 olmo_and_pythia <- olmo_and_pythia %>%
@@ -1536,7 +1540,11 @@ ggplot(df_summary_fb, aes(x = tokens_seen_numeric_mod, y = acc, color = model_sh
 
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
-directory_path <- "../../data/processed/attn-checks-local/"
+directory_path <- "../../data/processed/attn-checks-minimal-questions-local/"
+
+# For the passage-matching attention check critical queries:
+#directory_path <- "../../data/processed/attn-checks-local/"
+
 
 csv_files <- list.files(path = directory_path, pattern = "*.csv", full.names = TRUE)
 csv_list <- csv_files %>%
@@ -1577,6 +1585,54 @@ df_attn_check <- df_attn_check %>%
   select(-tokens_seen_from_df1) %>%
   mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
 
+# TODO: must also add Olmo 3 models' tokens seen!
+#TODO: double-check these token estimates per step! Current ones are based batch
+#size times step count
+make_olmo3_lookup <- function(path) {
+  read_csv(path, show_col_types = FALSE) %>%
+    mutate(
+      stage = str_extract(revision, "^stage\\d"),
+      ingredient = case_when(
+        str_detect(revision, "ingredient") ~ str_extract(revision, "ingredient[0-9+]+"),
+        str_detect(revision, "-mix-")      ~ str_remove(revision, "^stage2-step47684-"),
+        TRUE                               ~ NA_character_
+      ),
+      tokens_lookup = if (is.character(tokens_seen_numeric)) parse_number(tokens_seen_numeric) else tokens_seen_numeric
+    ) %>%
+    select(model_shorthand, stage, ingredient, step, tokens_lookup)
+}
+
+tokens_seen_olmo3 <- bind_rows(
+  make_olmo3_lookup("../../data/raw/olmo3_7b_stage1_stage2_tokens_seen.csv"),
+  make_olmo3_lookup("../../data/raw/olmo3_32b_stage1_stage2_tokens_seen.csv")
+)
+
+df_attn_check <- df_attn_check %>%
+  left_join(tokens_seen_olmo3, by = c("model_shorthand", "stage", "ingredient", "step")) %>%
+  mutate(tokens_seen_numeric = coalesce(tokens_lookup, tokens_seen_numeric)) %>%
+  select(-tokens_lookup) %>%
+  mutate(tokens_seen_numeric_mod = tokens_seen_numeric + 1)
+
+df_attn_check = df_attn_check %>%
+  mutate(model_family = case_when(
+    model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b") ~ "Pythia",
+    model_shorthand %in% c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
+                           "Olmo 2 32b") ~ "Olmo 2",
+    model_shorthand %in% c("Olmo 3 32b", "Olmo 3 7b",
+                           "Olmo 3 7b-Think", 
+                           "Olmo 3 32b-Think") ~ "Olmo 3"),
+    training_type = case_when(
+      model_shorthand %in% c("Pythia 14m", "Pythia 1b", 
+                           "Pythia 6.9b", "Pythia 12b",
+                           "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b",
+                           "Olmo 2 32b","Olmo 3 32b", 
+                           "Olmo 3 7b") ~ "Pretraining",
+      model_shorthand %in% c("Olmo 3 7b-Think", 
+                           "Olmo 3 32b-Think") ~ "Postraining"
+  ))
+
+
 length(unique(df_attn_check$model_id))
 table(df_attn_check$model_path)
 table(df_attn_check$model_shorthand)
@@ -1587,17 +1643,31 @@ table(df_attn_check$step)
 ```
 
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
+# Minimal-pair Attention Check Critical Queries
 df_attn_check = df_attn_check %>%
   mutate(correct = case_when(
     log_odds > 0 ~ TRUE,
     log_odds <= 0 ~ FALSE
   )) %>%
   mutate(q_label = case_when(
-    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
-    question_id == 2 ~ "At end of story, ITEM in {LOC}",
-    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
-    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
+    question_id == 1 ~ "At the start of the story, the ITEM was in the {LOC}",
+    question_id == 2 ~ "At the end of the story, the ITEM was in the {LOC}",
+    question_id == 3 ~ "The person who put the ITEM in the START_LOC was {AGENT}",
+    question_id == 4 ~ "The person who put the ITEM in the END_LOC was {AGENT}"
   ))
+
+# Passage-matching Attention Check Critical Queries
+#df_attn_check = df_attn_check %>%
+#  mutate(correct = case_when(
+#    log_odds > 0 ~ TRUE,
+#    log_odds <= 0 ~ FALSE
+#  )) %>%
+#  mutate(q_label = case_when(
+#    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
+#    question_id == 2 ~ "At end of story, ITEM in {LOC}",
+#    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
+#    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
+#  ))
 
 ## Accuracy of item start location
 df_summ_attn = df_attn_check %>%
@@ -1612,18 +1682,30 @@ df_summ_attn %>%
   select(model_path, step, mean_accuracy) %>%
   head(5)
 
+# Minimal-pair Attention Check Critical Queries
 df_summ_attn = df_summ_attn %>%
   mutate(q_label = case_when(
-    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
-    question_id == 2 ~ "At end of story, ITEM in {LOC}",
-    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
-    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
+    question_id == 1 ~ "At the start of the story, the ITEM was in the {LOC}",
+    question_id == 2 ~ "At the end of the story, the ITEM was in the {LOC}",
+    question_id == 3 ~ "The person who put the ITEM in the START_LOC was {AGENT}",
+    question_id == 4 ~ "The person who put the ITEM in the END_LOC was {AGENT}"
   ))
+
+# Passage-matching Attention Check Critical Queries
+#df_summ_attn = df_summ_attn %>%
+#  mutate(q_label = case_when(
+#    question_id == 1 ~ "At start of story, AGENT put ITEM in {LOC}",
+#    question_id == 2 ~ "At end of story, ITEM in {LOC}",
+#    question_id == 3 ~ "Person who put ITEM in START was {AGENT}",
+#    question_id == 4 ~ "Person who moved ITEM to END was {AGENT}"
+#  ))
 
 # PAPER FIGURE - attention check results per question
 df_summ_attn %>%
   filter(stage == "stage1" | is.na(stage)) %>%
-  filter(model_shorthand != "Pythia 14m") %>%
+  filter(!model_shorthand %in% c("Pythia 14m",
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think")) %>%
   ggplot(aes(x = tokens_seen_numeric_mod,
              y = mean_accuracy,
              color = model_shorthand)) +
@@ -1637,7 +1719,7 @@ df_summ_attn %>%
   # geom_text_repel(aes(label=model_shorthand), size=3) +
   scale_y_continuous(limits = c(0, 1)) +
   labs(title = "Development of Situation Model", 
-       x = "Tokens Seen",
+       x = "Number of Tokens Seen (log scale)",
        y = "Accuracy",
        color = "",
        shape = "") +
@@ -1728,8 +1810,10 @@ fb_and_attn_q1 <- bind_rows(
     mutate(model_shorthand = str_replace(model_shorthand, "OLMO", "Olmo"))
 
 # Define your desired order
-model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b", 
-                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b")
+#model_order <- c("Pythia 14m", "Pythia 1b", "Pythia 6.9b", "Pythia 12b", 
+#                 "Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b")
+
+model_order <- c("Olmo 2 1b", "Olmo 2 7b", "Olmo 2 13b")
 
 # Convert to factor with desired order
 fb_and_attn_q1 <- fb_and_attn_q1 %>%
