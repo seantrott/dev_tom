@@ -244,6 +244,9 @@ final_accuracy <- df_summ_fb %>%
   slice_max(step, n = 1, with_ties = FALSE) %>%  # One row per model, no ties
   ungroup()
 
+#APPENDIX TABLE:
+print(final_accuracy)
+
 # Plot accuracy at final step by model parameter size
 ggplot(final_accuracy, aes(x = n_params_approx, y = mean_accuracy)) +
   geom_point(size = 3, alpha = 0.7) +
@@ -1012,7 +1015,7 @@ mod_full = glmer(data = olmo_and_pythia,
                    (1 | model_shorthand),
                  family = binomial())
 summary(mod_full)
-
+table(olmo_and_pythia$model_shorthand)
 
 ### Plot coefficients
 df_coef <- broom.mixed::tidy(mod_full, effects = "fixed") %>%
@@ -1080,120 +1083,21 @@ ggcoef_model(mod_full, significance = 0.001)  # handles everything automatically
 # write.csv(df_summ, "../../data/processed/summaries/fb_summary.csv")
 ```
 
-## False Belief Performance for Olmo 2 13b, by Knowledge State and Cue
-(To do: run LRT at each time step for each model.)
-
-```{r,echo=FALSE, warning=FALSE, message=FALSE}
-
-df_summ = df_all_models_fb %>%
-  group_by(model_shorthand, step,
-           tokens_seen_numeric_mod, 
-           n_params_approx,
-           condition, knowledge_cue) %>%
-  summarise(mean_accuracy = mean(correct),
-            mean_lo = mean(log_odds))
 
 
-df_summ %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(step > 1) %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_lo,
-             color = condition,
-             linetype = knowledge_cue
-             )) + 
-  geom_line(linewidth=1.5,alpha=0.8) +
-  #geom_point(size = 2, alpha = .4) +
-  geom_hline(yintercept = 0, linetype = "dotted") +
-  scale_x_log10() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) + 
-  theme_minimal() +
-  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
-  labs(color = "Knowledge State",       
-       linetype = "Knowledge Cue") 
+## Getting Final Accuracies
+```{r}
 
-df_summ %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(step > 1) %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_accuracy,
-             color = condition,
-             linetype = knowledge_cue
-             )) + 
-  geom_line(linewidth=1.5,alpha=0.8) +
-  #geom_point(size = 2, alpha = .4) +
-  geom_hline(yintercept = 0.5, linetype = "dotted") +
-  scale_x_log10() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) + 
-  theme_minimal() +
-  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
-  labs(color = "Knowledge State",       
-       linetype = "Knowledge Cue",
-       x = "Number of Tokens Seen (log scale)",
-       y = "Accuracy",
-       title = "False Belief Task Performance by Stimulus Properties") 
-
-### 
-df_summ = df_all_models_fb %>%
-  group_by(model_shorthand, step,
-           tokens_seen_numeric_mod, 
-           n_params_approx,
-           condition,
-           knowledge_cue) %>%
-  summarise(mean_accuracy = mean(correct),
-            mean_lo = mean(log_odds))
-
-## PAPER FIGURE
-df_summ %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(step > 1) %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_accuracy,
-             color = knowledge_cue
-             )) + 
-  geom_line(linewidth=1.5,alpha=0.8) +
-  #geom_point(size = 2, alpha = .4) +
-  geom_hline(yintercept = 0.5, linetype = "dotted") +
-  scale_x_log10() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) + 
-  theme_minimal() +
-  facet_wrap(~condition) + 
-  labs(color = "Knowledge Cue",
-       x = "Number of Tokens Seen (log scale)",
-       y = "Accuracy",
-       title = "False Belief Task Performance by Stimulus Properties") +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") 
-
-## APPENDIX: companion figure, shows log odds
-df_summ %>%
-  filter(model_shorthand == "Olmo 2 13b") %>%
-  filter(step > 1) %>%
-  ggplot(aes(x = tokens_seen_numeric_mod,
-             y = mean_lo,
-             color = knowledge_cue
-             )) + 
-  geom_line(linewidth=1.5,alpha=0.8) +
-  #geom_point(size = 2, alpha = .4) +
-  geom_hline(yintercept = 0.5, linetype = "dotted") +
-  scale_x_log10() +
-  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
-                                                  begin = 0.8, end = 0.15)) + 
-  theme_minimal() +
-  facet_wrap(~condition) + 
-  labs(color = "Knowledge Cue",
-       x = "Number of Tokens Seen (log scale)",
-       y = "Log-Odds (Start v. End)",
-       title = "False Belief Task Performance by Stimulus Properties") +
-  theme(text = element_text(size = 15),
-        legend.position="bottom") 
-
-
+# FINAL FB ACCURACY FOR LMs in Stage 1 Pretraining: 
+tmp <- df_summ_fb %>%
+  filter(step > 0) %>%
+  filter(stage == "stage1" | is.na(stage)) %>%
+  filter(!model_shorthand %in% c("Pythia 14m", 
+                                 "Olmo 3 7b-Think",
+                                 "Olmo 3 32b-Think"))
 
 ```
+
 
 ## Finding Number of Tokens Seen for median accuracy
 ```{r,echo=FALSE, warning=FALSE, message=FALSE}
@@ -2557,5 +2461,121 @@ grangertest(fb_accuracy ~ q1,
 grangertest(fb_accuracy ~ q2, 
             order = 3,  # number of lags
             data = ts_data)
+
+```
+
+# Punt to different paper exploring verb sensitivity: 
+## False Belief Performance for Olmo 2 13b, by Knowledge State and Cue
+(To do: run LRT at each time step for each model.)
+
+```{r,echo=FALSE, warning=FALSE, message=FALSE}
+
+df_summ = df_all_models_fb %>%
+  group_by(model_shorthand, step,
+           tokens_seen_numeric_mod, 
+           n_params_approx,
+           condition, knowledge_cue) %>%
+  summarise(mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_lo,
+             color = condition,
+             linetype = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
+  labs(color = "Knowledge State",       
+       linetype = "Knowledge Cue") 
+
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = condition,
+             linetype = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~reorder(model_shorthand, n_params_approx)) + 
+  labs(color = "Knowledge State",       
+       linetype = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Accuracy",
+       title = "False Belief Task Performance by Stimulus Properties") 
+
+### 
+df_summ = df_all_models_fb %>%
+  group_by(model_shorthand, step,
+           tokens_seen_numeric_mod, 
+           n_params_approx,
+           condition,
+           knowledge_cue) %>%
+  summarise(mean_accuracy = mean(correct),
+            mean_lo = mean(log_odds))
+
+## PAPER FIGURE
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_accuracy,
+             color = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~condition) + 
+  labs(color = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Accuracy",
+       title = "False Belief Task Performance by Stimulus Properties") +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+## APPENDIX: companion figure, shows log odds
+df_summ %>%
+  filter(model_shorthand == "Olmo 2 13b") %>%
+  filter(step > 1) %>%
+  ggplot(aes(x = tokens_seen_numeric_mod,
+             y = mean_lo,
+             color = knowledge_cue
+             )) + 
+  geom_line(linewidth=1.5,alpha=0.8) +
+  #geom_point(size = 2, alpha = .4) +
+  geom_hline(yintercept = 0.5, linetype = "dotted") +
+  scale_x_log10() +
+  scale_color_manual(values = viridisLite::viridis(2, option = "mako", 
+                                                  begin = 0.8, end = 0.15)) + 
+  theme_minimal() +
+  facet_wrap(~condition) + 
+  labs(color = "Knowledge Cue",
+       x = "Number of Tokens Seen (log scale)",
+       y = "Log-Odds (Start v. End)",
+       title = "False Belief Task Performance by Stimulus Properties") +
+  theme(text = element_text(size = 15),
+        legend.position="bottom") 
+
+
 
 ```
